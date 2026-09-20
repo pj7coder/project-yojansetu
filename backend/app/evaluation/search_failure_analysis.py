@@ -1,5 +1,5 @@
 """
-JanSetu - Day 31: Search Failure Taxonomy & Stage-Level Root Cause Attributor.
+YojanSetu - Day 31: Search Failure Taxonomy & Stage-Level Root Cause Attributor.
 
 Diagnoses search and discovery failures:
 - Identifies the exact pipeline stage where a scheme was dropped or misclassified

@@ -38,7 +38,7 @@ from app.validation.validators.numbers import NumbersValidator
 from app.validation.validators.provenance import ProvenanceValidator
 from app.validation.validators.schema import SchemaValidator
 
-logger = logging.getLogger("jansetu.validation.service")
+logger = logging.getLogger("yojansetu.validation.service")
 
 
 class SchemeValidationService:

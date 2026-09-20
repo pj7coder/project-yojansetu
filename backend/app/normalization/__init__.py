@@ -1,4 +1,4 @@
-"""Canonical Scheme Schema and Normalization Layer for JanSetu (Day 10)."""
+"""Canonical Scheme Schema and Normalization Layer for YojanSetu (Day 10)."""
 from app.normalization.aggregator import DocumentSchemeAggregator
 from app.normalization.benefits import normalize_benefit
 from app.normalization.conflicts import detect_conflicts, merge_identical_conditions

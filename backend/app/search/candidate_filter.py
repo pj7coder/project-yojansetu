@@ -8,7 +8,7 @@ from app.core.config import get_settings
 from app.database.models.scheme_search_metadata import SchemeSearchMetadata
 from app.eligibility.profile import CitizenProfile
 
-logger = logging.getLogger("jansetu.search.candidate_filter")
+logger = logging.getLogger("yojansetu.search.candidate_filter")
 
 
 class CandidateFilterService:

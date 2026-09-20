@@ -18,7 +18,7 @@ from app.schemas.ocr import (
     OCRRunResponse,
 )
 
-logger = logging.getLogger("jansetu.api.ocr")
+logger = logging.getLogger("yojansetu.api.ocr")
 
 router = APIRouter()
 

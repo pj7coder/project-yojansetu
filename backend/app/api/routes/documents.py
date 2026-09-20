@@ -17,7 +17,7 @@ from app.ingestion.storage import StorageManager
 from app.repositories.document_repository import DocumentRepository
 from app.schemas.document import DocumentListResponse, DocumentResponse
 
-logger = logging.getLogger("jansetu.api.documents")
+logger = logging.getLogger("yojansetu.api.documents")
 router = APIRouter()
 
 ingestion_service = DocumentIngestionService()

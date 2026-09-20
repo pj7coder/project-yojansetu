@@ -18,7 +18,7 @@ from app.versioning.schemas import (
 from app.versioning.service import SchemeVersionService
 from app.versioning.timeline import SchemeTimelineService
 
-logger = logging.getLogger("jansetu.api.routes.versioning")
+logger = logging.getLogger("yojansetu.api.routes.versioning")
 
 router = APIRouter(tags=["versioning"])
 

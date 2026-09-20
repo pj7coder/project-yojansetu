@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "JANSETU | राजस्थान सरकारी योजना सहायता",
+  title: "YOJANSETU | राजस्थान सरकारी योजना सहायता",
   description:
     "Offline-first vernacular Rajasthan government scheme discovery assistant.",
 };

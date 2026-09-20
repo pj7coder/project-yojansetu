@@ -26,7 +26,7 @@ client = TestClient(app)
 settings = get_settings()
 
 
-def create_sample_pdf(pages_text: list[str], author: str = "JanSetu Admin") -> bytes:
+def create_sample_pdf(pages_text: list[str], author: str = "YojanSetu Admin") -> bytes:
     """Generate a multi-page PDF with selectable digital text."""
     doc = pymupdf.open()
     font_paths = [

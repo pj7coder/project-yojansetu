@@ -1,4 +1,4 @@
-"""Local LLM scheme extraction subsystem for JanSetu."""
+"""Local LLM scheme extraction subsystem for YojanSetu."""
 from app.extraction.aggregator import DocumentExtractionAggregator
 from app.extraction.evidence_validator import EvidenceValidator
 from app.extraction.prompts import (

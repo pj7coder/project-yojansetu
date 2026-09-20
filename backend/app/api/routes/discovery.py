@@ -14,7 +14,7 @@ from app.search.schemas import (
     SearchIndexStatusResponse,
 )
 
-logger = logging.getLogger("jansetu.api.discovery")
+logger = logging.getLogger("yojansetu.api.discovery")
 
 router = APIRouter(tags=["Scheme Discovery & Semantic Ranking"])
 

@@ -19,7 +19,7 @@ from app.schemas.chunk import (
     ChunkTriggerResponse,
 )
 
-logger = logging.getLogger("jansetu.api.chunks")
+logger = logging.getLogger("yojansetu.api.chunks")
 
 router = APIRouter()
 

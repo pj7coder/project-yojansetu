@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26 Tests: Conversation & TTS Integration.
+YojanSetu - Day 26 Tests: Conversation & TTS Integration.
 
 Verifies end-to-end integration between Day 25 ConversationManager responses
 and Day 26 speech rendering, ensuring the conversation state machine is strictly

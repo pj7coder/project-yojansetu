@@ -1,5 +1,5 @@
 """
-JanSetu - Day 28: Gold Dataset Hashing & Staleness Utilities.
+YojanSetu - Day 28: Gold Dataset Hashing & Staleness Utilities.
 
 Computes SHA-256 checksums over source artifacts, audio recordings,
 scheme versions, and dataset manifests to guarantee immutability

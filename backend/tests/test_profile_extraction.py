@@ -1,5 +1,5 @@
 """
-JanSetu - Day 24: Comprehensive Profile Extraction, Normalization & Confirmation Tests.
+YojanSetu - Day 24: Comprehensive Profile Extraction, Normalization & Confirmation Tests.
 
 Verifies:
 1. Expected-field fast path (< 5ms deterministic parsing without LLM)

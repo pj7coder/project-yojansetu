@@ -1,5 +1,5 @@
 """
-Controlled conversation events for JanSetu State Machine transitions (Day 25).
+Controlled conversation events for YojanSetu State Machine transitions (Day 25).
 """
 
 from enum import Enum

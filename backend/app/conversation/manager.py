@@ -41,7 +41,7 @@ from app.questioning.schemas import QuestionReasonCode
 from app.sessions.manager import CitizenSessionManager, SessionNotFoundError, get_session_manager
 from app.sessions.models import CitizenSession, FieldValueState
 
-logger = logging.getLogger("jansetu.conversation.manager")
+logger = logging.getLogger("yojansetu.conversation.manager")
 
 
 class ConversationManager:

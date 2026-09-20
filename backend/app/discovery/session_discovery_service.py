@@ -27,7 +27,7 @@ from app.search.semantic_ranker import SemanticSchemeRanker
 from app.sessions.manager import get_session_manager
 from app.sessions.schemas import SessionSummary
 
-logger = logging.getLogger("jansetu.discovery.session")
+logger = logging.getLogger("yojansetu.discovery.session")
 
 
 class SessionDiscoveryService:

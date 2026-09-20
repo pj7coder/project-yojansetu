@@ -1,5 +1,5 @@
 """
-JanSetu — Day 14: Deterministic Citizen Eligibility Engine.
+YojanSetu — Day 14: Deterministic Citizen Eligibility Engine.
 Pure Python deterministic evaluation of human-verified scheme rules against citizen profiles.
 Zero LLM reasoning in eligibility decisions.
 """

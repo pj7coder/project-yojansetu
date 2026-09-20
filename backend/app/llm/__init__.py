@@ -1,4 +1,4 @@
-"""Local LLM provider abstraction for JanSetu."""
+"""Local LLM provider abstraction for YojanSetu."""
 from app.llm.interface import (
     BaseLLMProvider,
     LLMProviderError,

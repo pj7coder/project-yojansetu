@@ -1,5 +1,5 @@
 """
-Vernacular question catalog and dynamic builder for JanSetu Citizen Interface.
+Vernacular question catalog and dynamic builder for YojanSetu Citizen Interface.
 Enforces deterministic question mapping, units, sensitivity, and option translation.
 """
 

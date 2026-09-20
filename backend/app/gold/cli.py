@@ -1,5 +1,5 @@
 """
-JanSetu - Day 28: Gold Dataset CLI Utilities.
+YojanSetu - Day 28: Gold Dataset CLI Utilities.
 
 Entrypoints:
   python -m app.gold.validate [--version v1]
@@ -119,7 +119,7 @@ def run_freeze(args):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JanSetu Gold Dataset Manager")
+    parser = argparse.ArgumentParser(description="YojanSetu Gold Dataset Manager")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # Validate command

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Conversation Speech Policy.
+YojanSetu - Day 26: Conversation Speech Policy.
 
 Transforms structured Day 25 ConversationResponse objects into concise,
 citizen-friendly speakable text according to action types and privacy policies.

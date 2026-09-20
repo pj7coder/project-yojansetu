@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Tuple
 from app.parser.diagnostics import evaluate_document_diagnostics
 from app.parser.interface import BlockType, ParserRawResult
 
-logger = logging.getLogger("jansetu.parser.normalizer")
+logger = logging.getLogger("yojansetu.parser.normalizer")
 
 
 def build_normalized_document(
@@ -17,7 +17,7 @@ def build_normalized_document(
     raw_result: ParserRawResult,
 ) -> Dict[str, Any]:
     """
-    Transform raw parser output into canonical JanSetu structured document schema.
+    Transform raw parser output into canonical YojanSetu structured document schema.
     Guarantees stable schema_version 1.0 with physical 1-based page indexing.
     """
     doc_id_str = str(document_id)

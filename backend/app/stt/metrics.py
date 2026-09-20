@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Speech-to-Text Benchmark Metrics Engine.
+YojanSetu - Day 22: Speech-to-Text Benchmark Metrics Engine.
 
 Computes:
 - Word Error Rate (WER) using Levenshtein distance on normalized word tokens

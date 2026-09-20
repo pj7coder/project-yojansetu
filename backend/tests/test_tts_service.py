@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26 Tests: Speech Synthesis Service & Lifecycle.
+YojanSetu - Day 26 Tests: Speech Synthesis Service & Lifecycle.
 
 Tests service orchestration, caching boundaries, input constraints,
 temporary storage cleanup, and provider safety using standard asyncio.run().
@@ -65,7 +65,7 @@ class TestSpeechSynthesisService:
     def test_generic_prompt_caching(self):
         import uuid
         # Unique generic prompt to test caching
-        text = f"नमस्ते, राजस्थान सरकार के जनसेतु पोर्टल में आपका स्वागत है {uuid.uuid4().hex}।"
+        text = f"नमस्ते, राजस्थान सरकार के योजनसेतु पोर्टल में आपका स्वागत है {uuid.uuid4().hex}।"
 
         # First call: not cached
         res1 = asyncio.run(self.service.synthesize_text(

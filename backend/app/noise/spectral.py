@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Spectral Gating Noise Suppressor (Optional).
+YojanSetu - Day 23: Spectral Gating Noise Suppressor (Optional).
 
 Uses short-time Fourier transform (STFT) spectral subtraction / gating
 to attenuate steady background noise (fan hum, steady vehicle drone).

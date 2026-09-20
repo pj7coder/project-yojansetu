@@ -28,6 +28,6 @@ def setup_logging(log_level: str = "INFO") -> logging.Logger:
     # Silence overly verbose third-party loggers if needed
     logging.getLogger("uvicorn.access").setLevel(numeric_level)
 
-    logger = logging.getLogger("jansetu")
+    logger = logging.getLogger("yojansetu")
     logger.setLevel(numeric_level)
     return logger

@@ -31,7 +31,7 @@ export function VoiceStatus({ state, lang = 'hi', recordingDuration = 0 }: Voice
         };
       case 'SPEAKING':
         return {
-          label: isHi ? 'जनसेतु बोल रहा है…' : 'JanSetu is speaking…',
+          label: isHi ? 'योजनसेतु बोल रहा है…' : 'YojanSetu is speaking…',
           badgeClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 animate-pulse',
           dotClass: 'bg-emerald-500',
         };

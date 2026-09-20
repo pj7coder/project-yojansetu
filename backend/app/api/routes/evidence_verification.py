@@ -15,7 +15,7 @@ from app.verification.schemas import (
 )
 from app.verification.service import EvidenceVerificationService
 
-logger = logging.getLogger("jansetu.api.evidence_verification")
+logger = logging.getLogger("yojansetu.api.evidence_verification")
 
 router = APIRouter()
 

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 28: Gold Dataset Pydantic Schemas.
+YojanSetu - Day 28: Gold Dataset Pydantic Schemas.
 
 Defines deterministic, typed structures for gold-standard cases,
 splits, metadata, provenance references, and manifest catalogs.

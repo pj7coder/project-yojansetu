@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: TTS Provider Registry & Concurrency Manager.
+YojanSetu - Day 26: TTS Provider Registry & Concurrency Manager.
 
 Maintains an allowlisted registry of offline TTS providers and enforces
 bounded concurrency guards for inference safety.

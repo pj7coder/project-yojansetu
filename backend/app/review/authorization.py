@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import Header, HTTPException, status
 from app.core.config import get_settings
 
-logger = logging.getLogger("jansetu.review.auth")
+logger = logging.getLogger("yojansetu.review.auth")
 
 
 class ReviewAuthorizationService:

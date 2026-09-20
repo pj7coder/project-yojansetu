@@ -1,5 +1,5 @@
 """
-JanSetu - Day 32: Unit & Integration Tests for Voice System QA & Failure Analysis.
+YojanSetu - Day 32: Unit & Integration Tests for Voice System QA & Failure Analysis.
 
 Verifies:
 1. Silero VAD evaluation metrics (Speech detection recall, precision, false positives, short answers)

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Voice Activity Detection Module.
+YojanSetu - Day 23: Voice Activity Detection Module.
 """
 
 from typing import Optional

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 31: Eligibility Bucket Integrity & Ineligible Leakage Evaluator.
+YojanSetu - Day 31: Eligibility Bucket Integrity & Ineligible Leakage Evaluator.
 
 Evaluates Stage C & E Output Safety:
 - Eligible Bucket Accuracy
@@ -87,7 +87,7 @@ class BucketMetricsCalculator:
                 default=1.0,
             )
             # Check if any more-info item has a higher similarity but appears in a merged recommendation view
-            # jansetu maintains strictly separate lists: eligible[] and more_information_required[]
+            # yojansetu maintains strictly separate lists: eligible[] and more_information_required[]
             pass
 
         return {

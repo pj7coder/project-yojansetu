@@ -19,7 +19,7 @@ from app.sessions.schemas import (
     UpdateProfileRequest,
 )
 
-logger = logging.getLogger("jansetu.api.citizen_sessions")
+logger = logging.getLogger("yojansetu.api.citizen_sessions")
 
 router = APIRouter(prefix="/citizen/sessions", tags=["Citizen Multi-Turn Sessions"])
 

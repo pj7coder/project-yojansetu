@@ -12,7 +12,7 @@ from app.core.config import get_settings
 from app.database.models.scheme import Scheme, SchemeVersion
 from app.database.models.scheme_draft import SchemeDraft
 
-logger = logging.getLogger("jansetu.eligibility.repository")
+logger = logging.getLogger("yojansetu.eligibility.repository")
 
 
 class UnverifiedSchemeAccessError(Exception):

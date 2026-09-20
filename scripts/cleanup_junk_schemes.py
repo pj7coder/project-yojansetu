@@ -1,4 +1,4 @@
-﻿"""
+"""
 Cleanup Junk Schemes
 ====================
 Removes scheme records that were incorrectly generated from bad extraction runs.
@@ -12,6 +12,8 @@ Run from backend/ directory:
 import sys
 import re
 sys.stdout.reconfigure(encoding="utf-8")
+sys.path.insert(0, ".")
+sys.path.insert(0, "backend")
 
 from app.database.session import SessionLocal
 from app.database.models.scheme import Scheme, SchemeVersion
@@ -40,7 +42,7 @@ def main():
         keep = [s for s in all_schemes if not is_junk_scheme(s.name_en or "")]
 
         print("=" * 60)
-        print("  JanSetu — Junk Scheme Cleanup")
+        print("  YojanSetu — Junk Scheme Cleanup")
         print("=" * 60)
         print(f"\n  Total schemes in DB: {len(all_schemes)}")
         print(f"  Legitimate schemes to KEEP: {len(keep)}")

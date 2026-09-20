@@ -13,7 +13,7 @@ from app.schemas.rag import (
     RetrievedChunkResponse,
 )
 
-logger = logging.getLogger("jansetu.api.rag")
+logger = logging.getLogger("yojansetu.api.rag")
 
 router = APIRouter(prefix="/rag", tags=["Circular RAG & Evidence Retrieval"])
 

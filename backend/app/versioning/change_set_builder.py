@@ -9,7 +9,7 @@ from app.database.models.scheme_change_item import SchemeChangeItem
 from app.database.models.scheme_change_set import SchemeChangeSet
 from app.versioning.schemas import ChangeItemSchema, ChangeRiskLevel, ChangeType
 
-logger = logging.getLogger("jansetu.versioning.change_set_builder")
+logger = logging.getLogger("yojansetu.versioning.change_set_builder")
 
 
 class SchemeChangeSetBuilder:

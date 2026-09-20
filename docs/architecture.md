@@ -1,8 +1,8 @@
-# JanSetu — Architecture Documentation
+# YojanSetu — Architecture Documentation
 
 ## Overview
 
-JanSetu is an offline-first vernacular government-scheme discovery assistant for Rajasthan.
+YojanSetu is an offline-first vernacular government-scheme discovery assistant for Rajasthan.
 
 ---
 
@@ -366,7 +366,7 @@ Government scheme documents are legally dense administrative circulars containin
   A 40-page circular exceeds single-prompt LLM sweet spots, dilutes attention on specific eligibility clauses, and prevents fine-grained, evidence-backed page citations for citizens.
 - **Why Not Fixed Character/Page Windows (e.g., every 3,000 chars or 5 pages)?**
   Fixed windows blindly slice through critical legal conditions. For instance, separating an eligibility clause on Page 7 from its proviso (*"Provided that..."*) or exception on Page 8 produces hallucinated or misleading eligibility advice.
-- **The JanSetu Principle:**
+- **The YojanSetu Principle:**
   > **Structure-Aware + Page-Aware + Token-Aware = Semantically Complete Chunks.**
   > A slightly larger coherent chunk that preserves legal context is always preferred over an arbitrarily fragmented chunk that severs a rule from its caveat.
 
@@ -632,7 +632,7 @@ READY_FOR_NORMALIZATION         (Retry via POST /api/v1/chunks/{id}/reextract)
 
 ## 10. Evaluation Truth Architecture (Days 28–32)
 
-To ensure scientific rigor, avoid self-fulfilling validation, and prevent AI hallucinations from polluting benchmark truth, JanSetu decouples system implementation from reference ground truth.
+To ensure scientific rigor, avoid self-fulfilling validation, and prevent AI hallucinations from polluting benchmark truth, YojanSetu decouples system implementation from reference ground truth.
 
 ```text
                  OFFICIAL GOVERNMENT EVIDENCE

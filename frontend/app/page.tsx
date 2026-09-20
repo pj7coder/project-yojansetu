@@ -70,14 +70,14 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-orange-600 text-white flex items-center justify-center font-black text-xl shadow-md shadow-orange-600/20">
-              JS
+              YS
             </div>
             <div>
               <div className="font-black text-lg tracking-tight text-slate-900 leading-tight">
-                JANSETU
+                YOJANSETU
               </div>
               <div className="text-xs text-orange-700 font-semibold leading-tight">
-                {isHi ? "जनसेतु • राजस्थान सरकार" : "Government of Rajasthan"}
+                {isHi ? "योजनसेतु • राजस्थान सरकार" : "Government of Rajasthan"}
               </div>
             </div>
           </div>
@@ -315,7 +315,7 @@ export default function HomePage() {
       <footer className="w-full bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-700">JanSetu (जनसेतु)</span>
+            <span className="font-bold text-slate-700">YojanSetu (योजनसेतु)</span>
             <span>•</span>
             <span>{isHi ? "राजस्थान सरकार कल्याण पोर्टल" : "Rajasthan Welfare Discovery"}</span>
           </div>

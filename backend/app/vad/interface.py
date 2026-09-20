@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Voice Activity Detector (VAD) Interface.
+YojanSetu - Day 23: Voice Activity Detector (VAD) Interface.
 
 Defines the abstract interface for offline voice activity detection.
 """

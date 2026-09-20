@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Development & Evaluation TTS Routes.
+YojanSetu - Day 26: Development & Evaluation TTS Routes.
 
 Provides development-only endpoints for synthesizing speech, testing pronunciation,
 and inspecting offline TTS provider health.

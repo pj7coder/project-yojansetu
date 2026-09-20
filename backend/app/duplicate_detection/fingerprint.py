@@ -15,7 +15,7 @@ from pypdf import PdfReader
 
 from app.core.config import get_settings
 
-logger = logging.getLogger("jansetu.duplicate_detection.fingerprint")
+logger = logging.getLogger("yojansetu.duplicate_detection.fingerprint")
 
 
 @dataclass

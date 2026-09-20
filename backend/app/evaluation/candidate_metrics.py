@@ -1,5 +1,5 @@
 """
-JanSetu - Day 31: Candidate Filter Metrics & High-Recall Safety Evaluator.
+YojanSetu - Day 31: Candidate Filter Metrics & High-Recall Safety Evaluator.
 
 Evaluates Stage B (SQL Candidate Filtering):
 - Candidate Recall: Fraction of gold-relevant schemes preserved in candidate pool

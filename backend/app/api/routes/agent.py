@@ -20,7 +20,7 @@ from app.schemas.agent import (
     ToolSchemaResponse,
 )
 
-logger = logging.getLogger("jansetu.api.agent")
+logger = logging.getLogger("yojansetu.api.agent")
 
 router = APIRouter(prefix="/agent", tags=["ReAct Agent & Tools Engine"])
 

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 EXTRACTION_PROMPT_VERSION = "1.0"
 EXTRACTION_SCHEMA_VERSION = "1.0"
 
-SYSTEM_EXTRACTION_PROMPT = """You are JanSetu's official document extraction system for Rajasthan government welfare schemes.
+SYSTEM_EXTRACTION_PROMPT = """You are YojanSetu's official document extraction system for Rajasthan government welfare schemes.
 Your task is to extract factual, evidence-backed scheme information strictly from the provided text chunk into valid JSON.
 
 CRITICAL INSTRUCTIONS & RULES:

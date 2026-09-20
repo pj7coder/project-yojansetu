@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 from typing import Dict, List, Optional, Tuple
 
-logger = logging.getLogger("jansetu.profile_extraction.location_parser")
+logger = logging.getLogger("yojansetu.profile_extraction.location_parser")
 
 _DISTRICTS_CACHE: Optional[Dict[str, str]] = None
 

@@ -12,7 +12,7 @@ from app.questioning.schemas import (
 from app.questioning.scoring import QuestionScorer
 from app.sessions.models import FieldValueState
 
-logger = logging.getLogger("jansetu.questioning.selector")
+logger = logging.getLogger("yojansetu.questioning.selector")
 
 
 class NextQuestionSelector:

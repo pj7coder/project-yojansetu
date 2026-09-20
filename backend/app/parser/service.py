@@ -30,7 +30,7 @@ from app.parser.normalizer import (
 from app.repositories.document_repository import DocumentRepository
 from app.repositories.parsed_document_repository import ParsedDocumentRepository
 
-logger = logging.getLogger("jansetu.parser.service")
+logger = logging.getLogger("yojansetu.parser.service")
 
 
 class DocumentParserService:
@@ -135,7 +135,7 @@ class DocumentParserService:
                 **kwargs,
             )
 
-            # 2. Transform into canonical JanSetu schema
+            # 2. Transform into canonical YojanSetu schema
             normalized_doc = build_normalized_document(
                 document_id=doc.id,
                 raw_result=raw_result,

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 30: Eligibility Evaluation Command-Line Interface.
+YojanSetu - Day 30: Eligibility Evaluation Command-Line Interface.
 
 Commands:
   python -m app.evaluation.eligibility --gold-version v1 --split DEV
@@ -20,7 +20,7 @@ from app.evaluation.eligibility_runner import EligibilityBenchmarkRunner
 from app.gold.schemas import GoldSplit
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
-logger = logging.getLogger("jansetu.evaluation.eligibility_cli")
+logger = logging.getLogger("yojansetu.evaluation.eligibility_cli")
 
 
 def main(argv: Optional[List[str]] = None):
@@ -30,7 +30,7 @@ def main(argv: Optional[List[str]] = None):
         except Exception:
             pass
 
-    parser = argparse.ArgumentParser(description="JanSetu Eligibility Evaluation Benchmark (Day 30)")
+    parser = argparse.ArgumentParser(description="YojanSetu Eligibility Evaluation Benchmark (Day 30)")
     parser.add_argument("--gold-version", default="v1", help="Target gold dataset version (default: v1)")
     parser.add_argument("--split", choices=["DEV", "VALIDATION", "TEST"], default="DEV", help="Dataset split to evaluate")
     parser.add_argument("--case", default=None, help="Evaluate a single case ID (e.g. ELG-RJ-001) with full drill-down")
@@ -104,7 +104,7 @@ def main(argv: Optional[List[str]] = None):
         return
 
     print(f"\n======================================================================")
-    print(f"JANSETU - ELIGIBILITY EVALUATION BENCHMARK (Day 30)")
+    print(f"YOJANSETU - ELIGIBILITY EVALUATION BENCHMARK (Day 30)")
     print(f"Gold Dataset:  {args.gold_version} ({args.split})")
     if args.tag:
         print(f"Tag Filter:    {args.tag}")

@@ -20,7 +20,7 @@ from app.schemas.extraction import (
     LLMHealthResponse,
 )
 
-logger = logging.getLogger("jansetu.api.extraction")
+logger = logging.getLogger("yojansetu.api.extraction")
 
 router = APIRouter()
 

@@ -17,7 +17,7 @@ from app.embeddings.local_provider import LocalFastEmbedProvider
 from app.search.metadata_builder import SearchMetadataBuilder
 from app.search.semantic_ranker import is_pgvector_available
 
-logger = logging.getLogger("jansetu.search.indexer")
+logger = logging.getLogger("yojansetu.search.indexer")
 
 
 class SchemeSearchIndexService:

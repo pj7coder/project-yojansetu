@@ -12,7 +12,7 @@ from app.llm.interface import (
     StructuredLLMResponse,
 )
 
-logger = logging.getLogger("jansetu.llm.mock")
+logger = logging.getLogger("yojansetu.llm.mock")
 
 T = TypeVar("T", bound=BaseModel)
 

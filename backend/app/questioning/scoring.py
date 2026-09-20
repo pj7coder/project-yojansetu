@@ -6,7 +6,7 @@ from app.core.config import get_settings
 from app.questioning.field_metadata import get_field_metadata
 from app.questioning.schemas import CandidateSchemeMissingInfo
 
-logger = logging.getLogger("jansetu.questioning.scoring")
+logger = logging.getLogger("yojansetu.questioning.scoring")
 
 
 @dataclass

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 27: Ephemeral Voice Response Store.
+YojanSetu - Day 27: Ephemeral Voice Response Store.
 
 Manages temporary synthesized audio responses for citizen playback with strict privacy:
 1. Opaque, unguessable response tokens (zero path traversal risk).

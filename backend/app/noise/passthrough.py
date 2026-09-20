@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Passthrough Noise Suppressor (Default).
+YojanSetu - Day 23: Passthrough Noise Suppressor (Default).
 
 Performs zero alteration to the audio, guaranteeing no degradation
 of quiet consonants, short answers, or regional dialect phonemes.

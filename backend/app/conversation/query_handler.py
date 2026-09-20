@@ -15,7 +15,7 @@ from app.conversation.messages import ConversationMessageCatalog
 from app.conversation.schemas import ConversationMessage
 from app.sessions.models import CitizenSession
 
-logger = logging.getLogger("jansetu.conversation.query_handler")
+logger = logging.getLogger("yojansetu.conversation.query_handler")
 
 # Deterministic regex matchers for citizen query classification
 WHY_PATTERNS = [

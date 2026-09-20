@@ -1,5 +1,5 @@
 """
-JanSetu - Day 30: Eligibility Evaluation Subsystem Schemas.
+YojanSetu - Day 30: Eligibility Evaluation Subsystem Schemas.
 
 Defines typed dataclasses and Pydantic models for deterministic eligibility evaluation:
 - Tri-state decisions (ELIGIBLE, NOT_ELIGIBLE, MORE_INFORMATION_REQUIRED)

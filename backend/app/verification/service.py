@@ -28,7 +28,7 @@ from app.verification.schemas import (
     VerificationRunStatus,
 )
 
-logger = logging.getLogger("jansetu.verification.service")
+logger = logging.getLogger("yojansetu.verification.service")
 
 
 class EvidenceVerificationService:

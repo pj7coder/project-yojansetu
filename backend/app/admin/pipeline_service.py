@@ -17,7 +17,7 @@ from app.database.models.document import Document
 from app.ocr.service import OCRService
 from app.parser.service import DocumentParserService
 
-logger = logging.getLogger("jansetu.admin.pipeline")
+logger = logging.getLogger("yojansetu.admin.pipeline")
 
 
 class AdminPipelineService:

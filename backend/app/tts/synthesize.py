@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Standalone Synthesis CLI.
+YojanSetu - Day 26: Standalone Synthesis CLI.
 
 Utility for developers and evaluators to quickly synthesize arbitrary text
 using local offline TTS providers and export audio to a specified WAV file.
@@ -18,7 +18,7 @@ from app.tts.service import get_speech_synthesis_service
 
 
 async def async_main():
-    parser = argparse.ArgumentParser(description="JanSetu Offline Speech Synthesizer CLI")
+    parser = argparse.ArgumentParser(description="YojanSetu Offline Speech Synthesizer CLI")
     parser.add_argument("--text", type=str, required=True, help="Text to speak")
     parser.add_argument("--output", type=str, default="output.wav", help="Output WAV file path")
     parser.add_argument("--language", type=str, default="hi", help="Language code ('hi' or 'en')")

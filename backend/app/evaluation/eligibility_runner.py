@@ -1,5 +1,5 @@
 """
-JanSetu - Day 30: Production Eligibility Benchmark Runner & Failure Analysis Subsystem.
+YojanSetu - Day 30: Production Eligibility Benchmark Runner & Failure Analysis Subsystem.
 
 Orchestrates:
 - Loading frozen gold eligibility cases via GoldBenchmarkLoader
@@ -48,12 +48,12 @@ from app.evaluation.trace_comparator import TraceComparator
 from app.gold.loader import GoldBenchmarkLoader
 from app.gold.schemas import CaseStatus, DifficultyLevel, EligibilityGoldCase, EligibilityStatus, GoldSplit, GoldTask
 
-logger = logging.getLogger("jansetu.evaluation.eligibility_runner")
+logger = logging.getLogger("yojansetu.evaluation.eligibility_runner")
 
 
 class EligibilityBenchmarkRunner:
     """
-    Evaluates JanSetu's deterministic eligibility engine against human-verified gold ground truth.
+    Evaluates YojanSetu's deterministic eligibility engine against human-verified gold ground truth.
     """
 
     def __init__(
@@ -830,7 +830,7 @@ class EligibilityBenchmarkRunner:
         status_pass_badge = "✅ PASS" if summary.status_accuracy == 1.0 else "❌ FAIL"
         safety_badge = "🛡️ SECURE (0 Critical)" if summary.critical_failure_count == 0 else "⚠️ CRITICAL BREACH"
 
-        md = f"""# 🏛️ JanSetu - Day 30 Eligibility Benchmark Evaluation Report
+        md = f"""# 🏛️ YojanSetu - Day 30 Eligibility Benchmark Evaluation Report
 
 **Run ID**: `{summary.run_id}`  
 **Evaluated At**: `{summary.evaluated_at}`  
@@ -903,6 +903,6 @@ class EligibilityBenchmarkRunner:
 > - **Minimal Burden Invariant**: {"PASSED (Zero Unnecessary Questions)" if summary.total_unnecessary_questions == 0 else "FAILED"}
 > - **Audit Trail Consistency**: {"PASSED (100% Trace Consistent)" if summary.trace_decisive_accuracy == 1.0 else "FAILED"}
 
-*Generated automatically by JanSetu Benchmark Runner v1.0.0*
+*Generated automatically by YojanSetu Benchmark Runner v1.0.0*
 """
         return md

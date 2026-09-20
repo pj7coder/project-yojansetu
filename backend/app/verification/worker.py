@@ -14,7 +14,7 @@ from app.database.models.scheme_draft import SchemeDraft
 from app.database.session import get_db_context
 from app.verification.service import EvidenceVerificationService
 
-logger = logging.getLogger("jansetu.verification.worker")
+logger = logging.getLogger("yojansetu.verification.worker")
 
 
 class EvidenceVerificationWorker:
@@ -91,7 +91,7 @@ class EvidenceVerificationWorker:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="JanSetu Second-Pass Evidence Verification Worker"
+        description="YojanSetu Second-Pass Evidence Verification Worker"
     )
     parser.add_argument(
         "--draft-id", type=str, help="Specific Scheme Draft UUID to verify"

@@ -21,7 +21,7 @@ from app.schemas.department import DepartmentCreate
 from app.schemas.scheme import SchemeCreate
 
 setup_logging("INFO")
-logger = logging.getLogger("jansetu.seed")
+logger = logging.getLogger("yojansetu.seed")
 
 
 def seed_development_data() -> None:

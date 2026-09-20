@@ -1,5 +1,5 @@
 """
-JanSetu - Day 29: Logical Rule Tree Canonicalization & Operator Evaluation.
+YojanSetu - Day 29: Logical Rule Tree Canonicalization & Operator Evaluation.
 
 Implements:
 - Canonical AST rule comparison for eligibility logic

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 28: Gold Benchmark Dataset Loader.
+YojanSetu - Day 28: Gold Benchmark Dataset Loader.
 
 Provides task, split, and status-based dataset loading with
 strict data-leakage protection (stripping expected labels for runtime evaluation).
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 class GoldBenchmarkLoader:
     """
-    Standard loader for the JanSetu Gold-Standard Evaluation Dataset.
+    Standard loader for the YojanSetu Gold-Standard Evaluation Dataset.
     """
 
     def __init__(self, dataset_root: Optional[Union[str, Path]] = None, version: str = "v1"):

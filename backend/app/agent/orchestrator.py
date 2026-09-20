@@ -1,5 +1,5 @@
 """
-ReAct Multi-Step Welfare Agent Orchestrator for JanSetu.
+ReAct Multi-Step Welfare Agent Orchestrator for YojanSetu.
 Performs explicit, verifiable multi-step reasoning:
 Thought -> Tool Call -> Observation -> Thought -> Synthesis.
 Sequences retrieval, deterministic eligibility, benefit calculations,
@@ -27,7 +27,7 @@ from app.agent.tools import (
     search_welfare_schemes,
 )
 
-logger = logging.getLogger("jansetu.agent.orchestrator")
+logger = logging.getLogger("yojansetu.agent.orchestrator")
 
 
 @dataclass

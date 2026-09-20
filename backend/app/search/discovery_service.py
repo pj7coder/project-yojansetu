@@ -21,7 +21,7 @@ from app.search.schemas import (
 )
 from app.search.semantic_ranker import SemanticSchemeRanker, is_pgvector_available
 
-logger = logging.getLogger("jansetu.search.discovery")
+logger = logging.getLogger("yojansetu.search.discovery")
 
 
 class SchemeDiscoveryService:

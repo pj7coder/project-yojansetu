@@ -1,5 +1,5 @@
 """
-JanSetu - Day 31: Unit & Integration Tests for Scheme Discovery & Search Quality Evaluation.
+YojanSetu - Day 31: Unit & Integration Tests for Scheme Discovery & Search Quality Evaluation.
 
 Verifies:
 1. Candidate filtering metrics calculation (Recall, Precision, Unknown-field safety)

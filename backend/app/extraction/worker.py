@@ -17,7 +17,7 @@ from app.extraction.service import SchemeExtractionService
 from app.repositories.chunk_repository import DocumentChunkRepository
 from app.repositories.document_repository import DocumentRepository
 
-logger = logging.getLogger("jansetu.extraction.worker")
+logger = logging.getLogger("yojansetu.extraction.worker")
 
 
 class ExtractionWorker:
@@ -150,7 +150,7 @@ class ExtractionWorker:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JanSetu Local LLM Extraction Worker")
+    parser = argparse.ArgumentParser(description="YojanSetu Local LLM Extraction Worker")
     parser.add_argument(
         "--once",
         action="store_true",

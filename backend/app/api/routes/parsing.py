@@ -16,7 +16,7 @@ from app.schemas.parsed_document import (
     ParseTriggerResponse,
 )
 
-logger = logging.getLogger("jansetu.api.parsing")
+logger = logging.getLogger("yojansetu.api.parsing")
 
 router = APIRouter()
 

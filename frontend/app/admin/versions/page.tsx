@@ -134,7 +134,7 @@ export default function AdminVersionsPage() {
           <span>Day 19 Immutable Scheme Version Architecture</span>
         </div>
         <p className="text-blue-800 leading-relaxed">
-          JanSetu maintains strict version immutability. When government circulars amend eligibility criteria or benefits,
+          YojanSetu maintains strict version immutability. When government circulars amend eligibility criteria or benefits,
           new versions are drafted and verified without overwriting previous versions. Amendments with future legal effective
           dates are labeled as <span className="font-semibold">Future-Effective</span> and remain inactive until their legal start date.
         </p>

@@ -16,7 +16,7 @@ from app.ingestion.storage import StorageManager
 from app.repositories.document_relationship_repository import DocumentRelationshipRepository
 from app.repositories.document_repository import DocumentRepository
 
-logger = logging.getLogger("jansetu.duplicate_detection.service")
+logger = logging.getLogger("yojansetu.duplicate_detection.service")
 
 
 @dataclass

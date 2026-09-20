@@ -1,4 +1,4 @@
-"""JanSetu Document Ingestion Subsystem.
+"""YojanSetu Document Ingestion Subsystem.
 
 Unified pipeline for government document ingestion, validation, hashing, storage,
 and automatic folder monitoring.

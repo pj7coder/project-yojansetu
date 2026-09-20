@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Lightweight Audio Quality Analyzer.
+YojanSetu - Day 23: Lightweight Audio Quality Analyzer.
 
 Computes basic acoustic quality metrics (RMS level, peak amplitude,
 clipping ratio, silence ratio) and flags abnormal conditions (too quiet, clipping).

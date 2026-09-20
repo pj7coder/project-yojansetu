@@ -1,7 +1,7 @@
 {
   "dataset_version": "1.0",
   "benchmark_version": "1.0",
-  "description": "JanSetu Local STT Benchmark Dataset (Rajasthan vernacular welfare domain)",
+  "description": "YojanSetu Local STT Benchmark Dataset (Rajasthan vernacular welfare domain)",
   "total_samples": 40,
   "samples": [
     {

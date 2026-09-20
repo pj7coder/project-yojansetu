@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Speech-to-Text Provider Common Abstraction.
+YojanSetu - Day 22: Speech-to-Text Provider Common Abstraction.
 
 Establishes common interface SpeechToTextProvider keeping benchmark
 evaluation logic completely decoupled from model internals and dependencies.

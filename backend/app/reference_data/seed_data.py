@@ -11,7 +11,7 @@ from app.database.models.department import Department
 from app.database.models.category import Category
 from app.database.session import get_db_context
 
-logger = logging.getLogger("jansetu.reference_data.seed")
+logger = logging.getLogger("yojansetu.reference_data.seed")
 
 DEFAULT_DEPARTMENTS = [
     {

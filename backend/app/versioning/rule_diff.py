@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 from app.versioning.schemas import ChangeItemSchema, ChangeRiskLevel, ChangeType
 
-logger = logging.getLogger("jansetu.versioning.rule_diff")
+logger = logging.getLogger("yojansetu.versioning.rule_diff")
 
 
 class RuleDiffService:

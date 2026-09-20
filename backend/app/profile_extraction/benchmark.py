@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional
 from app.profile_extraction.schemas import CandidateStatus, InputSource
 from app.profile_extraction.service import CitizenProfileExtractionService
 
-logger = logging.getLogger("jansetu.profile_extraction.benchmark")
+logger = logging.getLogger("yojansetu.profile_extraction.benchmark")
 
 
 @dataclass

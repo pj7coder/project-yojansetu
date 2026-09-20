@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Meta MMS-TTS Hindi Provider Adapter.
+YojanSetu - Day 26: Meta MMS-TTS Hindi Provider Adapter.
 
 Implements TextToSpeechProvider using Meta's Massively Multilingual Speech (MMS)
 VITS model checkpoint for Hindi (facebook/mms-tts-hin). Runs 100% offline on CPU.

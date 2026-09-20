@@ -8,7 +8,7 @@ from app.database.models.document import Document
 from app.database.models.scheme import Scheme
 from app.database.models.source import Source
 
-logger = logging.getLogger("jansetu.admin.search")
+logger = logging.getLogger("yojansetu.admin.search")
 
 
 class AdminGlobalSearchService:

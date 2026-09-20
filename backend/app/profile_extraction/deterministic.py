@@ -1,5 +1,5 @@
 """
-Deterministic Profile Extractor for JanSetu.
+Deterministic Profile Extractor for YojanSetu.
 Provides < 2ms fast path for direct expected-field answers and rule-based multi-fact parsing
 without relying on an LLM for simple statements.
 """

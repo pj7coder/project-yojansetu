@@ -1,5 +1,5 @@
 """
-JanSetu - Speech-to-Text (STT) Module.
+YojanSetu - Speech-to-Text (STT) Module.
 
 Provides:
 - SpeechToTextProvider abstraction

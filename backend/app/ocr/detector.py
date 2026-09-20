@@ -6,7 +6,7 @@ import unicodedata
 from app.core.config import get_settings
 from app.ocr.interface import OCRDecisionResult, PageOCRDecision, PageOCRReason
 
-logger = logging.getLogger("jansetu.ocr.detector")
+logger = logging.getLogger("yojansetu.ocr.detector")
 
 # Valid script character ranges for Rajasthan government documents
 # Devanagari: \u0900-\u097F, Devanagari Extended: \uA8E0-\uA8FF

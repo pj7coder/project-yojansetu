@@ -72,7 +72,7 @@ export default function AdminOverviewPage() {
             System Operations Overview
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Real-time observability and operational control across all JanSetu pipelines
+            Real-time observability and operational control across all YojanSetu pipelines
           </p>
         </div>
         <div className="text-[11px] text-slate-400 font-mono">

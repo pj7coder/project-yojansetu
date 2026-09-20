@@ -70,7 +70,7 @@ class SourceMonitorWorker:
     async def run_loop(self):
         """Continuous polling loop."""
         logger.info(
-            f"Starting JanSetu Source Monitoring Worker "
+            f"Starting YojanSetu Source Monitoring Worker "
             f"(poll_interval={self.poll_interval_seconds}s, batch_size={self.batch_size})..."
         )
 
@@ -93,7 +93,7 @@ class SourceMonitorWorker:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JanSetu Source Monitoring Worker")
+    parser = argparse.ArgumentParser(description="YojanSetu Source Monitoring Worker")
     parser.add_argument(
         "--once",
         action="store_true",

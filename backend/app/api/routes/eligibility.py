@@ -15,7 +15,7 @@ from app.schemas.eligibility import (
     MultiSchemeEvaluationRequest,
 )
 
-logger = logging.getLogger("jansetu.api.eligibility")
+logger = logging.getLogger("yojansetu.api.eligibility")
 
 router = APIRouter(prefix="/eligibility", tags=["Deterministic Eligibility Engine"])
 

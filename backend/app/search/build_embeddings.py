@@ -8,7 +8,7 @@ from app.embeddings.local_provider import LocalFastEmbedProvider
 from app.search.indexer import SchemeSearchIndexService
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
-logger = logging.getLogger("jansetu.search.build_embeddings")
+logger = logging.getLogger("yojansetu.search.build_embeddings")
 
 
 def main() -> None:

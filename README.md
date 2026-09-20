@@ -1,4 +1,4 @@
-# JanSetu (जनसेतु)
+# YojanSetu (योजनसेतु)
 
 > **Offline-first vernacular government-scheme discovery assistant for Rajasthan.**
 
@@ -8,7 +8,7 @@
 
 ## 1. Overview
 
-JanSetu is designed to empower citizens of Rajasthan—especially rural, elderly, and Hindi-first users—to discover and understand eligible government welfare schemes using natural voice and vernacular language, functioning reliably offline without cloud API lock-in.
+YojanSetu is designed to empower citizens of Rajasthan—especially rural, elderly, and Hindi-first users—to discover and understand eligible government welfare schemes using natural voice and vernacular language, functioning reliably offline without cloud API lock-in.
 
 ### Critical Architecture Principle:
 ```text
@@ -70,7 +70,7 @@ Sealed Verified Artifact (storage/verified/<draft_id>/)
 
 ## 3. Ollama Setup & Offline Execution
 
-JanSetu uses [Ollama](https://ollama.com/) to run `llama3.2:3b` locally on CPU or GPU.
+YojanSetu uses [Ollama](https://ollama.com/) to run `llama3.2:3b` locally on CPU or GPU.
 
 ### 1. Install & Start Ollama
 Download and install Ollama from [ollama.com](https://ollama.com/download). Start the Ollama background daemon:
@@ -91,7 +91,7 @@ ollama list
 # llama3.2:3b      a80c4f17acd5    2.0 GB    ...
 ```
 
-### 3. Verify Health via JanSetu API
+### 3. Verify Health via YojanSetu API
 ```bash
 curl http://localhost:8000/api/v1/system/llm-health
 # Output:
@@ -110,7 +110,7 @@ storage/
 │       └── original.pdf  # Deterministic, read-only original file
 ├── parsed/               # Structured parsed outputs (Day 6)
 │   └── <document_id>/
-│       ├── document.json # Standardized JanSetu JSON schema
+│       ├── document.json # Standardized YojanSetu JSON schema
 │       └── document.md   # Clean Markdown for human review
 ├── ocr/                  # Corrective OCR outputs (Day 7)
 │   └── <document_id>/
@@ -340,7 +340,7 @@ storage/verified/<scheme_draft_id>/
 
 ## 10. Deterministic Citizen Eligibility Engine (Day 14)
 
-JanSetu evaluates citizen eligibility using pure, deterministic Python rule execution over sealed `HUMAN_VERIFIED` government scheme rules.
+YojanSetu evaluates citizen eligibility using pure, deterministic Python rule execution over sealed `HUMAN_VERIFIED` government scheme rules.
 
 ```text
 Citizen Profile (Partial / Full)
@@ -375,7 +375,7 @@ Structured Reasons & Minimal Missing Fields
 
 ## 11. Candidate Filtering & Semantic Ranking (Day 15)
 
-JanSetu resolves the challenge of scaling eligibility evaluation across thousands of verified schemes using a two-tier retrieval architecture:
+YojanSetu resolves the challenge of scaling eligibility evaluation across thousands of verified schemes using a two-tier retrieval architecture:
 1. **Coarse Candidate Filtering (Fast SQL)**: High-recall, conservative PostgreSQL filtering narrowing verified schemes by jurisdiction, dates, and geographic scope.
 2. **Authoritative Decision**: Day 14 deterministic `EligibilityEngine` evaluates the candidates into `ELIGIBLE`, `MORE_INFORMATION_REQUIRED`, and `NOT_ELIGIBLE` (pruned).
 3. **Multilingual Relevance Ranking (FastEmbed / PGVector)**: Dense multilingual vector embeddings (`sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`, 384 dimensions) ranking eligible schemes by citizen need relevance.
@@ -477,7 +477,7 @@ python -m app.search.build_embeddings --batch-size 32
 
 ## 12. Citizen Multi-Turn Sessions & Intelligent Question Selection (Day 16)
 
-JanSetu features a stateful, privacy-preserving conversational discovery architecture:
+YojanSetu features a stateful, privacy-preserving conversational discovery architecture:
 
 ```text
                Verified Schemes (PostgreSQL)
@@ -644,7 +644,7 @@ Subsequent discovery immediately promotes the agricultural schemes to `ELIGIBLE`
 
 ## 18. Smart Government Source Monitoring & Change Detection (Day 17)
 
-JanSetu monitors approved Rajasthan government webpages to answer:
+YojanSetu monitors approved Rajasthan government webpages to answer:
 > **"Has this official government source changed since the last successful check?"**
 
 ### Architectural Flow:
@@ -848,7 +848,7 @@ python -m app.versioning.worker --once
 
 ## 21. Day 20: Citizen Text Interface + End-to-End Scheme Discovery Flow
 
-Day 20 delivers the first complete citizen-facing product flow of JanSetu. Citizens can find schemes relevant to their personal circumstances without understanding eligibility rules, JSON, government portals, or vector databases.
+Day 20 delivers the first complete citizen-facing product flow of YojanSetu. Citizens can find schemes relevant to their personal circumstances without understanding eligibility rules, JSON, government portals, or vector databases.
 
 ```text
                  Citizen
@@ -910,7 +910,7 @@ Citizen flow route: [http://localhost:3000/citizen](http://localhost:3000/citize
 
 ## 22. Day 21: Admin Dashboard + System Operations Control Center
 
-Day 21 delivers an administrative operations control center over JanSetu's 20-day backend subsystems (Sources, Monitoring, Document Processing, Human Review, Schemes, Versions, Conflicts, Search Index, Rule Cache, and Workers).
+Day 21 delivers an administrative operations control center over YojanSetu's 20-day backend subsystems (Sources, Monitoring, Document Processing, Human Review, Schemes, Versions, Conflicts, Search Index, Rule Cache, and Workers).
 
 ```text
                                Admin Operator
@@ -970,7 +970,7 @@ Day 21 delivers an administrative operations control center over JanSetu's 20-da
 
 ## 23. Day 22: Local STT Benchmark — Whisper vs AI4Bharat IndicConformer
 
-Day 22 delivers an offline-first Speech-to-Text (STT) benchmark evaluation suite for JanSetu's vernacular welfare domain in Rajasthan. Before integrating voice models into the production citizen flow or adding voice activity detection (VAD), we benchmark candidate local STT backends directly against domain-specific speech patterns, accents, dialects, and eligibility-critical entities.
+Day 22 delivers an offline-first Speech-to-Text (STT) benchmark evaluation suite for YojanSetu's vernacular welfare domain in Rajasthan. Before integrating voice models into the production citizen flow or adding voice activity detection (VAD), we benchmark candidate local STT backends directly against domain-specific speech patterns, accents, dialects, and eligibility-critical entities.
 
 ```text
 Citizen Speech (Future Voice Flow)
@@ -1011,7 +1011,7 @@ Deterministic Eligibility Engine (Verified Rule Cache)
 ```
 
 ### Core Benchmark Principles:
-1. **Critical Entity Accuracy > Generic WER**: An ASR model with acceptable Word Error Rate can still be dangerous if it confuses `62` with `26` or `1.5 lakh` with `2.5 lakh`. JanSetu measures literal transcription (`WER`, `CER`) and task-semantic critical fields (`AGE_ACCURACY`, `INCOME_ACCURACY`, `DISTRICT_ACCURACY`, `NEGATION_ACCURACY`, `GOV_TERM_ACCURACY`) separately.
+1. **Critical Entity Accuracy > Generic WER**: An ASR model with acceptable Word Error Rate can still be dangerous if it confuses `62` with `26` or `1.5 lakh` with `2.5 lakh`. YojanSetu measures literal transcription (`WER`, `CER`) and task-semantic critical fields (`AGE_ACCURACY`, `INCOME_ACCURACY`, `DISTRICT_ACCURACY`, `NEGATION_ACCURACY`, `GOV_TERM_ACCURACY`) separately.
 2. **Immutable Raw Transcripts**: Raw transcripts are never overwritten. Metric normalization (Devanagari digit conversion, whitespace, punctuation stripping) is applied strictly on separate comparison copies.
 3. **Zero LLM Post-Correction**: Transcripts are benchmarked directly against ground truth without post-hoc LLM fixing.
 4. **Startup Isolation**: STT models are heavy and are NEVER loaded on standard FastAPI backend startup. Loading is isolated strictly to explicit CLI runs or provider initialization.
@@ -1061,7 +1061,7 @@ Artifacts are saved to: `storage/benchmarks/stt/<run_id>/`:
 
 ## 25. Day 25: Deterministic Conversation Manager & State Machine
 
-JanSetu features a **fully deterministic conversation brain** driving multi-turn citizen interactions across both typed text and speech-to-text transcripts.
+YojanSetu features a **fully deterministic conversation brain** driving multi-turn citizen interactions across both typed text and speech-to-text transcripts.
 
 ### Core Principle
 > **The LLM may understand a sentence, but it never controls the conversation state.**
@@ -1189,7 +1189,7 @@ Speech transcripts automatically trigger critical-value confirmation for numeric
 
 ## 27. Day 26 — Offline Hindi TTS Benchmark, Voice Selection & Safe Speech Rendering Layer
 
-Day 26 introduces the outbound speech synthesis rendering layer for JanSetu, enabling fully local, offline Hindi voice responses for citizen-facing conversation turns.
+Day 26 introduces the outbound speech synthesis rendering layer for YojanSetu, enabling fully local, offline Hindi voice responses for citizen-facing conversation turns.
 
 ```text
                  Citizen Speech Input
@@ -1265,7 +1265,7 @@ python -m app.tts.benchmark --all
 
 ## 28. Day 27 — Complete Offline Voice Loop + Half-Duplex State Control
 
-Day 27 connects the complete vernacular offline voice loop for JanSetu, integrating Day 23 Audio/VAD, Day 22 Selected STT (faster-whisper-tiny INT8 CPU), Day 24 Profile Extraction, Day 25 Deterministic ConversationManager, and Day 26 Selected TTS into a unified, safe, half-duplex voice interface.
+Day 27 connects the complete vernacular offline voice loop for YojanSetu, integrating Day 23 Audio/VAD, Day 22 Selected STT (faster-whisper-tiny INT8 CPU), Day 24 Profile Extraction, Day 25 Deterministic ConversationManager, and Day 26 Selected TTS into a unified, safe, half-duplex voice interface.
 
 ### Architectural Invariant
 Voice is strictly an input/output transport layer to the deterministic `ConversationManager`. STT converts speech to text, deterministic Python rules evaluate eligibility and profile updates, and TTS only speaks verified system responses. No separate LLM voice brain is created.
@@ -1289,7 +1289,7 @@ READY
 ```
 
 ### Key Technical Pillars
-1. **Half-Duplex Safety**: While JanSetu is `SPEAKING`, the microphone is strictly disabled. Direct transitions from `SPEAKING` to `LISTENING` without playback completion or explicit cancellation are forbidden, eliminating acoustic self-capture on laptop speakers and phones.
+1. **Half-Duplex Safety**: While YojanSetu is `SPEAKING`, the microphone is strictly disabled. Direct transitions from `SPEAKING` to `LISTENING` without playback completion or explicit cancellation are forbidden, eliminating acoustic self-capture on laptop speakers and phones.
 2. **Orthogonal State Machines**:
    - **Voice Transport State**: `IDLE`, `READY`, `LISTENING`, `PROCESSING_AUDIO`, `TRANSCRIBING`, `PROCESSING_TURN`, `SYNTHESIZING`, `SPEAKING`, `RECOVERABLE_ERROR`, `STOPPED`.
    - **Semantic Conversation State**: `WAITING_FOR_NEED`, `WAITING_FOR_PROFILE_VALUE`, `WAITING_FOR_CONFIRMATION`, `SHOWING_RESULTS`, `SHOWING_DOCUMENTS`.
@@ -1314,7 +1314,7 @@ READY
 
 ## 30. Day 28 — Gold-Standard Evaluation Dataset & Human-Verified Test Truth
 
-Day 28 builds the independent, versioned, evidence-backed evaluation ground truth for JanSetu across Extraction, Eligibility, Search, and Voice/Conversation, establishing the benchmark truth for Days 29 through 32.
+Day 28 builds the independent, versioned, evidence-backed evaluation ground truth for YojanSetu across Extraction, Eligibility, Search, and Voice/Conversation, establishing the benchmark truth for Days 29 through 32.
 
 ### Architectural Evaluation Pipeline:
 ```text

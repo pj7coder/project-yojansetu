@@ -94,7 +94,7 @@ class ParserRawResult:
 
 
 class BaseParser(ABC):
-    """Abstract interface for all JanSetu document layout parsers."""
+    """Abstract interface for all YojanSetu document layout parsers."""
 
     @property
     @abstractmethod

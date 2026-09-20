@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Temporary Audio Storage & Ephemeral Lifecycle Manager.
+YojanSetu - Day 26: Temporary Audio Storage & Ephemeral Lifecycle Manager.
 
 Ensures citizen-specific speech audio is saved to secure, collision-proof temporary
 files and deleted immediately after serving or upon any synthesis failure.

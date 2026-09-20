@@ -1,5 +1,5 @@
 """
-Controlled conversation states for JanSetu Deterministic State Machine (Day 25).
+Controlled conversation states for YojanSetu Deterministic State Machine (Day 25).
 Represents workflow progress rather than individual fields.
 """
 

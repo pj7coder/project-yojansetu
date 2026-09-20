@@ -26,7 +26,7 @@ from app.repositories.document_repository import DocumentRepository
 from app.repositories.ocr_repository import OCRRunRepository
 from app.ingestion.storage import StorageManager
 
-logger = logging.getLogger("jansetu.ocr.service")
+logger = logging.getLogger("yojansetu.ocr.service")
 
 
 class OCRService:

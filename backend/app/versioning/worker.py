@@ -20,7 +20,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
-logger = logging.getLogger("jansetu.versioning.worker")
+logger = logging.getLogger("yojansetu.versioning.worker")
 
 
 class SchemeVersioningWorker:
@@ -156,7 +156,7 @@ class SchemeVersioningWorker:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JanSetu Scheme Versioning & Amendment Worker")
+    parser = argparse.ArgumentParser(description="YojanSetu Scheme Versioning & Amendment Worker")
     parser.add_argument("--once", action="store_true", help="Run a single pass and exit")
     parser.add_argument("--poll-interval", type=int, default=10, help="Polling interval in seconds")
     parser.add_argument("--batch-size", type=int, default=10, help="Batch size per cycle")

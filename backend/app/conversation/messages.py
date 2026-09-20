@@ -1,5 +1,5 @@
 """
-Deterministic Bilingual Message Catalog for JanSetu Conversation Manager (Day 25).
+Deterministic Bilingual Message Catalog for YojanSetu Conversation Manager (Day 25).
 Pure plain text; no HTML. Standardized for presentation and Day 26 TTS generation.
 """
 
@@ -232,8 +232,8 @@ class ConversationMessageCatalog:
     def completed(cls) -> ConversationMessage:
         return ConversationMessage(
             key="COMPLETED",
-            text_hi="जनसेतु का उपयोग करने के लिए धन्यवाद! आपकी बातचीत समाप्त हो गई है।",
-            text_en="Thank you for using JanSetu! Your conversation is completed.",
+            text_hi="योजनसेतु का उपयोग करने के लिए धन्यवाद! आपकी बातचीत समाप्त हो गई है।",
+            text_en="Thank you for using YojanSetu! Your conversation is completed.",
         )
 
     @classmethod

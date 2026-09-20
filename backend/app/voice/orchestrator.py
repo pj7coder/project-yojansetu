@@ -1,5 +1,5 @@
 """
-JanSetu - Day 27: Voice Conversation Orchestrator.
+YojanSetu - Day 27: Voice Conversation Orchestrator.
 
 Coordinates inbound citizen voice turns and outbound speech responses:
 1. Enforces single active voice turn per session (per-session lock / semaphore).

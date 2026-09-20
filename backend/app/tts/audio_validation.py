@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Audio Output Validation & Postprocessing.
+YojanSetu - Day 26: Audio Output Validation & Postprocessing.
 
 Validates that synthesized audio meets strict quality, duration,
 channel, sample rate, and non-empty acoustic constraints.

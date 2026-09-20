@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 from typing import Dict, List, Optional, Tuple
 
-logger = logging.getLogger("jansetu.profile_extraction.dialects")
+logger = logging.getLogger("yojansetu.profile_extraction.dialects")
 
 DIALECT_LEXICON_VERSION = "1.0"
 

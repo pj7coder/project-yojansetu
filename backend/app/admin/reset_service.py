@@ -12,7 +12,7 @@ from app.core.config import get_settings
 from app.database.session import engine
 from app.sessions.manager import get_session_manager
 
-logger = logging.getLogger("jansetu.admin.reset")
+logger = logging.getLogger("yojansetu.admin.reset")
 
 TABLES_TO_TRUNCATE = [
     # Search & Embeddings

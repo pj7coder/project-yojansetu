@@ -70,7 +70,7 @@ class FastDeterministicEmbeddingProvider(EmbeddingProvider):
 
 
 setup_logging("INFO")
-logger = logging.getLogger("jansetu.seed_schemes")
+logger = logging.getLogger("yojansetu.seed_schemes")
 settings = get_settings()
 
 SCHEMES_SPEC = [

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26 Tests: Speech Text Normalization.
+YojanSetu - Day 26 Tests: Speech Text Normalization.
 
 Verifies deterministic expansion of currency, numbers, ages, percentages,
 dates, boundary operators, acronyms, and Rajasthan districts, while

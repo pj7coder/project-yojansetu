@@ -44,7 +44,7 @@ export function VoiceControls({
       {/* Primary Push-to-Talk / Control Button */}
       <div className="relative flex items-center justify-center">
         {isPlaying ? (
-          // Stop playback button while JanSetu is speaking
+          // Stop playback button while YojanSetu is speaking
           <button
             type="button"
             onClick={onStopSpeaking}
@@ -101,7 +101,7 @@ export function VoiceControls({
           onClick={onReplay}
           disabled={isRecording || isProcessing || isPlaying}
           className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium transition-colors disabled:opacity-50"
-          title={isHi ? 'जनसेतु की पिछली बात दोबारा सुनें' : 'Replay last response'}
+          title={isHi ? 'योजनसेतु की पिछली बात दोबारा सुनें' : 'Replay last response'}
         >
           🔊 {isHi ? 'दोबारा सुनें' : 'Replay'}
         </button>

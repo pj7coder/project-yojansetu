@@ -1,5 +1,5 @@
 """
-JanSetu - Day 27: Voice Loop Package.
+YojanSetu - Day 27: Voice Loop Package.
 """
 
 from app.voice.orchestrator import VoiceConversationOrchestrator, get_voice_orchestrator

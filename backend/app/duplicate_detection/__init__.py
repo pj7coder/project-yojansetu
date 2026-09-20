@@ -1,4 +1,4 @@
-"""JanSetu Duplicate Detection and Document Version Identification Subsystem."""
+"""YojanSetu Duplicate Detection and Document Version Identification Subsystem."""
 from app.duplicate_detection.fingerprint import (
     TextFingerprint,
     extract_text_fingerprint,

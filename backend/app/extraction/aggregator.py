@@ -14,7 +14,7 @@ from app.repositories.chunk_repository import DocumentChunkRepository
 from app.repositories.document_repository import DocumentRepository
 from app.repositories.extraction_repository import ExtractionRunRepository
 
-logger = logging.getLogger("jansetu.extraction.aggregator")
+logger = logging.getLogger("yojansetu.extraction.aggregator")
 
 
 class DocumentExtractionAggregator:

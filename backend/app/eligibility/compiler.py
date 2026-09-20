@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Set, Union
 from app.eligibility.models import ASTNode, CompiledScheme, ConditionNode, ExclusionNode, GroupNode
 from app.normalization.schemas import LogicalGroupType, OperatorEnum
 
-logger = logging.getLogger("jansetu.eligibility.compiler")
+logger = logging.getLogger("yojansetu.eligibility.compiler")
 
 MAX_RULE_DEPTH = 10
 SUPPORTED_SCHEMA_VERSIONS = {"1.0"}

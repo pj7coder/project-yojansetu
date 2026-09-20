@@ -1,5 +1,5 @@
 """
-Unit and integration tests for JanSetu's decorated Python tool calling framework.
+Unit and integration tests for YojanSetu's decorated Python tool calling framework.
 Verifies that all tools adhere to typing, generate valid schemas, and execute real domain logic.
 """
 

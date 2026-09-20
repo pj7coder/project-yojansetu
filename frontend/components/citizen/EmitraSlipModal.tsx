@@ -78,7 +78,7 @@ export function EmitraSlipModal({
           {/* Slip Header */}
           <div className="border-b-2 border-slate-900 pb-4 text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-orange-600 text-white font-black text-2xl mb-2">
-              JS
+              YS
             </div>
             <div className="text-sm font-black tracking-wider uppercase text-slate-800">
               Government of Rajasthan • राजस्थान सरकार

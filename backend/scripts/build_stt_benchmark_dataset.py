@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Benchmark Dataset Builder.
+YojanSetu - Day 22: Benchmark Dataset Builder.
 
 Generates:
 1. tests/stt_benchmark/manifest.json (annotated benchmark utterances)
@@ -595,7 +595,7 @@ def main():
     manifest_data = {
         "dataset_version": "1.0",
         "benchmark_version": "1.0",
-        "description": "JanSetu Local STT Benchmark Dataset (Rajasthan vernacular welfare domain)",
+        "description": "YojanSetu Local STT Benchmark Dataset (Rajasthan vernacular welfare domain)",
         "total_samples": len(manifest_samples),
         "samples": manifest_samples,
     }

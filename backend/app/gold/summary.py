@@ -1,5 +1,5 @@
 """
-JanSetu - Day 28: Gold Dataset Summary & Reporting Utilities.
+YojanSetu - Day 28: Gold Dataset Summary & Reporting Utilities.
 
 Generates aggregate metrics, task and split distributions, coverage matrices,
 and human review reports.
@@ -65,7 +65,7 @@ class GoldDatasetReporter:
         summary = self.generate_summary()
         lines = [
             "=" * 70,
-            f"JANSETU — GOLD EVALUATION DATASET SUMMARY (v{summary['dataset_version']})",
+            f"YOJANSETU — GOLD EVALUATION DATASET SUMMARY (v{summary['dataset_version']})",
             f"Dataset SHA-256: {summary['dataset_sha256'] or 'NOT_FROZEN'}",
             f"Total Registered Cases: {summary['total_cases']}",
             "=" * 70,
@@ -119,7 +119,7 @@ class GoldDatasetReporter:
 if __name__ == "__main__":
     import argparse
     from app.gold.cli import run_summary
-    parser = argparse.ArgumentParser(description="Summarize JanSetu Gold Dataset")
+    parser = argparse.ArgumentParser(description="Summarize YojanSetu Gold Dataset")
     parser.add_argument("--version", default="v1", help="Dataset version folder (default: v1)")
     args = parser.parse_args()
     run_summary(args)

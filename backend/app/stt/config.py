@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Speech-to-Text Benchmark Configuration.
+YojanSetu - Day 22: Speech-to-Text Benchmark Configuration.
 
 Centralizes configuration parameters for dataset paths, model names,
 devices, and evaluation flags. Does NOT hardcode system-specific paths.

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Mock / Offline Deterministic TTS Provider.
+YojanSetu - Day 26: Mock / Offline Deterministic TTS Provider.
 
 Generates valid 16-bit PCM WAV audio for automated testing, continuous integration,
 and degraded text-only fallback operation without requiring neural network weights.

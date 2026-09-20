@@ -1,5 +1,5 @@
 """
-JanSetu - Day 32: Voice Benchmark CLI Entrypoint.
+YojanSetu - Day 32: Voice Benchmark CLI Entrypoint.
 
 Usage:
     python -m app.evaluation.voice --gold-version v1 --split DEV
@@ -17,12 +17,12 @@ import sys
 from app.evaluation.voice_runner import VoiceBenchmarkRunner
 from app.gold.schemas import GoldSplit
 
-logger = logging.getLogger("jansetu.evaluation.voice")
+logger = logging.getLogger("yojansetu.evaluation.voice")
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="JanSetu Day 32 - Voice System Quality Benchmark Runner"
+        description="YojanSetu Day 32 - Voice System Quality Benchmark Runner"
     )
     parser.add_argument(
         "--gold-version",
@@ -88,7 +88,7 @@ def main():
     )
 
     print("=" * 80)
-    print("  JANSETU — VOICE SYSTEM QUALITY BENCHMARK (DAY 32)")
+    print("  YOJANSETU — VOICE SYSTEM QUALITY BENCHMARK (DAY 32)")
     print(f"  Gold Version: {summary.gold_version} | Split: {summary.split}")
     if args.case:
         print(f"  Target Case: {args.case}")

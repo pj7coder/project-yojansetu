@@ -1,5 +1,5 @@
 """
-JanSetu - Day 27 Tests: Voice Transport State Machine.
+YojanSetu - Day 27 Tests: Voice Transport State Machine.
 
 Verifies:
 1. Legal state transitions matching the physical turn-taking lifecycle.

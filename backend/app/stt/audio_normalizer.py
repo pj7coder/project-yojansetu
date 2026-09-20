@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Audio Normalizer.
+YojanSetu - Day 22: Audio Normalizer.
 
 Standardizes all input audio formats (WAV, MP3, M4A, OGG, FLAC) into the
 canonical baseline required for fair, reproducible STT evaluation:
@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Optional, Tuple
 import wave
 
-logger = logging.getLogger("jansetu.stt.audio_normalizer")
+logger = logging.getLogger("yojansetu.stt.audio_normalizer")
 
 ALLOWED_AUDIO_EXTENSIONS = {".wav", ".mp3", ".m4a", ".ogg", ".flac", ".aac", ".webm"}
 MAX_AUDIO_SIZE_BYTES = 50 * 1024 * 1024  # 50 MB limit

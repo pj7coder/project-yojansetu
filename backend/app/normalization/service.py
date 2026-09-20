@@ -39,7 +39,7 @@ from app.repositories.document_repository import DocumentRepository
 from app.repositories.extraction_repository import ExtractionRunRepository
 from app.repositories.scheme_draft_repository import NormalizationRunRepository, SchemeDraftRepository
 
-logger = logging.getLogger("jansetu.normalization.service")
+logger = logging.getLogger("yojansetu.normalization.service")
 
 
 class SchemeNormalizationService:

@@ -10,7 +10,7 @@ from app.database.session import get_db_context
 from app.duplicate_detection.service import DuplicateDetectionService
 from app.repositories.document_repository import DocumentRepository
 
-logger = logging.getLogger("jansetu.duplicate_detection.worker")
+logger = logging.getLogger("yojansetu.duplicate_detection.worker")
 
 
 class DuplicateDetectionWorker:
@@ -71,7 +71,7 @@ class DuplicateDetectionWorker:
 
 def main():
     """CLI entrypoint for running duplicate detection worker."""
-    parser = argparse.ArgumentParser(description="JanSetu Document Duplicate & Version Detection Worker")
+    parser = argparse.ArgumentParser(description="YojanSetu Document Duplicate & Version Detection Worker")
     parser.add_argument("--once", action="store_true", help="Process pending batch once and exit")
     parser.add_argument("--batch-size", type=int, default=20, help="Number of documents to process per batch")
     parser.add_argument("--interval", type=float, default=3.0, help="Polling interval in seconds (default 3.0)")
@@ -79,7 +79,7 @@ def main():
 
     settings = get_settings()
     setup_logging(log_level=settings.log_level)
-    logger.info("=== JANSETU DUPLICATE DETECTION WORKER ===")
+    logger.info("=== YOJANSETU DUPLICATE DETECTION WORKER ===")
 
     worker = DuplicateDetectionWorker()
     if args.once:

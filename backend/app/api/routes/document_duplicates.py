@@ -22,7 +22,7 @@ from app.schemas.duplicate import (
     DuplicateResolutionRequest,
 )
 
-logger = logging.getLogger("jansetu.api.document_duplicates")
+logger = logging.getLogger("yojansetu.api.document_duplicates")
 router = APIRouter()
 
 duplicate_service = DuplicateDetectionService()

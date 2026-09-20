@@ -10,7 +10,7 @@ import uuid
 
 from app.database.session import get_db_context
 
-logger = logging.getLogger("jansetu.pipeline.auto_runner")
+logger = logging.getLogger("yojansetu.pipeline.auto_runner")
 
 
 # ---------------------------------------------------------------------------

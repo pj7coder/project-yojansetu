@@ -6,7 +6,7 @@ import pymupdf
 from app.core.config import get_settings
 from app.ocr.interface import OCRPageRenderException
 
-logger = logging.getLogger("jansetu.ocr.renderer")
+logger = logging.getLogger("yojansetu.ocr.renderer")
 
 
 class PDFPageRenderer:

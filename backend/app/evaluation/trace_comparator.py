@@ -1,5 +1,5 @@
 """
-JanSetu - Day 30: Trace Comparator & Decisive Condition Verification.
+YojanSetu - Day 30: Trace Comparator & Decisive Condition Verification.
 
 Validates that:
 1. Final eligibility status strictly agrees with the reasoning trace.

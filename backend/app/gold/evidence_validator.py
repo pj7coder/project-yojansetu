@@ -1,5 +1,5 @@
 """
-JanSetu - Day 28: Evidence & Provenance Validator.
+YojanSetu - Day 28: Evidence & Provenance Validator.
 
 Verifies that all gold dataset cases reference real, existing source
 artifacts, verified scheme versions, and un-tampered audio recordings.

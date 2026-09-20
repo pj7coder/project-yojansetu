@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Speech-to-Text Benchmark Unit & Integration Test Suite.
+YojanSetu - Day 22: Speech-to-Text Benchmark Unit & Integration Test Suite.
 
 Tests:
 1. AudioNormalizer (16kHz mono baseline, validation, corrupt audio handling)

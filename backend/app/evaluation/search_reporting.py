@@ -1,5 +1,5 @@
 """
-JanSetu - Day 31: Search Benchmark Artifact Generator & Markdown Reporter.
+YojanSetu - Day 31: Search Benchmark Artifact Generator & Markdown Reporter.
 
 Persists immutable evaluation artifacts:
 - run_manifest.json, summary.json, cases.jsonl, failures.jsonl, critical_failures.json
@@ -139,7 +139,7 @@ class SearchBenchmarkReporter:
         strong_cases = [c for c in cases if c.strict_case_pass and not c.expected_empty and c.reciprocal_rank == 1.0]
 
         lines = [
-            f"# JANSETU — SEARCH + DISCOVERY QUALITY EVALUATION REPORT",
+            f"# YOJANSETU — SEARCH + DISCOVERY QUALITY EVALUATION REPORT",
             f"",
             f"**Run ID**: `{summary.run_id}`  ",
             f"**Timestamp**: `{summary.timestamp}`  ",

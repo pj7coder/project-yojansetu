@@ -1,5 +1,5 @@
 """
-JanSetu - Day 27 Tests: Voice Orchestration, Locking, Idempotency & Recovery.
+YojanSetu - Day 27 Tests: Voice Orchestration, Locking, Idempotency & Recovery.
 
 Verifies:
 1. Concurrency: Exactly one active voice turn per citizen session.

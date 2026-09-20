@@ -13,7 +13,7 @@ from app.validation.schemas import (
 )
 from app.validation.service import SchemeValidationService
 
-logger = logging.getLogger("jansetu.api.validation")
+logger = logging.getLogger("yojansetu.api.validation")
 
 router = APIRouter()
 

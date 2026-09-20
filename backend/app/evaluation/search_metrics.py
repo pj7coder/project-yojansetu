@@ -1,5 +1,5 @@
 """
-JanSetu - Day 31: Unified Search & Scheme Discovery Evaluation Schemas.
+YojanSetu - Day 31: Unified Search & Scheme Discovery Evaluation Schemas.
 
 Defines typed data models for search benchmark case results,
 aggregated metrics summaries, index health status, and strict pass criteria.

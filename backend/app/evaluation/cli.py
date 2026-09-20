@@ -1,5 +1,5 @@
 """
-JanSetu - Day 29: Benchmark Command-Line Interface.
+YojanSetu - Day 29: Benchmark Command-Line Interface.
 
 Commands:
   python -m app.evaluation.extraction --gold-version v1 --split DEV
@@ -18,11 +18,11 @@ from app.evaluation.extraction_runner import ExtractionBenchmarkRunner
 from app.gold.schemas import GoldSplit
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
-logger = logging.getLogger("jansetu.evaluation.cli")
+logger = logging.getLogger("yojansetu.evaluation.cli")
 
 
 def main(argv: Optional[List[str]] = None):
-    parser = argparse.ArgumentParser(description="JanSetu Extraction Evaluation Benchmark (Day 29)")
+    parser = argparse.ArgumentParser(description="YojanSetu Extraction Evaluation Benchmark (Day 29)")
     parser.add_argument("--gold-version", default="v1", help="Target gold dataset version (default: v1)")
     parser.add_argument("--split", choices=["DEV", "VALIDATION", "TEST"], default="DEV", help="Dataset split to evaluate")
     parser.add_argument("--case", default=None, help="Evaluate a single case ID (e.g. EXT-RJ-001) with full drill-down")
@@ -81,7 +81,7 @@ def main(argv: Optional[List[str]] = None):
         return
 
     print(f"\n======================================================================")
-    print(f"JANSETU - EXTRACTION BENCHMARK RUNNER (Day 29)")
+    print(f"YOJANSETU - EXTRACTION BENCHMARK RUNNER (Day 29)")
     print(f"Gold Dataset:  {args.gold_version} ({args.split})")
     if args.tag:
         print(f"Tag Filter:    {args.tag}")

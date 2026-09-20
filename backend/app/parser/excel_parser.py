@@ -15,13 +15,13 @@ from app.parser.interface import (
     RawTableData,
 )
 
-logger = logging.getLogger("jansetu.parser.excel")
+logger = logging.getLogger("yojansetu.parser.excel")
 
 
 class ExcelLayoutParser(BaseParser):
     """
     High-performance layout parser for government spreadsheets (.xlsx, .xls, .csv).
-    Converts worksheets into canonical JanSetu structured document blocks and tables,
+    Converts worksheets into canonical YojanSetu structured document blocks and tables,
     enabling full extraction, normalization, and direct database publication.
     """
 

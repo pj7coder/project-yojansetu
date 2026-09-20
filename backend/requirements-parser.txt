@@ -1,4 +1,4 @@
-# JanSetu — Day 6 Parser Dependencies (MinerU / magic-pdf)
+# YojanSetu — Day 6 Parser Dependencies (MinerU / magic-pdf)
 # Note: For production systems with GPU / CUDA acceleration, install this group:
 # pip install -r requirements-parser.txt
 #

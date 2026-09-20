@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Offline Audio Front-End & VAD Configuration.
+YojanSetu - Day 23: Offline Audio Front-End & VAD Configuration.
 
 Centralizes configuration parameters for audio limits, normalization,
 Silero VAD thresholds, utterance segmentation, noise suppression,

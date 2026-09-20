@@ -1,5 +1,5 @@
 """
-JanSetu - Day 32: Voice Benchmark Artifact Generator & Markdown Reporter.
+YojanSetu - Day 32: Voice Benchmark Artifact Generator & Markdown Reporter.
 
 Persists immutable evaluation artifacts into storage/benchmarks/voice/<run_id>/:
 1. run_manifest.json
@@ -138,7 +138,7 @@ class VoiceBenchmarkReporter:
     ) -> str:
         """Generates the comprehensive Day 32 Voice System QA Markdown report."""
         lines: List[str] = [
-            "# JANSETU — FINAL VOICE SYSTEM QA REPORT (DAY 32)",
+            "# YOJANSETU — FINAL VOICE SYSTEM QA REPORT (DAY 32)",
             "",
             f"**Run ID**: `{summary.run_id}`  ",
             f"**Timestamp**: `{summary.timestamp}`  ",

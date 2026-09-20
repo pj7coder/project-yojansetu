@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Offline Audio Front-End, Silero VAD & Preprocessing Tests.
+YojanSetu - Day 23: Offline Audio Front-End, Silero VAD & Preprocessing Tests.
 
 Tests:
 - Audio validation, formats (WAV, WebM, stereo, multiple sample rates), size & duration limits

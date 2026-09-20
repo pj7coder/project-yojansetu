@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Offline Audio Front-End & Silero VAD Benchmark Suite.
+YojanSetu - Day 23: Offline Audio Front-End & Silero VAD Benchmark Suite.
 
 Evaluates:
 1. Speech detection recall across clean, noisy, dialect, and short-answer speech
@@ -32,7 +32,7 @@ from app.noise.passthrough import PassthroughNoiseSuppressor
 from app.noise.spectral import SpectralGatingNoiseSuppressor
 from app.vad.silero import SileroVADProvider
 
-logger = logging.getLogger("jansetu.audio.benchmark")
+logger = logging.getLogger("yojansetu.audio.benchmark")
 
 
 class AudioFrontendBenchmarkRunner:
@@ -333,7 +333,7 @@ class AudioFrontendBenchmarkRunner:
         denoise_results: List[Dict[str, Any]],
     ) -> str:
         lines = [
-            f"# JanSetu Day 23: Audio Front-End & Silero VAD Benchmark Report",
+            f"# YojanSetu Day 23: Audio Front-End & Silero VAD Benchmark Report",
             f"",
             f"- **Run ID**: `{summary['run_id']}`",
             f"- **Timestamp**: `{summary['timestamp']}`",

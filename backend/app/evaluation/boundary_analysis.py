@@ -1,5 +1,5 @@
 """
-JanSetu - Day 30: Numeric, Percentage & Relational Boundary Analysis.
+YojanSetu - Day 30: Numeric, Percentage & Relational Boundary Analysis.
 
 Provides rigorous testing for exact edge boundaries:
 - Age >= 60 (59 vs 60 vs 61)

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Audio Preprocessing and Transcription Schemas.
+YojanSetu - Day 23: Audio Preprocessing and Transcription Schemas.
 
 Defines Pydantic models and Enums for audio validation, quality analysis,
 VAD results, utterance segments, and transcription responses.

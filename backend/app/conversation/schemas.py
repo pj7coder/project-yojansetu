@@ -1,5 +1,5 @@
 """
-Pydantic schemas and DTOs for JanSetu Conversation Manager (Day 25).
+Pydantic schemas and DTOs for YojanSetu Conversation Manager (Day 25).
 Provides structured contracts for client turns, responses, and field input descriptors.
 """
 

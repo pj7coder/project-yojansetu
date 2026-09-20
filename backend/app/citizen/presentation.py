@@ -1,5 +1,5 @@
 """
-Deterministic citizen explanation and presentation service for JanSetu.
+Deterministic citizen explanation and presentation service for YojanSetu.
 Translates Layer 3 canonical scheme models and Day 14 deterministic eligibility results
 into plain, accessible Hindi and English presentation structures without using an LLM.
 """
@@ -22,7 +22,7 @@ from app.eligibility.result import ConditionEvaluationResult, EligibilityResult
 from app.monitoring.safety import validate_url_safety
 from app.questioning.field_metadata import get_field_metadata
 
-logger = logging.getLogger("jansetu.citizen.presentation")
+logger = logging.getLogger("yojansetu.citizen.presentation")
 
 
 class CitizenExplanationService:

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 31: Multilingual Retrieval Analysis & Slice Performance Evaluator.
+YojanSetu - Day 31: Multilingual Retrieval Analysis & Slice Performance Evaluator.
 
 Evaluates performance across linguistic and query intent dimensions:
 - Independent metrics for Hindi, English, Hinglish, and Dialect

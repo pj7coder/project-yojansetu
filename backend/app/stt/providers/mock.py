@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Mock STT Provider for Testing and Isolation.
+YojanSetu - Day 22: Mock STT Provider for Testing and Isolation.
 
 Provides deterministic responses and failure simulation for unit testing
 and CI/CD pipelines without downloading neural network checkpoints.

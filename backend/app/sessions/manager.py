@@ -8,7 +8,7 @@ from app.core.config import get_settings
 from app.eligibility.profile import CitizenProfile
 from app.sessions.models import CitizenSession, FieldRecord, FieldValueState
 
-logger = logging.getLogger("jansetu.sessions.manager")
+logger = logging.getLogger("yojansetu.sessions.manager")
 
 
 class SessionNotFoundError(Exception):

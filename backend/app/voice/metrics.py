@@ -1,5 +1,5 @@
 """
-JanSetu - Day 27: Aggregated Voice Metrics.
+YojanSetu - Day 27: Aggregated Voice Metrics.
 
 Tracks non-PII operational counters and latency statistics across voice turns.
 Strict invariant: Never stores citizen speech text, income, demographics, or audio.

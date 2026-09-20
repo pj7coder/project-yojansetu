@@ -1,4 +1,4 @@
-# JanSetu — Gold Dataset Annotation & Human Verification Guidelines (v1.0)
+# YojanSetu — Gold Dataset Annotation & Human Verification Guidelines (v1.0)
 
 > **Mandatory Standard Operating Procedure for Gold-Standard Reference Truth**  
 > *Establishing independent, evidence-backed evaluation benchmarks for Days 29–32.*

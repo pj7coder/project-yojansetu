@@ -1,5 +1,5 @@
 """
-JanSetu - Day 27: Schemas and DTOs for Voice Loop & Turn Orchestration.
+YojanSetu - Day 27: Schemas and DTOs for Voice Loop & Turn Orchestration.
 
 Defines strict contracts for incoming voice turn requests, outgoing results,
 audio retrieval descriptors, error classifications, and recovery suggestions.

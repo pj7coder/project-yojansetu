@@ -22,7 +22,7 @@ ELIGIBILITY_ENGINE_VERSION = "1.0"
 
 class EligibilityEngine:
     """
-    JanSetu Pure Python Deterministic Eligibility Engine.
+    YojanSetu Pure Python Deterministic Eligibility Engine.
     Evaluates human-verified government scheme rules against citizen profiles.
     Decisions strictly stem from verified rule trees; zero LLM reasoning.
     """

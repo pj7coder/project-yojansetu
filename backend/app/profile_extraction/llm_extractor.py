@@ -22,9 +22,9 @@ from app.profile_extraction.schemas import (
     InputSource,
 )
 
-logger = logging.getLogger("jansetu.profile_extraction.llm_extractor")
+logger = logging.getLogger("yojansetu.profile_extraction.llm_extractor")
 
-EXTRACTION_SYSTEM_PROMPT = """You are a strict data extraction parser for JanSetu, a citizen assistance system for Rajasthan.
+EXTRACTION_SYSTEM_PROMPT = """You are a strict data extraction parser for YojanSetu, a citizen assistance system for Rajasthan.
 Your task is to extract explicitly stated citizen profile facts from the provided citizen text.
 
 MANDATORY SAFETY AND ANTI-HALLUCINATION RULES:

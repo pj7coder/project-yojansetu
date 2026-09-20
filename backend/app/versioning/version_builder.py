@@ -13,7 +13,7 @@ from app.database.base import utc_now
 from app.database.models.scheme import SchemeVersion
 from app.database.models.scheme_change_set import SchemeChangeSet
 
-logger = logging.getLogger("jansetu.versioning.version_builder")
+logger = logging.getLogger("yojansetu.versioning.version_builder")
 
 
 class SchemeVersionBuilder:

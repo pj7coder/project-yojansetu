@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: TTS Schemas, Error Codes, and Data Transfer Objects.
+YojanSetu - Day 26: TTS Schemas, Error Codes, and Data Transfer Objects.
 """
 
 from enum import Enum

@@ -9,7 +9,7 @@ from typing import Optional
 
 from app.core.config import get_settings
 
-logger = logging.getLogger("jansetu.ingestion.storage")
+logger = logging.getLogger("yojansetu.ingestion.storage")
 
 
 class StorageManager:

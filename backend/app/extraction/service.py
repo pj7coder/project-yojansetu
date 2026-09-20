@@ -34,7 +34,7 @@ from app.llm.ollama import OllamaProvider
 from app.repositories.chunk_repository import DocumentChunkRepository
 from app.repositories.extraction_repository import ExtractionRunRepository
 
-logger = logging.getLogger("jansetu.extraction.service")
+logger = logging.getLogger("yojansetu.extraction.service")
 
 
 class SchemeExtractionService:

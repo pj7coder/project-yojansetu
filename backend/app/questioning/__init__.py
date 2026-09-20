@@ -1,4 +1,4 @@
-"""Intelligent next-question selection package for JanSetu."""
+"""Intelligent next-question selection package for YojanSetu."""
 from app.questioning.field_metadata import FIELD_METADATA_REGISTRY, FieldMetadata, get_field_metadata
 from app.questioning.schemas import (
     CandidateSchemeMissingInfo,

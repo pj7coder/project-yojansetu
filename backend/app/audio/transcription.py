@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Audio Transcription Composition Service.
+YojanSetu - Day 23: Audio Transcription Composition Service.
 
 Composes the AudioProcessingPipeline and the Day 22 Selected Speech-to-Text Provider
 (Whisper INT8 with Devanagari prompt conditioning).

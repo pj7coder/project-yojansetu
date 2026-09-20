@@ -29,7 +29,7 @@ from app.database.models.scheme import Scheme, SchemeVersion
 from app.database.models.scheme_draft import SchemeDraft
 from app.search.indexer import SchemeSearchIndexService
 
-logger = logging.getLogger("jansetu.services.scheme_conversion")
+logger = logging.getLogger("yojansetu.services.scheme_conversion")
 
 
 class SchemeConversionService:

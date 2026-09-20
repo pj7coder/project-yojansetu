@@ -12,7 +12,7 @@ from app.ingestion.storage import StorageManager
 from app.ingestion.validator import DocumentValidationService, DocumentValidationResult
 from app.repositories.document_repository import DocumentRepository
 
-logger = logging.getLogger("jansetu.ingestion.service")
+logger = logging.getLogger("yojansetu.ingestion.service")
 
 
 class DocumentIngestionError(Exception):
@@ -70,7 +70,7 @@ class DocumentIngestionService:
         move_file: bool = True,
     ) -> Document:
         """
-        Ingest a candidate document into JanSetu.
+        Ingest a candidate document into YojanSetu.
 
         :param db: Active SQLAlchemy database session.
         :param file_path: Path to the temporary or incoming document file.

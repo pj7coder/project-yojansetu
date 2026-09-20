@@ -7,7 +7,7 @@ import unicodedata
 from app.core.config import get_settings
 from app.embeddings.interface import EmbeddingProvider
 
-logger = logging.getLogger("jansetu.embeddings.local")
+logger = logging.getLogger("yojansetu.embeddings.local")
 
 _GLOBAL_EMBEDDING_MODEL = None
 

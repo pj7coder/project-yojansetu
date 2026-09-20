@@ -9,7 +9,7 @@ import uuid
 from app.core.config import get_settings
 from app.database.models.human_review_session import HumanReviewSession
 
-logger = logging.getLogger("jansetu.review.artifact_builder")
+logger = logging.getLogger("yojansetu.review.artifact_builder")
 
 
 class VerifiedArtifactBuilder:

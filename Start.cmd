@@ -1,10 +1,10 @@
 @echo off
 setlocal
-title JanSetu (जनसेतु) - Launcher
+title YojanSetu (योजनसेतु) - Launcher
 cd /d "%~dp0"
 
 echo ========================================================================
-echo    JANSETU (जनसेतु) - Government Scheme Assistant Launcher
+echo    YOJANSETU (योजनसेतु) - Government Scheme Assistant Launcher
 echo    Offline-First Vernacular ReAct Agent & Citizen Welfare Platform
 echo ========================================================================
 echo.
@@ -20,10 +20,10 @@ if not exist "%~dp0backend\.venv\Scripts\python.exe" (
 )
 
 echo [*] Starting Backend API Server (FastAPI on http://127.0.0.1:8000)...
-start "JanSetu - Backend API (:8000)" cmd /k "cd /d ""%~dp0backend"" && "".venv\Scripts\python.exe"" -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+start "YojanSetu - Backend API (:8000)" cmd /k "cd /d ""%~dp0backend"" && "".venv\Scripts\python.exe"" -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
 
 echo [*] Starting Frontend Application (Next.js on http://localhost:3000)...
-start "JanSetu - Frontend Web (:3000)" cmd /k "set NODE_OPTIONS=--max-old-space-size=4096 && cd /d ""%~dp0frontend"" && npm run dev"
+start "YojanSetu - Frontend Web (:3000)" cmd /k "set NODE_OPTIONS=--max-old-space-size=4096 && cd /d ""%~dp0frontend"" && npm run dev"
 
 echo.
 echo [*] Waiting 5 seconds for servers to initialize...
@@ -34,7 +34,7 @@ start http://localhost:3000/citizen
 
 echo.
 echo ========================================================================
-echo   JANSETU IS RUNNING!
+echo   YOJANSETU IS RUNNING!
 echo ========================================================================
 echo   * Citizen Discovery Portal : http://localhost:3000/citizen
 echo   * Live Eligibility Tool    : http://localhost:3000/citizen (Simulator)

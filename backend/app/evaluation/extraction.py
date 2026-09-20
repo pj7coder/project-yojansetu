@@ -1,5 +1,5 @@
 """
-JanSetu - Day 29: python -m app.evaluation.extraction Entrypoint.
+YojanSetu - Day 29: python -m app.evaluation.extraction Entrypoint.
 """
 
 from app.evaluation.cli import main

@@ -1,1 +1,1 @@
-"""Admin domain package for JanSetu operations dashboard and control center."""
+"""Admin domain package for YojanSetu operations dashboard and control center."""

@@ -43,7 +43,7 @@ from app.review.schemas import (
 from app.validation.service import SchemeValidationService
 from app.verification.service import EvidenceVerificationService
 
-logger = logging.getLogger("jansetu.review.service")
+logger = logging.getLogger("yojansetu.review.service")
 
 
 class HumanReviewService:

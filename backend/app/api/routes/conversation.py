@@ -20,7 +20,7 @@ from app.conversation.states import ConversationState
 from app.database.session import get_db
 from app.sessions.manager import SessionNotFoundError
 
-logger = logging.getLogger("jansetu.api.conversation")
+logger = logging.getLogger("yojansetu.api.conversation")
 
 router = APIRouter(prefix="/citizen/sessions", tags=["Citizen Conversational Flow"])
 
@@ -36,7 +36,7 @@ def process_conversation_turn(
     db: Session = Depends(get_db),
 ) -> ConversationResponse:
     """
-    Executes a single conversational turn in JanSetu's deterministic state machine:
+    Executes a single conversational turn in YojanSetu's deterministic state machine:
     - Ingests natural language text or STT transcript.
     - Evaluates confirmation, expected field, need, or query context.
     - Updates temporary RAM session facts.

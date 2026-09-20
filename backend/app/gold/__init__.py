@@ -1,5 +1,5 @@
 """
-JanSetu - Day 28: Gold-Standard Evaluation Dataset Engine.
+YojanSetu - Day 28: Gold-Standard Evaluation Dataset Engine.
 
 Provides schemas, validation, artifact hashing, provenance tracking,
 and data-leakage protected loaders for independent QA benchmarks.

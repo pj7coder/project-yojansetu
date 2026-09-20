@@ -9,7 +9,7 @@ from app.database.models.scheme import Scheme, SchemeVersion
 from app.versioning.reference_extractor import GovernmentReferenceExtractor
 from app.versioning.schemas import GovernmentReference
 
-logger = logging.getLogger("jansetu.versioning.candidate_matcher")
+logger = logging.getLogger("yojansetu.versioning.candidate_matcher")
 
 
 class MatchedCandidate:

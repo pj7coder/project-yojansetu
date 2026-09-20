@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional
 from app.versioning.rule_diff import RuleDiffService
 from app.versioning.schemas import ChangeItemSchema, ChangeRiskLevel, ChangeType
 
-logger = logging.getLogger("jansetu.versioning.canonical_diff")
+logger = logging.getLogger("yojansetu.versioning.canonical_diff")
 
 
 class CanonicalSchemeDiffService:

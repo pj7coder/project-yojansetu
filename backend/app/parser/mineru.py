@@ -21,7 +21,7 @@ from app.parser.interface import (
     RawTableData,
 )
 
-logger = logging.getLogger("jansetu.parser.mineru")
+logger = logging.getLogger("yojansetu.parser.mineru")
 
 
 class MinerUAdapter(BaseParser):

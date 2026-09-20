@@ -4,7 +4,7 @@ import uuid
 
 from app.review.schemas import ConflictResolutionChoice
 
-logger = logging.getLogger("jansetu.review.conflict_service")
+logger = logging.getLogger("yojansetu.review.conflict_service")
 
 
 class ConflictResolutionService:

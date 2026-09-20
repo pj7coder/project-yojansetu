@@ -11,7 +11,7 @@ from app.database.models.review_audit_event import ReviewAuditEvent
 from app.database.models.scheme import SchemeVersion
 from app.database.models.source_change_event import SourceChangeEvent
 
-logger = logging.getLogger("jansetu.admin.activity")
+logger = logging.getLogger("yojansetu.admin.activity")
 
 
 class AdminActivityService:

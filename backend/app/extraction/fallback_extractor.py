@@ -23,7 +23,7 @@ from app.extraction.schemas import (
     SchemeRawExtraction,
 )
 
-logger = logging.getLogger("jansetu.extraction.fallback")
+logger = logging.getLogger("yojansetu.extraction.fallback")
 
 
 class FallbackChunkExtractor:

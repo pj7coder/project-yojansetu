@@ -19,7 +19,7 @@ from app.profile_extraction.schemas import (
 from app.profile_extraction.service import get_profile_extraction_service
 from app.sessions.manager import get_session_manager
 
-logger = logging.getLogger("jansetu.api.citizen_input")
+logger = logging.getLogger("yojansetu.api.citizen_input")
 
 router = APIRouter(prefix="/citizen/sessions", tags=["Citizen Natural Language Input & Confirmation"])
 

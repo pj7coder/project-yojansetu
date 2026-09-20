@@ -1,4 +1,4 @@
-# JanSetu — Gold Dataset Human Review & Sign-Off Report (v1.0)
+# YojanSetu — Gold Dataset Human Review & Sign-Off Report (v1.0)
 
 > **Official Quality Assurance Sign-Off for Day 28 Milestone**  
 > *Audit Completed: 2026-09-07*

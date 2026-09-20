@@ -10,7 +10,7 @@ from app.database.models.scheme_change_item import SchemeChangeItem
 from app.database.models.scheme_change_set import SchemeChangeSet
 from app.database.models.scheme_document_link import SchemeDocumentLink
 
-logger = logging.getLogger("jansetu.versioning.repository")
+logger = logging.getLogger("yojansetu.versioning.repository")
 
 
 class VersioningRepository:

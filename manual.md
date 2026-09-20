@@ -1,4 +1,4 @@
-# JanSetu (जनसेतु) — Quick Start & User Manual
+# YojanSetu (योजनसेतु) — Quick Start & User Manual
 
 An offline-first, vernacular assistant for Rajasthan citizens to discover government welfare schemes via voice and text, powered by an automated document extraction and verification pipeline.
 
@@ -93,7 +93,7 @@ python -m pytest tests/test_citizen_flow.py -q
 
 ## ❓ 5. Quick Troubleshooting
 
-- **Database Connection Error**: Verify PostgreSQL is running on port 5432 and credentials match `.env` (default: `POSTGRES_DB=jansetu`, `POSTGRES_USER=postgres`).
+- **Database Connection Error**: Verify PostgreSQL is running on port 5432 and credentials match `.env` (default: `POSTGRES_DB=yojansetu`, `POSTGRES_USER=postgres`).
 - **Port Conflict (8000 or 3000)**: Close background instances or run on alternate ports:
   - Backend: `uvicorn app.main:app --port 8001`
   - Frontend: `npm run dev -- -p 3001`

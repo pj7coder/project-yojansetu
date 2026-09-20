@@ -1,5 +1,5 @@
 """
-Decorated Tool Calling Framework for JanSetu.
+Decorated Tool Calling Framework for YojanSetu.
 All tools are strictly decorated, typed, and documented with real Python logic
 governing Rajasthan welfare schemes (no LLM guessing or hallucinations!).
 """
@@ -23,7 +23,7 @@ from app.eligibility.result import EligibilityStatus
 from app.eligibility.service import EligibilityService
 from app.rag.retriever import CircularDocumentRetriever
 
-logger = logging.getLogger("jansetu.agent.tools")
+logger = logging.getLogger("yojansetu.agent.tools")
 
 
 @dataclass

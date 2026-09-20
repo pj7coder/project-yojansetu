@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: AI4Bharat Indic ASR Provider Adapter.
+YojanSetu - Day 22: AI4Bharat Indic ASR Provider Adapter.
 
 Implements SpeechToTextProvider adapter for AI4Bharat Indic ASR models
 (IndicWav2Vec / IndicConformer):
@@ -20,7 +20,7 @@ from app.stt.audio_normalizer import AudioNormalizer
 from app.stt.interface import SpeechToTextProvider
 from app.stt.schemas import STTResult, STTSegment
 
-logger = logging.getLogger("jansetu.stt.providers.indic_asr")
+logger = logging.getLogger("yojansetu.stt.providers.indic_asr")
 
 
 class IndicASRSTTProvider(SpeechToTextProvider):

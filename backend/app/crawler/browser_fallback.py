@@ -113,7 +113,7 @@ class BrowserFallbackService:
                     user_agent=getattr(
                         settings,
                         "monitoring_user_agent",
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) JanSetuBot/1.0",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) YojanSetuBot/1.0",
                     ),
                     viewport={"width": 1280, "height": 800},
                     java_script_enabled=True,

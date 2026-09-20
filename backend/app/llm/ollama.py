@@ -17,7 +17,7 @@ from app.llm.interface import (
     StructuredLLMResponse,
 )
 
-logger = logging.getLogger("jansetu.llm.ollama")
+logger = logging.getLogger("yojansetu.llm.ollama")
 
 T = TypeVar("T", bound=BaseModel)
 

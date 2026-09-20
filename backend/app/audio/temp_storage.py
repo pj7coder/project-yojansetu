@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Audio Temporary Storage & Privacy Lifecycle Manager.
+YojanSetu - Day 23: Audio Temporary Storage & Privacy Lifecycle Manager.
 
 Manages temporary audio file lifecycle with collision-proof UUID naming,
 path traversal validation, and guaranteed cleanup on both success and error.

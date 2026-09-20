@@ -21,7 +21,7 @@ from app.repositories.chunk_repository import DocumentChunkRepository
 from app.repositories.document_repository import DocumentRepository
 from app.repositories.ocr_repository import OCRRunRepository
 
-logger = logging.getLogger("jansetu.chunking.service")
+logger = logging.getLogger("yojansetu.chunking.service")
 
 
 class DocumentChunkingService:

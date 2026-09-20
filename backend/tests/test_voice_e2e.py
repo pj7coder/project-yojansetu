@@ -1,5 +1,5 @@
 """
-JanSetu - Day 27 Tests: End-to-End Offline Voice Loop Scenarios.
+YojanSetu - Day 27 Tests: End-to-End Offline Voice Loop Scenarios.
 
 Scenarios:
 1. Complete Pension voice flow:

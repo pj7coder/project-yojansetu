@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.eligibility.models import CompiledScheme
 
-logger = logging.getLogger("jansetu.cache.rules")
+logger = logging.getLogger("yojansetu.cache.rules")
 
 
 @dataclass(frozen=True)

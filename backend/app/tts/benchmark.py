@@ -1,8 +1,8 @@
 """
-JanSetu - Day 26: Offline Hindi TTS Benchmark Suite.
+YojanSetu - Day 26: Offline Hindi TTS Benchmark Suite.
 
 Executes sequential, evidence-based evaluations of local TTS candidates
-against real JanSetu conversational messages, scheme queries, and edge cases.
+against real YojanSetu conversational messages, scheme queries, and edge cases.
 Measures latency, RTF, RAM, critical pronunciation accuracy, and round-trip STT.
 """
 
@@ -336,7 +336,7 @@ class TTSBenchmarkRunner:
     ) -> str:
         """Generates comprehensive markdown benchmark report."""
         lines = [
-            "# JanSetu — Day 26: Offline Hindi TTS Benchmark Report",
+            "# YojanSetu — Day 26: Offline Hindi TTS Benchmark Report",
             f"\n**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
             "**Environment**: Windows, Offline Local Inference (CPU)",
             "\n## 1. Executive Summary & Candidate Comparison Table\n",
@@ -366,7 +366,7 @@ class TTSBenchmarkRunner:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JanSetu Offline TTS Benchmark Suite")
+    parser = argparse.ArgumentParser(description="YojanSetu Offline TTS Benchmark Suite")
     parser.add_argument("--provider", type=str, help="Specific provider to benchmark (e.g. 'mms', 'piper', 'mock')")
     parser.add_argument("--all", action="store_true", help="Benchmark all available candidate providers")
     parser.add_argument("--run-name", type=str, default="evaluation", help="Name label for benchmark run")

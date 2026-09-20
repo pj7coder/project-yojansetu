@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Offline Text-to-Speech (TTS) Configuration.
+YojanSetu - Day 26: Offline Text-to-Speech (TTS) Configuration.
 
 Centralizes configuration parameters for TTS providers, voice selection,
 speaking rates, audio format standards, text length boundaries,

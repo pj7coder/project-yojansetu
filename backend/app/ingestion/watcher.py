@@ -13,7 +13,7 @@ from app.database.session import get_db_context
 from app.ingestion.service import DocumentIngestionError, DocumentIngestionService
 from app.ingestion.storage import StorageManager
 
-logger = logging.getLogger("jansetu.ingestion.watcher")
+logger = logging.getLogger("yojansetu.ingestion.watcher")
 
 
 class IncomingFolderHandler(FileSystemEventHandler):
@@ -195,7 +195,7 @@ def run_watcher() -> None:
     """CLI entrypoint for running the folder watcher process standalone."""
     settings = get_settings()
     setup_logging(log_level=settings.log_level)
-    logger.info("=== JANSETU AUTOMATIC FOLDER WATCHER ===")
+    logger.info("=== YOJANSETU AUTOMATIC FOLDER WATCHER ===")
 
     # Ensure storage directories exist
     settings.ensure_storage_dirs()

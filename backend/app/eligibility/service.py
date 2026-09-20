@@ -11,7 +11,7 @@ from app.eligibility.profile import CitizenProfile
 from app.eligibility.repository import VerifiedSchemeRepository
 from app.eligibility.result import EligibilityResult
 
-logger = logging.getLogger("jansetu.eligibility.service")
+logger = logging.getLogger("yojansetu.eligibility.service")
 
 
 class EligibilityService:

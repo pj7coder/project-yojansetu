@@ -14,7 +14,7 @@ from app.database.models.document import Document
 from app.database.session import SessionLocal
 from app.ocr.service import OCRService
 
-logger = logging.getLogger("jansetu.ocr.worker")
+logger = logging.getLogger("yojansetu.ocr.worker")
 
 
 class OCRWorker:
@@ -124,7 +124,7 @@ class OCRWorker:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JanSetu Document OCR Worker")
+    parser = argparse.ArgumentParser(description="YojanSetu Document OCR Worker")
     parser.add_argument("--once", action="store_true", help="Run a single pass and exit")
     parser.add_argument("--batch-size", type=int, default=10, help="Number of documents per batch")
     parser.add_argument("--interval", type=int, default=5, help="Polling interval in seconds")

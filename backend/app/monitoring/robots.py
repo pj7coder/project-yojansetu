@@ -25,7 +25,7 @@ class RobotsPolicyService:
     def is_allowed(
         self,
         url: str,
-        user_agent: str = "JanSetu-Monitor/1.0",
+        user_agent: str = "YojanSetu-Monitor/1.0",
         robots_content: Optional[str] = None,
     ) -> Tuple[bool, Optional[str]]:
         """Check if target URL is allowed by robots.txt for the given user-agent.

@@ -1,7 +1,7 @@
 """
-JanSetu - Day 28: Gold-Standard Dataset Generator & Manifest Builder.
+YojanSetu - Day 28: Gold-Standard Dataset Generator & Manifest Builder.
 
-Builds version 1.0 of the JanSetu Gold Benchmark Dataset across:
+Builds version 1.0 of the YojanSetu Gold Benchmark Dataset across:
 - Extraction (60 cases: clean PDF, Hindi, tables, OCR, exclusions, provisos, negative, security test)
 - Eligibility (120 cases: tri-state, boundary, unknown vs false, short-circuit, personal/family, temporal versions)
 - Search (50 cases: Hindi, English, Hinglish, profile-assisted, negative ranking, no-result)
@@ -31,7 +31,7 @@ from app.gold.hashing import compute_file_sha256, compute_manifest_hash
 
 def build_dataset():
     print("=" * 70)
-    print("Building JanSetu Gold-Standard Evaluation Dataset (v1.0)...")
+    print("Building YojanSetu Gold-Standard Evaluation Dataset (v1.0)...")
     print("=" * 70)
 
     # Clean / prepare directories

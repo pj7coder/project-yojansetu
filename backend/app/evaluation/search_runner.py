@@ -1,5 +1,5 @@
 """
-JanSetu - Day 31: End-to-End Scheme Discovery & Search Quality Evaluation Runner.
+YojanSetu - Day 31: End-to-End Scheme Discovery & Search Quality Evaluation Runner.
 
 Executes read-only benchmarking of the discovery pipeline against human-verified gold ground truth:
 Stage A (Corpus Index) -> Stage B (SQL Filter) -> Stage C (Eligibility) -> Stage D (Vector Ranking) -> Stage E (Recommendations).
@@ -48,12 +48,12 @@ from app.search.indexer import SchemeSearchIndexService
 from app.search.schemas import SchemeDiscoveryRequest
 from app.search.semantic_ranker import SemanticSchemeRanker
 
-logger = logging.getLogger("jansetu.evaluation.search_runner")
+logger = logging.getLogger("yojansetu.evaluation.search_runner")
 
 
 class SearchBenchmarkRunner:
     """
-    Evaluates JanSetu's scheme-discovery pipeline against frozen human-verified search gold cases.
+    Evaluates YojanSetu's scheme-discovery pipeline against frozen human-verified search gold cases.
     """
 
     def __init__(

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 28: Gold Dataset Master Validator.
+YojanSetu - Day 28: Gold Dataset Master Validator.
 
 Validates schema constraints, ID uniqueness, split integrity, tri-state
 eligibility logic, evidence existence, audio hashes, and citizen privacy.
@@ -35,7 +35,7 @@ EMAIL_REGEX = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
 
 class GoldDatasetValidator:
     """
-    Master validator for JanSetu Gold-Standard Evaluation Datasets.
+    Master validator for YojanSetu Gold-Standard Evaluation Datasets.
     """
 
     def __init__(self, workspace_root: Optional[Union[str, Path]] = None):

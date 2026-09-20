@@ -1,5 +1,5 @@
 """
-JanSetu - Day 29: Production Extraction Benchmark Runner.
+YojanSetu - Day 29: Production Extraction Benchmark Runner.
 
 Orchestrates:
 - Loading frozen gold extraction cases via GoldBenchmarkLoader
@@ -46,12 +46,12 @@ from app.normalization.documents import normalize_document_requirement
 from app.normalization.eligibility import normalize_single_criterion
 from app.normalization.numbers import parse_indian_number
 
-logger = logging.getLogger("jansetu.evaluation.runner")
+logger = logging.getLogger("yojansetu.evaluation.runner")
 
 
 class ExtractionBenchmarkRunner:
     """
-    Evaluates JanSetu's document extraction pipeline against human-verified gold ground truth.
+    Evaluates YojanSetu's document extraction pipeline against human-verified gold ground truth.
     """
 
     def __init__(

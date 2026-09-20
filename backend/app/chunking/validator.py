@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Set
 
 from app.chunking.formatter import ChunkFormatter
 
-logger = logging.getLogger("jansetu.chunking.validator")
+logger = logging.getLogger("yojansetu.chunking.validator")
 
 
 class ChunkValidationError(Exception):

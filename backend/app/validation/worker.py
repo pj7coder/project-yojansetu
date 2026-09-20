@@ -14,7 +14,7 @@ from app.database.models.scheme_draft import SchemeDraft
 from app.database.session import get_db_context
 from app.validation.service import SchemeValidationService
 
-logger = logging.getLogger("jansetu.validation.worker")
+logger = logging.getLogger("yojansetu.validation.worker")
 
 
 class ValidationWorker:
@@ -78,7 +78,7 @@ class ValidationWorker:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JanSetu Deterministic Validation Worker")
+    parser = argparse.ArgumentParser(description="YojanSetu Deterministic Validation Worker")
     parser.add_argument("--draft-id", type=str, help="Specific Scheme Draft UUID to validate")
     parser.add_argument("--all", action="store_true", help="Process all READY_FOR_VALIDATION drafts")
     parser.add_argument("--force", action="store_true", help="Force validation regardless of cache")

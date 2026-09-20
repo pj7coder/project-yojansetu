@@ -8,7 +8,7 @@ from app.core.config import get_settings
 from app.database.models.scheme_embedding import SchemeEmbedding
 from app.embeddings.interface import EmbeddingProvider
 
-logger = logging.getLogger("jansetu.search.semantic_ranker")
+logger = logging.getLogger("yojansetu.search.semantic_ranker")
 
 _PGVECTOR_AVAILABLE_CACHE: Optional[bool] = None
 

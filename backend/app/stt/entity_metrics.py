@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Critical Entity Extraction and Evaluation Metrics.
+YojanSetu - Day 22: Critical Entity Extraction and Evaluation Metrics.
 
 Evaluates eligibility-critical facts from speech transcripts:
 - AGE (e.g. 62 vs 26, Devanagari numerals, Hindi number words)

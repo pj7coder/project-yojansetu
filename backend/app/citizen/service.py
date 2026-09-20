@@ -1,5 +1,5 @@
 """
-Citizen Discovery Facade for JanSetu.
+Citizen Discovery Facade for YojanSetu.
 Orchestrates multi-turn session discovery, active version lookup (Day 19),
 rule evaluation (Day 14), question generation (Day 16), and presentation formatting (Day 20).
 """
@@ -32,7 +32,7 @@ from app.questioning.schemas import QuestionReasonCode
 from app.sessions.manager import SessionNotFoundError, get_session_manager
 from app.versioning.timeline import SchemeTimelineService
 
-logger = logging.getLogger("jansetu.citizen.service")
+logger = logging.getLogger("yojansetu.citizen.service")
 
 _DISTRICTS_CACHE: Optional[List[RajasthanDistrictItem]] = None
 

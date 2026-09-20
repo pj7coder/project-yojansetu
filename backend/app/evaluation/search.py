@@ -1,5 +1,5 @@
 """
-JanSetu - Day 31: Module execution entrypoint for python -m app.evaluation.search
+YojanSetu - Day 31: Module execution entrypoint for python -m app.evaluation.search
 """
 
 from app.evaluation.search_cli import main

@@ -13,7 +13,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
-logger = logging.getLogger("jansetu.crawler.worker")
+logger = logging.getLogger("yojansetu.crawler.worker")
 
 
 class ChangeAnalysisWorker:
@@ -85,7 +85,7 @@ class ChangeAnalysisWorker:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JanSetu Change Analysis Worker")
+    parser = argparse.ArgumentParser(description="YojanSetu Change Analysis Worker")
     parser.add_argument("--once", action="store_true", help="Process available events and exit")
     parser.add_argument("--interval", type=float, default=5.0, help="Poll interval in seconds")
     args = parser.parse_args()

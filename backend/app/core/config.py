@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     )
 
     # Application Metadata
-    app_name: str = Field(default="JanSetu", alias="APP_NAME")
+    app_name: str = Field(default="YojanSetu", alias="APP_NAME")
     app_env: str = Field(default="development", alias="APP_ENV")
     app_version: str = Field(default="0.1.0", alias="APP_VERSION")
 
@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     # Database Configuration (PostgreSQL)
     postgres_host: str = Field(default="localhost", alias="POSTGRES_HOST")
     postgres_port: int = Field(default=5432, alias="POSTGRES_PORT")
-    postgres_db: str = Field(default="jansetu", alias="POSTGRES_DB")
+    postgres_db: str = Field(default="yojansetu", alias="POSTGRES_DB")
     postgres_user: str = Field(default="postgres", alias="POSTGRES_USER")
     postgres_password: str = Field(default="", alias="POSTGRES_PASSWORD")
     database_url: Optional[str] = Field(default=None, alias="DATABASE_URL")
@@ -161,7 +161,7 @@ class Settings(BaseSettings):
     monitor_failure_backoff_factor: float = Field(default=2.0, alias="MONITOR_FAILURE_BACKOFF_FACTOR")
     monitor_jitter_percent: float = Field(default=0.10, alias="MONITOR_JITTER_PERCENT")
     monitor_user_agent: str = Field(
-        default="JanSetu-Monitor/1.0 (+https://jansetu.rajasthan.gov.in/bot)",
+        default="YojanSetu-Monitor/1.0 (+https://yojansetu.rajasthan.gov.in/bot)",
         alias="MONITOR_USER_AGENT",
     )
     monitor_allow_private_ips_dev: bool = Field(default=False, alias="MONITOR_ALLOW_PRIVATE_IPS_DEV")

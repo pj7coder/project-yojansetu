@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Deterministic Speech Text Normalizer.
+YojanSetu - Day 26: Deterministic Speech Text Normalizer.
 
 Transforms display messages and raw numerical/symbolic data into clear, natural,
 and phonetically unambiguous Hindi speech text.

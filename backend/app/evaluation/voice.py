@@ -1,5 +1,5 @@
 """
-JanSetu - Day 32: Voice Benchmark Evaluation Entrypoint.
+YojanSetu - Day 32: Voice Benchmark Evaluation Entrypoint.
 
 Enables invocation via:
     python -m app.evaluation.voice [options]

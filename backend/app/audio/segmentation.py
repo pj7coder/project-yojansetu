@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Utterance Segmentation & Gap Merging.
+YojanSetu - Day 23: Utterance Segmentation & Gap Merging.
 
 Refines raw VAD segments into citizen speaking turns:
 - Merges micro-gaps shorter than UTTERANCE_MERGE_GAP_MS

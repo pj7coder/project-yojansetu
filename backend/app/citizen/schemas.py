@@ -90,8 +90,8 @@ class CitizenApplicationGuidance(BaseModel):
     steps_en: List[str] = Field(default_factory=list)
     steps_hi: List[str] = Field(default_factory=list)
     fee_inr: Optional[float] = None
-    guidance_note_en: str = "Apply through designated official government channels. JanSetu provides guidance and does not directly submit applications."
-    guidance_note_hi: str = "नामित आधिकारिक सरकारी माध्यमों से आवेदन करें। जनसेतु मार्गदर्शन प्रदान करता है और सीधे आवेदन जमा नहीं करता है।"
+    guidance_note_en: str = "Apply through designated official government channels. YojanSetu provides guidance and does not directly submit applications."
+    guidance_note_hi: str = "नामित आधिकारिक सरकारी माध्यमों से आवेदन करें। योजनसेतु मार्गदर्शन प्रदान करता है और सीधे आवेदन जमा नहीं करता है।"
 
 
 class CitizenSourceInfo(BaseModel):

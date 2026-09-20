@@ -1,5 +1,5 @@
 """
-JanSetu - Day 29: Evaluation Subsystem Package.
+YojanSetu - Day 29: Evaluation Subsystem Package.
 """
 
 from app.evaluation.evidence_metrics import EvidenceGroundingEvaluator

@@ -18,7 +18,7 @@ client = TestClient(app)
 settings = get_settings()
 
 
-def create_pdf_with_text(text: str, author: str = "JanSetu Admin") -> bytes:
+def create_pdf_with_text(text: str, author: str = "YojanSetu Admin") -> bytes:
     """Generate a PDF containing text and metadata with unicode font support."""
     import os
     import pymupdf

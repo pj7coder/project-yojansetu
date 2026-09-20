@@ -8,7 +8,7 @@ from app.citizen.schemas import CitizenSchemeDetailResponse, RajasthanDistrictIt
 from app.citizen.service import CitizenDiscoveryFacade, load_rajasthan_districts
 from app.database.session import get_db
 
-logger = logging.getLogger("jansetu.api.citizen")
+logger = logging.getLogger("yojansetu.api.citizen")
 
 router = APIRouter(prefix="/citizen", tags=["Citizen Presentation & Exploration"])
 

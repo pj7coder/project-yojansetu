@@ -1,4 +1,4 @@
-# JanSetu — Gold-Standard Evaluation Dataset (v1.0)
+# YojanSetu — Gold-Standard Evaluation Dataset (v1.0)
 
 > **Human-Verified Reference Truth for Independent Benchmark Evaluation**  
 > *Establishing ground truth for Extraction (Day 29), Eligibility (Day 30), Search (Day 31), and Voice/Conversation (Day 32).*
@@ -7,7 +7,7 @@
 
 ## 1. Overview & Core Architecture
 
-The JanSetu Gold Dataset establishes the immutable expected truth across the four critical layers of the system:
+The YojanSetu Gold Dataset establishes the immutable expected truth across the four critical layers of the system:
 
 ```text
                  OFFICIAL GOVERNMENT EVIDENCE

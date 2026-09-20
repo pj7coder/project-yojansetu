@@ -13,7 +13,7 @@ from app.database.models.document import Document
 from app.database.session import SessionLocal
 from app.parser.service import DocumentParserService
 
-logger = logging.getLogger("jansetu.parser.worker")
+logger = logging.getLogger("yojansetu.parser.worker")
 
 
 class DocumentParserWorker:
@@ -102,7 +102,7 @@ class DocumentParserWorker:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JanSetu Document Parser Worker")
+    parser = argparse.ArgumentParser(description="YojanSetu Document Parser Worker")
     parser.add_argument("--once", action="store_true", help="Run a single pass and exit")
     parser.add_argument("--batch-size", type=int, default=10, help="Number of documents per batch")
     parser.add_argument("--interval", type=int, default=5, help="Polling interval in seconds")

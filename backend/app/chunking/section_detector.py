@@ -7,7 +7,7 @@ from app.chunking.section_patterns import (
     SectionType,
 )
 
-logger = logging.getLogger("jansetu.chunking.section_detector")
+logger = logging.getLogger("yojansetu.chunking.section_detector")
 
 HEADING_BLOCK_TYPES = {"TITLE", "HEADING"}
 

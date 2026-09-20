@@ -18,7 +18,7 @@ from app.versioning.change_set_builder import SchemeChangeSetBuilder
 from app.versioning.timeline import SchemeTimelineService
 from app.versioning.version_builder import SchemeVersionBuilder
 
-logger = logging.getLogger("jansetu.versioning.service")
+logger = logging.getLogger("yojansetu.versioning.service")
 
 
 class SchemeVersionService:

@@ -8,7 +8,7 @@ from app.database.session import check_database_connection
 from app.schemas.health import HealthResponse
 
 router = APIRouter()
-logger = logging.getLogger("jansetu.health")
+logger = logging.getLogger("yojansetu.health")
 
 
 @router.get(
@@ -25,7 +25,7 @@ async def check_health(
     logger.info("Health endpoint called")
     return HealthResponse(
         status="ok",
-        service="jansetu-backend",
+        service="yojansetu-backend",
         environment=settings.app_env,
         version=settings.app_version,
         timestamp=datetime.now(timezone.utc),

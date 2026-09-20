@@ -22,7 +22,7 @@ from app.database.models.document_chunk import DocumentChunk
 from app.embeddings.interface import EmbeddingProvider
 from app.embeddings.local_provider import LocalFastEmbedProvider
 
-logger = logging.getLogger("jansetu.rag.retriever")
+logger = logging.getLogger("yojansetu.rag.retriever")
 
 
 @dataclass

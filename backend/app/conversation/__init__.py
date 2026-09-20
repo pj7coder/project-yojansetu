@@ -1,5 +1,5 @@
 """
-JanSetu Conversation Subsystem (Day 25).
+YojanSetu Conversation Subsystem (Day 25).
 Deterministic State Machine + Conversation Manager for Safe Multi-Turn Flow.
 """
 

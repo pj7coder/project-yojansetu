@@ -7,7 +7,7 @@ from app.chunking.section_detector import SectionDetector
 from app.chunking.section_patterns import PROVISO_EXCEPTION_REGEX, SectionType
 from app.chunking.tokenizer import estimate_tokens
 
-logger = logging.getLogger("jansetu.chunking.splitter")
+logger = logging.getLogger("yojansetu.chunking.splitter")
 
 
 @dataclass

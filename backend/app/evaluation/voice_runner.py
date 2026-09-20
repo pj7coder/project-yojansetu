@@ -1,5 +1,5 @@
 """
-JanSetu - Day 32: Voice Benchmark Runner.
+YojanSetu - Day 32: Voice Benchmark Runner.
 
 Executes the full offline voice evaluation loop against frozen Day 28 gold datasets:
 1. Audio preprocessing & Silero VAD evaluation
@@ -67,7 +67,7 @@ from app.stt.metrics import calculate_cer, calculate_wer
 from app.tts.speech_normalizer import SpeechTextNormalizer
 from app.vad import get_vad_provider
 
-logger = logging.getLogger("jansetu.evaluation.voice")
+logger = logging.getLogger("yojansetu.evaluation.voice")
 
 
 class VoiceBenchmarkRunner:

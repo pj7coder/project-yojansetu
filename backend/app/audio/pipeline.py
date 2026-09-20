@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Audio Processing Pipeline.
+YojanSetu - Day 23: Audio Processing Pipeline.
 
 Orchestrates the offline audio front-end:
 1. Safe input validation (size, duration, MIME/format, decode test)

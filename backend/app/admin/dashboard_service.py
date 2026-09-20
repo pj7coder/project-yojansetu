@@ -25,11 +25,11 @@ from app.database.models.source_change_event import SourceChangeEvent
 from app.database.models.source_monitor_state import SourceMonitorState
 from app.database.models.validation_issue import ValidationIssue
 
-logger = logging.getLogger("jansetu.admin.dashboard")
+logger = logging.getLogger("yojansetu.admin.dashboard")
 
 
 class AdminDashboardService:
-    """Consolidated operational overview aggregator for JanSetu administrative control center."""
+    """Consolidated operational overview aggregator for YojanSetu administrative control center."""
 
     STAGE_STATUS_MAP = {
         "INGESTION": ["RECEIVED", "VALIDATING"],

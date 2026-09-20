@@ -33,7 +33,7 @@ export function AdminSidebar() {
         <Link href="/admin" className="flex items-center gap-2.5">
           <span className="text-xl">🛡️</span>
           <div>
-            <div className="font-bold text-sm text-white tracking-tight">JanSetu</div>
+            <div className="font-bold text-sm text-white tracking-tight">YojanSetu</div>
             <div className="text-[11px] text-slate-400 font-mono">Operations Control</div>
           </div>
         </Link>

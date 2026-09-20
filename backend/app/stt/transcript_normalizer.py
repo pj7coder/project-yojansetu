@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Transcript Normalizer.
+YojanSetu - Day 22: Transcript Normalizer.
 
 Standardizes transcripts for metric calculation (WER, CER) ONLY.
 CRITICAL INVARIANT: The benchmark keeps the raw transcript completely

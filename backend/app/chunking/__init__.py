@@ -1,4 +1,4 @@
-"""Semantic document chunking subsystem for JanSetu."""
+"""Semantic document chunking subsystem for YojanSetu."""
 from app.chunking.formatter import ChunkFormatter
 from app.chunking.section_detector import SectionDetector
 from app.chunking.section_patterns import SectionType

@@ -58,7 +58,7 @@ type FlowState =
   | 'ERROR'
   | 'SESSION_EXPIRED';
 
-const STORAGE_SESSION_KEY = 'jansetu_citizen_session_id';
+const STORAGE_SESSION_KEY = 'yojansetu_citizen_session_id';
 
 export default function CitizenPage() {
   const [language, setLanguage] = useState<CitizenLanguage>('hi');

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import get_settings
 
-logger = logging.getLogger("jansetu.database")
+logger = logging.getLogger("yojansetu.database")
 settings = get_settings()
 
 # Configure SQLAlchemy engine with pool pre-ping to detect dropped connections

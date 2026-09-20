@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: High-Level Speech Synthesis Service.
+YojanSetu - Day 26: High-Level Speech Synthesis Service.
 
 Orchestrates speech text preparation, generic prompt caching, concurrency control,
 provider dispatch, output validation, and ephemeral audio lifecycle.
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 class SpeechSynthesisService:
     """
-    Unified speech synthesis service for JanSetu.
+    Unified speech synthesis service for YojanSetu.
     """
 
     def __init__(self):

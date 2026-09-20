@@ -20,7 +20,7 @@ from app.database.session import get_db_context
 from app.ingestion.service import DocumentIngestionService
 from app.pipeline.auto_runner import run_full_pipeline
 
-logger = logging.getLogger("jansetu.ingestion.folder_watcher")
+logger = logging.getLogger("yojansetu.ingestion.folder_watcher")
 
 
 SUPPORTED_WATCH_EXTENSIONS = {".pdf", ".xlsx", ".xls", ".csv"}

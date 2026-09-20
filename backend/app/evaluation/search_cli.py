@@ -1,5 +1,5 @@
 """
-JanSetu - Day 31: Search & Scheme Discovery Evaluation CLI.
+YojanSetu - Day 31: Search & Scheme Discovery Evaluation CLI.
 
 Command line interface for running search quality benchmarks:
 Usage:
@@ -29,7 +29,7 @@ from app.gold.schemas import GoldSplit
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="JanSetu - Day 31: Search & Scheme Discovery Evaluation Benchmark"
+        description="YojanSetu - Day 31: Search & Scheme Discovery Evaluation Benchmark"
     )
     parser.add_argument(
         "--gold-version",
@@ -84,7 +84,7 @@ def main() -> None:
     )
 
     print("=" * 80)
-    print("  JANSETU — SCHEME DISCOVERY & SEARCH QUALITY BENCHMARK (DAY 31)")
+    print("  YOJANSETU — SCHEME DISCOVERY & SEARCH QUALITY BENCHMARK (DAY 31)")
     print(f"  Gold Version: {args.gold_version} | Split: {args.split} | Top-K: {args.k}")
     if args.case:
         print(f"  Target Case: {args.case}")

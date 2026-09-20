@@ -1,5 +1,5 @@
 """
-JanSetu - Day 28 Tests: Gold Dataset Integrity, Evidence, Safety & Leakage Prevention.
+YojanSetu - Day 28 Tests: Gold Dataset Integrity, Evidence, Safety & Leakage Prevention.
 
 Verifies:
 1. Full dataset passes GoldDatasetValidator with zero errors.

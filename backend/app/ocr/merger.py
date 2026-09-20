@@ -12,7 +12,7 @@ from app.ocr.interface import (
     OCRPageResult,
 )
 
-logger = logging.getLogger("jansetu.ocr.merger")
+logger = logging.getLogger("yojansetu.ocr.merger")
 
 
 class OCRMergeService:

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 31: Ranking Quality & Semantic Retrieval Metrics Evaluator.
+YojanSetu - Day 31: Ranking Quality & Semantic Retrieval Metrics Evaluator.
 
 Evaluates Stage D & E (Semantic Vector Ranking & Output Ordering):
 - Recall@1, Recall@3, Recall@5, Recall@10

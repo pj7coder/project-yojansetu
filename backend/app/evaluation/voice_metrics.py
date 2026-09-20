@@ -1,5 +1,5 @@
 """
-JanSetu - Day 32: Voice System Quality Evaluation Metrics.
+YojanSetu - Day 32: Voice System Quality Evaluation Metrics.
 
 Defines schemas and calculators for:
 1. Silero VAD metrics (Recall, precision, false positives, missed speech, short answers, clipping)

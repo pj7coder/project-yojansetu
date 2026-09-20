@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Generic Prompt Audio Cache.
+YojanSetu - Day 26: Generic Prompt Audio Cache.
 
 Provides deterministic filesystem caching for static, non-sensitive prompts
 (e.g., greetings, standard questions, confirmations).

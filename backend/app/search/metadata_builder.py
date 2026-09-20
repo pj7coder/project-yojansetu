@@ -6,7 +6,7 @@ import uuid
 from app.database.models.scheme_search_metadata import SchemeSearchMetadata
 from app.search.search_text import SchemeSearchTextBuilder, compute_search_text_hash
 
-logger = logging.getLogger("jansetu.search.metadata_builder")
+logger = logging.getLogger("yojansetu.search.metadata_builder")
 
 
 class SearchMetadataBuilder:

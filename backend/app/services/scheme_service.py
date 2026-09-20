@@ -23,7 +23,7 @@ from app.schemas.scheme import (
     SchemeVersionResponse,
 )
 
-logger = logging.getLogger("jansetu.schemes")
+logger = logging.getLogger("yojansetu.schemes")
 
 VALID_STATUSES = {
     "DRAFT",

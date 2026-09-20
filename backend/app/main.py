@@ -12,7 +12,7 @@ from app.core.logging import setup_logging
 
 settings = get_settings()
 setup_logging(log_level=settings.log_level)
-logger = logging.getLogger("jansetu.main")
+logger = logging.getLogger("yojansetu.main")
 
 
 @asynccontextmanager

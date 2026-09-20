@@ -14,7 +14,7 @@ from app.database.models.document import Document
 from app.database.session import get_db_context
 from app.normalization.service import SchemeNormalizationService
 
-logger = logging.getLogger("jansetu.normalization.worker")
+logger = logging.getLogger("yojansetu.normalization.worker")
 
 
 class NormalizationWorker:
@@ -82,7 +82,7 @@ class NormalizationWorker:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JanSetu Normalization Worker")
+    parser = argparse.ArgumentParser(description="YojanSetu Normalization Worker")
     parser.add_argument("--document-id", type=str, help="Specific document ID to normalize")
     parser.add_argument("--force", action="store_true", help="Force normalization regardless of status")
     parser.add_argument("--loop", action="store_true", help="Run in continuous polling loop mode")

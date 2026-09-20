@@ -1,5 +1,5 @@
 """
-JanSetu - Day 32: Voice Failure Taxonomy and Earliest Root-Cause Attribution.
+YojanSetu - Day 32: Voice Failure Taxonomy and Earliest Root-Cause Attribution.
 
 Provides structured root-cause attribution across all 6 voice stages:
 1. VAD (Silero VAD speech detection)

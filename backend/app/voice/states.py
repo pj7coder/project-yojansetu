@@ -1,5 +1,5 @@
 """
-JanSetu - Day 27: Voice Transport State Machine.
+YojanSetu - Day 27: Voice Transport State Machine.
 
 Maintains strict separation between the voice transport layer
 (LISTENING, PROCESSING, SPEAKING) and the Day 25 semantic conversation state
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 class VoiceTransportState(str, Enum):
     """
-    Physical audio transport and turn-taking states for JanSetu voice loop.
+    Physical audio transport and turn-taking states for YojanSetu voice loop.
     Strictly orthogonal to semantic ConversationState.
     """
     IDLE = "IDLE"

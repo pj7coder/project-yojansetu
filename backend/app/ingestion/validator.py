@@ -8,7 +8,7 @@ from pypdf.errors import PdfReadError
 
 from app.core.config import get_settings
 
-logger = logging.getLogger("jansetu.ingestion.validator")
+logger = logging.getLogger("yojansetu.ingestion.validator")
 
 SUPPORTED_EXTENSIONS = {".pdf", ".xlsx", ".xls", ".csv"}
 

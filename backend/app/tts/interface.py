@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Text-to-Speech Provider Interface.
+YojanSetu - Day 26: Text-to-Speech Provider Interface.
 
 Defines the abstract contract for all offline TTS engine adapters.
 TTS is strictly a voice renderer and must never modify conversation state,

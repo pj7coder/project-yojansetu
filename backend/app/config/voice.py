@@ -1,5 +1,5 @@
 """
-JanSetu - Day 27: Offline Voice Loop Configuration.
+YojanSetu - Day 27: Offline Voice Loop Configuration.
 
 Centralizes configuration parameters for voice transport states, turn timeouts,
 silence thresholds, concurrency locks, push-to-talk defaults, and temporary audio TTL.
@@ -29,7 +29,7 @@ class VoiceSettings(BaseSettings):
     voice_turn_timeout_seconds: float = 30.0  # Lock acquire timeout
 
     # Playback & Turn-taking policies (Half-duplex)
-    voice_auto_play_response: bool = True  # Auto-play JanSetu responses when voice active
+    voice_auto_play_response: bool = True  # Auto-play YojanSetu responses when voice active
     voice_auto_listen_after_playback: bool = False  # Default to Push-To-Talk for maximum reliability
 
     # Ephemeral Response Audio Storage & Privacy Lifecycle

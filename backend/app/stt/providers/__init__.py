@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: STT Providers Package.
+YojanSetu - Day 22: STT Providers Package.
 """
 
 from app.stt.providers.whisper import WhisperSTTProvider

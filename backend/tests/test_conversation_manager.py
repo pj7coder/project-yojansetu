@@ -1,5 +1,5 @@
 """
-Comprehensive Test Suite for JanSetu Deterministic Conversation Manager & State Machine (Day 25).
+Comprehensive Test Suite for YojanSetu Deterministic Conversation Manager & State Machine (Day 25).
 Tests all 39 workflow scenarios: transitions, guards, context safety, interruptions,
 corrections, ordinals, concurrency, idempotency, refresh restoration, and end-to-end dialogues.
 """

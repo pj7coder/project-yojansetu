@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Faster-Whisper Speech-to-Text Provider.
+YojanSetu - Day 22: Faster-Whisper Speech-to-Text Provider.
 
 Implements SpeechToTextProvider using faster-whisper (CTranslate2):
 - Offline local execution (no network required after weights download)
@@ -18,7 +18,7 @@ from app.stt.audio_normalizer import AudioNormalizer
 from app.stt.interface import SpeechToTextProvider
 from app.stt.schemas import STTResult, STTSegment
 
-logger = logging.getLogger("jansetu.stt.providers.whisper")
+logger = logging.getLogger("yojansetu.stt.providers.whisper")
 
 
 class WhisperSTTProvider(SpeechToTextProvider):

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 29: Failure Analysis, Criticality Classification & Pipeline-Stage Attribution.
+YojanSetu - Day 29: Failure Analysis, Criticality Classification & Pipeline-Stage Attribution.
 
 Implements:
 - Deterministic severity classification (CRITICAL, HIGH, MEDIUM, LOW)

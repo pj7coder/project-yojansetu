@@ -1,5 +1,5 @@
 """
-JanSetu - Day 30: Eligibility Failure Analysis & Taxonomy Classification.
+YojanSetu - Day 30: Eligibility Failure Analysis & Taxonomy Classification.
 
 Implements deterministic failure categorization, safety criticality ranking,
 and root-cause attribution distinguishing engine logic from rule data mismatches.

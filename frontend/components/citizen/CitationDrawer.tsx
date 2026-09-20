@@ -72,7 +72,7 @@ export function CitationDrawer({ language, citation, onClose }: CitationDrawerPr
               </div>
               <p className="text-[11px] text-blue-800 mt-0.5">
                 {isHi
-                  ? "जनसेतु में कोई भी पेंशन राशि या पात्रता शर्त भाषा मॉडल द्वारा अनुमानित नहीं है। सभी खंड सीधे राजस्थान सरकार के गजट से उद्धृत हैं।"
+                  ? "योजनसेतु में कोई भी पेंशन राशि या पात्रता शर्त भाषा मॉडल द्वारा अनुमानित नहीं है। सभी खंड सीधे राजस्थान सरकार के गजट से उद्धृत हैं।"
                   : "Every benefit slab and condition is anchored directly to this gazetted notification clause via hybrid BM25 + dense vector RAG."}
               </p>
             </div>

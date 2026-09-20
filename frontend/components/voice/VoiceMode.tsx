@@ -224,7 +224,7 @@ export function VoiceMode({
           </div>
           <div>
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">
-              {isHi ? 'जनसेतु — आवाज़ मोड' : 'JanSetu — Voice Mode'}
+              {isHi ? 'योजनसेतु — आवाज़ मोड' : 'YojanSetu — Voice Mode'}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               {isHi

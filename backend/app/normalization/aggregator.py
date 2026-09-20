@@ -14,7 +14,7 @@ from app.normalization.schemas import (
     SchemeOriginEnum,
 )
 
-logger = logging.getLogger("jansetu.normalization.aggregator")
+logger = logging.getLogger("yojansetu.normalization.aggregator")
 
 
 def clean_normalized_name(name: str) -> str:

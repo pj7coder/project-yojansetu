@@ -49,11 +49,11 @@ export function CitizenShell({
             className="flex items-center gap-2 group text-left focus:outline-none focus:ring-2 focus:ring-orange-500 rounded-lg p-1"
           >
             <div className="w-9 h-9 rounded-lg bg-orange-600 flex items-center justify-center text-white font-black text-lg shadow-sm group-hover:bg-orange-700 transition-colors">
-              JS
+              YS
             </div>
             <div>
               <div className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight leading-tight">
-                JanSetu
+                YojanSetu
               </div>
               <div className="text-xs text-orange-700 font-medium leading-none">
                 {activeLang === "hi"
@@ -102,8 +102,8 @@ export function CitizenShell({
         <div className="max-w-4xl mx-auto px-4 text-center text-xs text-slate-500 space-y-1">
           <p className="font-medium text-slate-600">
             {activeLang === "hi"
-              ? "जनसेतु केवल मार्गदर्शन एवं आधिकारिक सूचना उपलब्ध कराता है। यह सीधे आवेदन जमा नहीं करता।"
-              : "JanSetu provides guidance and verified official information. It does not submit applications directly."}
+              ? "योजनसेतु केवल मार्गदर्शन एवं आधिकारिक सूचना उपलब्ध कराता है। यह सीधे आवेदन जमा नहीं करता।"
+              : "YojanSetu provides guidance and verified official information. It does not submit applications directly."}
           </p>
           <p className="text-slate-400">
             {activeLang === "hi"

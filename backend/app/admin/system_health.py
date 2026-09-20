@@ -26,7 +26,7 @@ from app.database.session import engine
 from app.llm.ollama import OllamaProvider
 from app.search.indexer import SchemeSearchIndexService
 
-logger = logging.getLogger("jansetu.admin.system_health")
+logger = logging.getLogger("yojansetu.admin.system_health")
 
 
 class AdminSystemHealthService:

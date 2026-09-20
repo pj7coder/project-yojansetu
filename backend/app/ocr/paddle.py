@@ -14,7 +14,7 @@ from app.ocr.interface import (
     OCRRegion,
 )
 
-logger = logging.getLogger("jansetu.ocr.paddle")
+logger = logging.getLogger("yojansetu.ocr.paddle")
 
 # Regex to detect Rajasthan scheme numbers, currency, dates, percentages, and limits
 # Supports ASCII digits 0-9 and Devanagari numerals ०-९

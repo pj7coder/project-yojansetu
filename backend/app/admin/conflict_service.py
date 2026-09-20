@@ -13,7 +13,7 @@ from app.database.models.scheme_draft import SchemeDraft
 from app.database.models.source_change_event import SourceChangeEvent
 from app.database.models.validation_issue import ValidationIssue
 
-logger = logging.getLogger("jansetu.admin.conflicts")
+logger = logging.getLogger("yojansetu.admin.conflicts")
 
 
 class AdminConflictService:

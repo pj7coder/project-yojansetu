@@ -26,7 +26,7 @@ from app.profile_extraction.schemas import (
     ProfileExtractionResult,
 )
 
-logger = logging.getLogger("jansetu.profile_extraction.service")
+logger = logging.getLogger("yojansetu.profile_extraction.service")
 
 
 class CitizenProfileExtractionService:

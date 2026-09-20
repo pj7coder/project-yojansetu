@@ -19,7 +19,7 @@ from app.verification.schemas import (
     VerificationResult,
 )
 
-logger = logging.getLogger("jansetu.verification.llm")
+logger = logging.getLogger("yojansetu.verification.llm")
 
 
 class LLMEvidenceVerifier:

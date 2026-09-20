@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Developer Audio Endpoints.
+YojanSetu - Day 23: Developer Audio Endpoints.
 
 Protected, development/admin-only endpoints for evaluating the offline
 audio preprocessing pipeline, Silero VAD segmentation, and Whisper STT transcription.

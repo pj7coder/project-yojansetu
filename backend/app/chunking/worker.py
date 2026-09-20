@@ -14,7 +14,7 @@ from app.core.logging import setup_logging
 from app.database.models.document import Document
 from app.database.session import SessionLocal
 
-logger = logging.getLogger("jansetu.chunking.worker")
+logger = logging.getLogger("yojansetu.chunking.worker")
 
 
 class ChunkingWorker:
@@ -115,7 +115,7 @@ class ChunkingWorker:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JanSetu Semantic Document Chunking Worker")
+    parser = argparse.ArgumentParser(description="YojanSetu Semantic Document Chunking Worker")
     parser.add_argument(
         "--once",
         action="store_true",

@@ -12,7 +12,7 @@ from app.normalization.service import SchemeNormalizationService
 from app.repositories.document_repository import DocumentRepository
 from app.repositories.scheme_draft_repository import SchemeDraftRepository
 
-logger = logging.getLogger("jansetu.api.scheme_drafts")
+logger = logging.getLogger("yojansetu.api.scheme_drafts")
 
 router = APIRouter()
 

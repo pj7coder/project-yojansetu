@@ -1,4 +1,4 @@
-# JanSetu — Gold Dataset Coverage Report (v1.0)
+# YojanSetu — Gold Dataset Coverage Report (v1.0)
 
 > **Comprehensive Coverage Audit & Explicit Limitation Disclosure**  
 > *Generated on 2026-09-07 as part of Day 28 Milestone.*

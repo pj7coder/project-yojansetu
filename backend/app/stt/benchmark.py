@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Speech-to-Text Benchmark Runner and CLI.
+YojanSetu - Day 22: Speech-to-Text Benchmark Runner and CLI.
 
 Orchestrates local offline benchmarking across candidate STT models:
 - Loads benchmark dataset manifest
@@ -42,7 +42,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
 )
-logger = logging.getLogger("jansetu.stt.benchmark")
+logger = logging.getLogger("yojansetu.stt.benchmark")
 
 
 class STTBenchmarkRunner:
@@ -143,7 +143,7 @@ class STTBenchmarkRunner:
                 total_critical_failures=0,
             )
             report_lines = [
-                f"# JanSetu — STT Benchmark Report: {provider.provider_id.upper()} ({provider.model_name})",
+                f"# YojanSetu — STT Benchmark Report: {provider.provider_id.upper()} ({provider.model_name})",
                 "",
                 "**Status**: `PROVIDER_UNAVAILABLE`  ",
                 f"**Diagnostics**: `{load_err}`  ",
@@ -290,7 +290,7 @@ class STTBenchmarkRunner:
     ) -> str:
         """Generates comprehensive human-readable Markdown benchmark report."""
         lines = [
-            f"# JanSetu — STT Benchmark Report: {summary.provider.upper()} ({summary.model})",
+            f"# YojanSetu — STT Benchmark Report: {summary.provider.upper()} ({summary.model})",
             "",
             f"**Run ID**: `{summary.benchmark_run_id}`  ",
             f"**Timestamp**: `{summary.timestamp.isoformat()}`  ",
@@ -367,7 +367,7 @@ class STTBenchmarkRunner:
 
 def main():
     """CLI entry point for running STT benchmarks."""
-    parser = argparse.ArgumentParser(description="JanSetu - Local STT Benchmark Suite")
+    parser = argparse.ArgumentParser(description="YojanSetu - Local STT Benchmark Suite")
     parser.add_argument(
         "--provider",
         choices=["whisper", "indic_asr", "mock", "all"],

@@ -54,7 +54,7 @@ export default function AdminReviewQueuePage() {
       <header className="bg-slate-900 text-white border-b border-slate-800 px-6 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="font-bold text-base tracking-tight text-white flex items-center gap-2">
-            <span>🛡 JanSetu</span>
+            <span>🛡 YojanSetu</span>
             <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
               Admin Workspace
             </span>

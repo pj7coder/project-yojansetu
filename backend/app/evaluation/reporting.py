@@ -1,5 +1,5 @@
 """
-JanSetu - Day 29: Benchmark Reporting & Immutable Artifact Generation.
+YojanSetu - Day 29: Benchmark Reporting & Immutable Artifact Generation.
 
 Persists benchmark run artifacts to:
 storage/benchmarks/extraction/<run_id>/
@@ -108,7 +108,7 @@ class BenchmarkReportGenerator:
         best_cases = [c for c in case_results if c.strict_case_pass and (c.source_format == "OCR" or c.layout_type == "TABLE" or "HINDI" in c.tags)][:8]
 
         lines = [
-            f"# JanSetu — Day 29: Document Extraction Benchmark Report",
+            f"# YojanSetu — Day 29: Document Extraction Benchmark Report",
             f"",
             f"**Run ID**: `{m.run_id}`  ",
             f"**Timestamp**: `{m.timestamp}`  ",

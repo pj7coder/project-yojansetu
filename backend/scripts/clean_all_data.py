@@ -1,5 +1,5 @@
 """
-JanSetu - Maintenance Utility: Complete Data Clean & Reset.
+YojanSetu - Maintenance Utility: Complete Data Clean & Reset.
 
 Purges:
 - All database records across schemes, documents, sources, reviews, runs, and pipeline data.

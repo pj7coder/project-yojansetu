@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Silero VAD Provider.
+YojanSetu - Day 23: Silero VAD Provider.
 
 Local, offline Voice Activity Detection using Silero VAD TorchScript JIT model.
 Lazy-loaded to ensure zero memory or startup overhead until needed.

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Audio Transcription CLI Tool.
+YojanSetu - Day 23: Audio Transcription CLI Tool.
 
 Usage:
     python -m app.audio.transcribe_file path/to/audio.wav
@@ -17,7 +17,7 @@ from app.audio.transcription import AudioTranscriptionService
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Transcribe audio file using JanSetu offline audio front-end + STT."
+        description="Transcribe audio file using YojanSetu offline audio front-end + STT."
     )
     parser.add_argument("audio_path", type=str, help="Path to input audio file")
     parser.add_argument("--language", type=str, default="hi", help="Language code (default: hi)")
@@ -28,7 +28,7 @@ def main():
         print(f"[ERROR] Audio file not found: {audio_path}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"=== JanSetu Audio Front-End CLI ===")
+    print(f"=== YojanSetu Audio Front-End CLI ===")
     print(f"Input: {audio_path.name}")
     print(f"Processing...")
 

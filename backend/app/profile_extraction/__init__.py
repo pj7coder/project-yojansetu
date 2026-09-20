@@ -1,5 +1,5 @@
 """
-JanSetu - Day 24: Citizen Profile Extraction & Normalization Package.
+YojanSetu - Day 24: Citizen Profile Extraction & Normalization Package.
 Bridges raw citizen speech transcripts and text inputs to typed, deterministic citizen profiles.
 """
 

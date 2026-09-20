@@ -1,5 +1,5 @@
 """
-JanSetu - Day 22: Speech-to-Text Benchmark Schemas and Data Models.
+YojanSetu - Day 22: Speech-to-Text Benchmark Schemas and Data Models.
 
 Defines typed representations for:
 - STT Provider transcription results (with raw text immutability)

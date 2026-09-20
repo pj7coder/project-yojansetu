@@ -29,7 +29,7 @@ from app.profile_extraction.schemas import (
 from app.profile_extraction.service import CitizenProfileExtractionService, get_profile_extraction_service
 from app.sessions.models import CitizenSession, FieldValueState
 
-logger = logging.getLogger("jansetu.conversation.router")
+logger = logging.getLogger("yojansetu.conversation.router")
 
 # Ordinal patterns for scheme selection from results list
 ORDINAL_MAP = {

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 26: Piper TTS Provider Adapter (ONNX).
+YojanSetu - Day 26: Piper TTS Provider Adapter (ONNX).
 
 Implements TextToSpeechProvider using Rhasspy's Piper neural TTS engine on ONNX runtime.
 Provides low-latency, lightweight offline speech synthesis on CPU with high intelligibility.

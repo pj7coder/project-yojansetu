@@ -44,7 +44,7 @@ from app.database.session import get_db
 from app.review.authorization import ReviewAuthorizationService
 from app.search.indexer import SchemeSearchIndexService
 
-logger = logging.getLogger("jansetu.api.admin_dashboard")
+logger = logging.getLogger("yojansetu.api.admin_dashboard")
 
 router = APIRouter(prefix="/admin", tags=["Admin Dashboard & Operations"])
 

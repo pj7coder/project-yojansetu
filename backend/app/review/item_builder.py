@@ -8,7 +8,7 @@ from app.database.models.validation_issue import ValidationIssue
 from app.verification.fact_builder import CanonicalFactBuilder
 from app.verification.schemas import FactRiskLevel, VerifiableFact
 
-logger = logging.getLogger("jansetu.review.item_builder")
+logger = logging.getLogger("yojansetu.review.item_builder")
 
 
 class ReviewItemBuilder:

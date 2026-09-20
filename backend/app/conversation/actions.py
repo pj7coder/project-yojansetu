@@ -1,5 +1,5 @@
 """
-Controlled conversation actions for JanSetu response rendering (Day 25).
+Controlled conversation actions for YojanSetu response rendering (Day 25).
 Directs frontend display and expected interaction without manual client orchestration.
 """
 

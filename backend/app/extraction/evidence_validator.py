@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 
 from app.extraction.schemas import ChunkExtractionResult, EvidenceItem
 
-logger = logging.getLogger("jansetu.extraction.evidence_validator")
+logger = logging.getLogger("yojansetu.extraction.evidence_validator")
 
 
 class EvidenceValidator:

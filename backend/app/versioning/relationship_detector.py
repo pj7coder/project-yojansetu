@@ -11,7 +11,7 @@ from app.versioning.schemas import (
     RelationshipType,
 )
 
-logger = logging.getLogger("jansetu.versioning.relationship_detector")
+logger = logging.getLogger("yojansetu.versioning.relationship_detector")
 
 
 class DocumentRelationshipDetector:

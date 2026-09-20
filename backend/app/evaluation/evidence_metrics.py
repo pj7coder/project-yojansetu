@@ -1,5 +1,5 @@
 """
-JanSetu - Day 29: Evidence Grounding, Semantic Support & Hallucination Evaluator.
+YojanSetu - Day 29: Evidence Grounding, Semantic Support & Hallucination Evaluator.
 
 Implements:
 - Evidence reference validity check (source page/block/chunk existence)

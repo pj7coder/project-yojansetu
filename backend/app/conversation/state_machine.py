@@ -11,7 +11,7 @@ from app.conversation.events import ConversationEvent
 from app.conversation.states import ConversationState
 from app.sessions.models import CitizenSession
 
-logger = logging.getLogger("jansetu.conversation.state_machine")
+logger = logging.getLogger("yojansetu.conversation.state_machine")
 
 
 # Explicit Transition Table: (Current State, Event) -> Next State

@@ -2,7 +2,7 @@ import logging
 from typing import List, Tuple
 from app.database.models.human_review_session import HumanReviewSession
 
-logger = logging.getLogger("jansetu.review.completion")
+logger = logging.getLogger("yojansetu.review.completion")
 
 
 class ReviewCompletionGuard:

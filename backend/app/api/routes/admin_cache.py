@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.cache.verified_rule_cache import get_rule_cache
 from app.database.session import get_db
 
-logger = logging.getLogger("jansetu.api.admin_cache")
+logger = logging.getLogger("yojansetu.api.admin_cache")
 
 router = APIRouter(prefix="/admin/cache", tags=["Admin System & Cache"])
 

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Noise Suppression Module.
+YojanSetu - Day 23: Noise Suppression Module.
 """
 
 from typing import Optional

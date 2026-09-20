@@ -1,5 +1,5 @@
 """
-JanSetu - Day 30: Unit & Integration Tests for Eligibility Accuracy Evaluation & Failure Analysis.
+YojanSetu - Day 30: Unit & Integration Tests for Eligibility Accuracy Evaluation & Failure Analysis.
 
 Verifies:
 1. Decision Confusion Matrix metrics (3x3), precision, recall, F1, and safety-critical counts

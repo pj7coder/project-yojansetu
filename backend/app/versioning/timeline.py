@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.database.models.scheme import SchemeVersion
 
-logger = logging.getLogger("jansetu.versioning.timeline")
+logger = logging.getLogger("yojansetu.versioning.timeline")
 
 
 class SchemeTimelineService:

@@ -1,5 +1,5 @@
 """
-JanSetu - Day 23: Noise Suppressor Interface.
+YojanSetu - Day 23: Noise Suppressor Interface.
 
 Defines the abstract base class for audio noise suppression.
 Implementations must process audio locally/offline without external network calls.

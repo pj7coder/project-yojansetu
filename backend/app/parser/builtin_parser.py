@@ -17,7 +17,7 @@ from app.parser.interface import (
     DocumentPageLimitExceededException,
 )
 
-logger = logging.getLogger("jansetu.parser.builtin")
+logger = logging.getLogger("yojansetu.parser.builtin")
 
 
 class BuiltinLayoutParser(BaseParser):

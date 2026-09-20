@@ -1,5 +1,5 @@
 """
-Integration tests for JanSetu's ReAct Welfare Agent Orchestrator.
+Integration tests for YojanSetu's ReAct Welfare Agent Orchestrator.
 Tests multi-step reasoning, tool sequencing, grounded citation generation, and vernacular synthesis.
 """
 
