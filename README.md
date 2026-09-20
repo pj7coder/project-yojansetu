@@ -2,7 +2,8 @@
 
 > **Offline-first vernacular government-scheme discovery assistant for Rajasthan.**
 
-**Current Status**: Day 29 — Extraction Accuracy Evaluation + Failure Analysis
+**Current Status**: Day 29 — Extraction Accuracy Evaluation + Failure Analysis  
+**Live Web Deployment**: [https://yojansetu.vercel.app](https://yojansetu.vercel.app)
 
 ---
 
