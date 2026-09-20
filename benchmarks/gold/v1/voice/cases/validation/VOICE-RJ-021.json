@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-021",
+  "task": "voice",
+  "split": "VALIDATION",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "EASY",
+  "tags": [
+    "SHORT_ANSWER",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_short_001.wav"
+  ],
+  "audio_file": "audio/hi_short_001.wav",
+  "audio_sha256": "d7c3a53a03b5faeb00d5bdfce594d401ce1c01d5fdb345f392f76913db145082",
+  "duration_seconds": 0.77,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "SHORT_ANSWER",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "हाँ",
+  "context": {
+    "expected_field": "bpl_status",
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": "bpl_status",
+    "operator": null,
+    "value": true,
+    "is_confirmation": true
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 670
+  }
+}

@@ -1,0 +1,615 @@
+{
+  "dataset_version": "1.0",
+  "benchmark_version": "1.0",
+  "description": "JanSetu Local STT Benchmark Dataset (Rajasthan vernacular welfare domain)",
+  "total_samples": 40,
+  "samples": [
+    {
+      "id": "HI-AGE-001",
+      "audio_file": "audio/hi_age_001.wav",
+      "reference": "मेरी उम्र बासठ वर्ष है",
+      "language": "hi",
+      "category": "AGE",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "age": 62
+      },
+      "duration": 2.38,
+      "notes": null
+    },
+    {
+      "id": "HI-AGE-002",
+      "audio_file": "audio/hi_age_002.wav",
+      "reference": "मैं अट्ठावन साल का हूँ",
+      "language": "hi",
+      "category": "AGE",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "age": 58
+      },
+      "duration": 2.25,
+      "notes": null
+    },
+    {
+      "id": "HI-AGE-003",
+      "audio_file": "audio/hi_age_003.wav",
+      "reference": "मेरी उम्र साठ साल है",
+      "language": "hi",
+      "category": "AGE",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "age": 60
+      },
+      "duration": 2.21,
+      "notes": null
+    },
+    {
+      "id": "HI-AGE-004",
+      "audio_file": "audio/hi_age_004.wav",
+      "reference": "मेरी उम्र साठ से ऊपर है",
+      "language": "hi",
+      "category": "AGE",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "age": 60
+      },
+      "duration": 2.5,
+      "notes": null
+    },
+    {
+      "id": "HI-AGE-005",
+      "audio_file": "audio/hi_age_005.wav",
+      "reference": "मेरी उम्र छब्बीस साल है",
+      "language": "hi",
+      "category": "AGE",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "age": 26
+      },
+      "duration": 2.38,
+      "notes": "Tests 62 vs 26 digit confusion"
+    },
+    {
+      "id": "HI-INC-001",
+      "audio_file": "audio/hi_inc_001.wav",
+      "reference": "मेरे परिवार की वार्षिक आय डेढ़ लाख रुपये है",
+      "language": "hi",
+      "category": "INCOME",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "family_income": 150000
+      },
+      "duration": 3.77,
+      "notes": null
+    },
+    {
+      "id": "HI-INC-002",
+      "audio_file": "audio/hi_inc_002.wav",
+      "reference": "मेरी सालाना आय दो लाख पचास हजार रुपये है",
+      "language": "hi",
+      "category": "INCOME",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "family_income": 250000
+      },
+      "duration": 3.94,
+      "notes": null
+    },
+    {
+      "id": "HI-INC-003",
+      "audio_file": "audio/hi_inc_003.wav",
+      "reference": "मेरी आय ढाई लाख रुपये है",
+      "language": "hi",
+      "category": "INCOME",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "family_income": 250000
+      },
+      "duration": 2.57,
+      "notes": null
+    },
+    {
+      "id": "HI-INC-004",
+      "audio_file": "audio/hi_inc_004.wav",
+      "reference": "हमारी वार्षिक आय दो लाख रुपये है",
+      "language": "hi",
+      "category": "INCOME",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "family_income": 200000
+      },
+      "duration": 3.17,
+      "notes": null
+    },
+    {
+      "id": "HI-INC-005",
+      "audio_file": "audio/hi_inc_005.wav",
+      "reference": "मेरी आय पंद्रह हजार रुपये महीना है",
+      "language": "hi",
+      "category": "INCOME",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "family_income": 15000,
+        "income_frequency": "MONTHLY"
+      },
+      "duration": 3.26,
+      "notes": null
+    },
+    {
+      "id": "HI-INC-006",
+      "audio_file": "audio/hi_inc_006.wav",
+      "reference": "परिवार की कुल कमाई एक लाख अस्सी हजार है",
+      "language": "hi",
+      "category": "INCOME",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "family_income": 180000
+      },
+      "duration": 3.77,
+      "notes": null
+    },
+    {
+      "id": "HI-DIST-001",
+      "audio_file": "audio/hi_dist_001.wav",
+      "reference": "मैं डूंगरपुर में रहता हूँ",
+      "language": "hi",
+      "category": "DISTRICT",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "district": "Dungarpur"
+      },
+      "duration": 2.35,
+      "notes": null
+    },
+    {
+      "id": "HI-DIST-002",
+      "audio_file": "audio/hi_dist_002.wav",
+      "reference": "मैं उदयपुर जिले से हूँ",
+      "language": "hi",
+      "category": "DISTRICT",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "district": "Udaipur"
+      },
+      "duration": 2.25,
+      "notes": null
+    },
+    {
+      "id": "HI-DIST-003",
+      "audio_file": "audio/hi_dist_003.wav",
+      "reference": "हम चित्तौड़गढ़ के रहने वाले हैं",
+      "language": "hi",
+      "category": "DISTRICT",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "district": "Chittorgarh"
+      },
+      "duration": 2.73,
+      "notes": null
+    },
+    {
+      "id": "HI-DIST-004",
+      "audio_file": "audio/hi_dist_004.wav",
+      "reference": "मेरा गांव बांसवाड़ा जिले में है",
+      "language": "hi",
+      "category": "DISTRICT",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "district": "Banswara"
+      },
+      "duration": 2.76,
+      "notes": null
+    },
+    {
+      "id": "HI-DIST-005",
+      "audio_file": "audio/hi_dist_005.wav",
+      "reference": "हम झालावाड़ जिले के निवासी हैं",
+      "language": "hi",
+      "category": "DISTRICT",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "district": "Jhalawar"
+      },
+      "duration": 2.88,
+      "notes": null
+    },
+    {
+      "id": "HI-DIST-006",
+      "audio_file": "audio/hi_dist_006.wav",
+      "reference": "मेरा निवास स्थान प्रतापगढ़ है",
+      "language": "hi",
+      "category": "DISTRICT",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "district": "Pratapgarh"
+      },
+      "duration": 2.71,
+      "notes": null
+    },
+    {
+      "id": "HI-DIST-007",
+      "audio_file": "audio/hi_dist_007.wav",
+      "reference": "हमारा घर जैसलमेर जिले में पड़ता है",
+      "language": "hi",
+      "category": "DISTRICT",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "district": "Jaisalmer"
+      },
+      "duration": 3.26,
+      "notes": null
+    },
+    {
+      "id": "HI-DIST-008",
+      "audio_file": "audio/hi_dist_008.wav",
+      "reference": "हम श्रीगंगानगर के रहने वाले हैं",
+      "language": "hi",
+      "category": "DISTRICT",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "district": "Sri Ganganagar"
+      },
+      "duration": 3.07,
+      "notes": null
+    },
+    {
+      "id": "HI-DIST-009",
+      "audio_file": "audio/hi_dist_009.wav",
+      "reference": "मैं सवाई माधोपुर जिले से हूँ",
+      "language": "hi",
+      "category": "DISTRICT",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "district": "Sawai Madhopur"
+      },
+      "duration": 2.64,
+      "notes": null
+    },
+    {
+      "id": "HI-SHORT-001",
+      "audio_file": "audio/hi_short_001.wav",
+      "reference": "हाँ",
+      "language": "hi",
+      "category": "SHORT_ANSWER",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": true,
+      "entities": {
+        "negation": false
+      },
+      "duration": 0.77,
+      "notes": null
+    },
+    {
+      "id": "HI-SHORT-002",
+      "audio_file": "audio/hi_short_002.wav",
+      "reference": "नहीं",
+      "language": "hi",
+      "category": "SHORT_ANSWER",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": true,
+      "entities": {
+        "negation": true
+      },
+      "duration": 0.84,
+      "notes": null
+    },
+    {
+      "id": "HI-SHORT-003",
+      "audio_file": "audio/hi_short_003.wav",
+      "reference": "डूंगरपुर",
+      "language": "hi",
+      "category": "SHORT_ANSWER",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": true,
+      "entities": {
+        "district": "Dungarpur"
+      },
+      "duration": 1.15,
+      "notes": null
+    },
+    {
+      "id": "HI-SHORT-004",
+      "audio_file": "audio/hi_short_004.wav",
+      "reference": "बासठ",
+      "language": "hi",
+      "category": "SHORT_ANSWER",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": true,
+      "entities": {
+        "age": 62
+      },
+      "duration": 1.03,
+      "notes": null
+    },
+    {
+      "id": "HI-SHORT-005",
+      "audio_file": "audio/hi_short_005.wav",
+      "reference": "डेढ़ लाख",
+      "language": "hi",
+      "category": "SHORT_ANSWER",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": true,
+      "entities": {
+        "family_income": 150000
+      },
+      "duration": 1.18,
+      "notes": null
+    },
+    {
+      "id": "HI-NEG-001",
+      "audio_file": "audio/hi_neg_001.wav",
+      "reference": "मैं बीपीएल परिवार में नहीं हूँ",
+      "language": "hi",
+      "category": "NEGATION",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "negation": true,
+        "bpl_status": false
+      },
+      "duration": 2.66,
+      "notes": null
+    },
+    {
+      "id": "HI-NEG-002",
+      "audio_file": "audio/hi_neg_002.wav",
+      "reference": "मैं बीपीएल परिवार में हूँ",
+      "language": "hi",
+      "category": "NEGATION",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "negation": false,
+        "bpl_status": true
+      },
+      "duration": 2.35,
+      "notes": null
+    },
+    {
+      "id": "HI-NEG-003",
+      "audio_file": "audio/hi_neg_003.wav",
+      "reference": "मेरे पास जन आधार कार्ड नहीं है",
+      "language": "hi",
+      "category": "NEGATION",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "negation": true
+      },
+      "duration": 2.98,
+      "notes": null
+    },
+    {
+      "id": "HI-MIX-001",
+      "audio_file": "audio/hi_mix_001.wav",
+      "reference": "मेरी family income दो लाख है",
+      "language": "hi",
+      "category": "CODE_MIXED",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "family_income": 200000
+      },
+      "duration": 2.69,
+      "notes": null
+    },
+    {
+      "id": "HI-MIX-002",
+      "audio_file": "audio/hi_mix_002.wav",
+      "reference": "मुझे farmer subsidy के बारे में जानकारी चाहिए",
+      "language": "hi",
+      "category": "CODE_MIXED",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "scheme_name": "subsidy"
+      },
+      "duration": 3.81,
+      "notes": null
+    },
+    {
+      "id": "HI-MIX-003",
+      "audio_file": "audio/hi_mix_003.wav",
+      "reference": "मैं e-Mitra से apply करना चाहता हूँ",
+      "language": "hi",
+      "category": "CODE_MIXED",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "scheme_name": "e-mitra"
+      },
+      "duration": 3.12,
+      "notes": null
+    },
+    {
+      "id": "HI-GOV-001",
+      "audio_file": "audio/hi_gov_001.wav",
+      "reference": "मेरे पास जन आधार कार्ड है",
+      "language": "hi",
+      "category": "GOVERNMENT_TERMS",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "scheme_name": "जन आधार"
+      },
+      "duration": 2.66,
+      "notes": null
+    },
+    {
+      "id": "HI-GOV-002",
+      "audio_file": "audio/hi_gov_002.wav",
+      "reference": "मुझे वृद्धावस्था पेंशन योजना की जानकारी चाहिए",
+      "language": "hi",
+      "category": "GOVERNMENT_TERMS",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "scheme_name": "पेंशन"
+      },
+      "duration": 4.17,
+      "notes": null
+    },
+    {
+      "id": "HI-GOV-003",
+      "audio_file": "audio/hi_gov_003.wav",
+      "reference": "छात्रवृत्ति के लिए आवेदन कैसे करें",
+      "language": "hi",
+      "category": "GOVERNMENT_TERMS",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "scheme_name": "छात्रवृत्ति"
+      },
+      "duration": 3.36,
+      "notes": null
+    },
+    {
+      "id": "RAJ-DIA-001",
+      "audio_file": "audio/raj_dia_001.wav",
+      "reference": "म्हारी उम्र बासठ साल है अर म्हारी कमाई डेढ़ लाख है",
+      "language": "raj",
+      "category": "RAJASTHANI_DIALECT_STYLE",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "age": 62,
+        "family_income": 150000
+      },
+      "duration": 4.56,
+      "notes": "Mewari/Marwari conversational style phrasing"
+    },
+    {
+      "id": "RAJ-DIA-002",
+      "audio_file": "audio/raj_dia_002.wav",
+      "reference": "म्हे उदयपुर जिला का रहने वाला हां",
+      "language": "raj",
+      "category": "RAJASTHANI_DIALECT_STYLE",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "district": "Udaipur"
+      },
+      "duration": 3.05,
+      "notes": "Mewari regional dialect self-identification"
+    },
+    {
+      "id": "RAJ-DIA-003",
+      "audio_file": "audio/raj_dia_003.wav",
+      "reference": "म्हारो जन आधार कार्ड बन्योड़ो कोनी",
+      "language": "raj",
+      "category": "RAJASTHANI_DIALECT_STYLE",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "negation": true,
+        "scheme_name": "जन आधार"
+      },
+      "duration": 3.26,
+      "notes": "Dialect negation marker 'कोनी'"
+    },
+    {
+      "id": "HI-NOISE-001",
+      "audio_file": "audio/hi_noise_001.wav",
+      "reference": "मेरी उम्र बासठ वर्ष है",
+      "language": "hi",
+      "category": "HINDI_NOISY",
+      "noise_level": "LIGHT_NOISE",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "age": 62
+      },
+      "duration": 2.38,
+      "notes": "Fan noise background"
+    },
+    {
+      "id": "HI-NOISE-002",
+      "audio_file": "audio/hi_noise_002.wav",
+      "reference": "परिवार की वार्षिक आय डेढ़ लाख रुपये है",
+      "language": "hi",
+      "category": "HINDI_NOISY",
+      "noise_level": "MODERATE_NOISE",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "family_income": 150000
+      },
+      "duration": 3.43,
+      "notes": "Street traffic noise background"
+    },
+    {
+      "id": "HI-MULTI-001",
+      "audio_file": "audio/hi_multi_001.wav",
+      "reference": "मैं उदयपुर जिले के एक गांव में रहता हूँ मेरी उम्र बासठ साल है और परिवार की सालाना आय लगभग डेढ़ लाख है",
+      "language": "hi",
+      "category": "LONG_MULTI_ENTITY",
+      "noise_level": "CLEAN",
+      "speech_rate": "normal",
+      "is_short_answer": false,
+      "entities": {
+        "district": "Udaipur",
+        "age": 62,
+        "family_income": 150000
+      },
+      "duration": 9.38,
+      "notes": "Complex multi-entity citizen turn"
+    }
+  ]
+}

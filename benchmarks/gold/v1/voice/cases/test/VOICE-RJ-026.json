@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-026",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "NEGATION",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_neg_001.wav"
+  ],
+  "audio_file": "audio/hi_neg_001.wav",
+  "audio_sha256": "797ad665a8113e9867d776e8f1d6e8f215c3c316f1c83cc79f0801ce7da1996f",
+  "duration_seconds": 2.66,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "NEGATION",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "मैं बीपीएल परिवार में नहीं हूँ",
+  "context": {
+    "expected_field": null,
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 2560
+  }
+}

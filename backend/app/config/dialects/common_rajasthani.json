@@ -1,0 +1,24 @@
+{
+  "_metadata": {
+    "lexicon_name": "common_rajasthani",
+    "version": "1.0",
+    "description": "Reviewed colloquial Rajasthani phrases mapped to standard Hindi equivalents for safe canonical normalization."
+  },
+  "mappings": {
+    "म्हारी": "मेरी",
+    "म्हारो": "मेरा",
+    "म्हारा": "मेरे",
+    "थांरी": "आपकी",
+    "थांरो": "आपका",
+    "थांरा": "आपके",
+    "छै": "है",
+    "छा": "थे",
+    "कोनी": "नहीं",
+    "कोनी है": "नहीं है",
+    "घरां री": "घर की",
+    "घर री": "घर की",
+    "साल भर री": "साल भर की",
+    "कमाई": "कमाई",
+    "कमाने": "कमाई"
+  }
+}

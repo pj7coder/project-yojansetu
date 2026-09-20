@@ -1,0 +1,56 @@
+{
+  "case_id": "EXT-RJ-036",
+  "task": "extraction",
+  "split": "VALIDATION",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "DOCUMENTS",
+    "JAN_AADHAAR",
+    "BANK",
+    "APPLICATION"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "doc:72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2"
+  ],
+  "source": {
+    "document_id": "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2",
+    "chunk_id": "DOC-72FF2711-CHUNK-0004",
+    "page_number": 2,
+    "source_block_ids": [
+      "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p2-b2"
+    ],
+    "text_snippet": "4. Required Documents\n1. Jan Aadhaar Card\n2. Bank Passbook\n3. Age Proof",
+    "contains_table": false,
+    "contains_ocr": false,
+    "language": "en"
+  },
+  "expected_facts": [
+    {
+      "field": "documents.jan_aadhaar",
+      "is_mandatory": true,
+      "value": "Jan Aadhaar Card",
+      "evidence_quote": "1. Jan Aadhaar Card",
+      "evidence_page": 2,
+      "evidence_block_ids": [
+        "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p2-b2"
+      ]
+    },
+    {
+      "field": "documents.bank_passbook",
+      "is_mandatory": true,
+      "value": "Bank Passbook",
+      "evidence_quote": "2. Bank Passbook",
+      "evidence_page": 2,
+      "evidence_block_ids": [
+        "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p2-b2"
+      ]
+    }
+  ],
+  "is_negative": false,
+  "is_security_test": false
+}

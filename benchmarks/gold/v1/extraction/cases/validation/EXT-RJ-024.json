@@ -1,0 +1,48 @@
+{
+  "case_id": "EXT-RJ-024",
+  "task": "extraction",
+  "split": "VALIDATION",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "HARD",
+  "tags": [
+    "OCR",
+    "TABLE",
+    "BENEFIT",
+    "SCANNED_PAGE"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "doc:bcf2c569-f75d-4e7a-a5ca-8595bba08000"
+  ],
+  "source": {
+    "document_id": "bcf2c569-f75d-4e7a-a5ca-8595bba08000",
+    "chunk_id": "DOC-BCF2C569-CHUNK-0003",
+    "page_number": 2,
+    "source_block_ids": [
+      "bcf2c569-f75d-4e7a-a5ca-8595bba08000-p2-b0"
+    ],
+    "text_snippet": "[OCR Section: BENEFITS]\n| Age Bracket | Monthly Pension |\n| 58 - 75 years | ₹1,150 |\n| Above 75 years | ₹1,500 |",
+    "contains_table": true,
+    "contains_ocr": true,
+    "language": "en"
+  },
+  "expected_facts": [
+    {
+      "field": "benefits.monthly_amount",
+      "operator": "EQ",
+      "value": 1150,
+      "currency": "INR",
+      "period": "MONTHLY",
+      "evidence_quote": "| 58 - 75 years | ₹1,150 |",
+      "evidence_page": 2,
+      "evidence_block_ids": [
+        "bcf2c569-f75d-4e7a-a5ca-8595bba08000-p2-b0"
+      ]
+    }
+  ],
+  "is_negative": false,
+  "is_security_test": false
+}

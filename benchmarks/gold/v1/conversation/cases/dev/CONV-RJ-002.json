@@ -1,0 +1,42 @@
+{
+  "case_id": "CONV-RJ-002",
+  "task": "conversation",
+  "split": "DEV",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "CONVERSATION",
+    "MULTI_TURN",
+    "STATE_MACHINE"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "conversation_orchestration"
+  ],
+  "conversation_id": "CONV_SES_CONV-RJ-002",
+  "language": "hi",
+  "description": "Immediate disqualification when user is underage for old age pension",
+  "turns": [
+    {
+      "turn_index": 1,
+      "user_text": "मुझे वृद्धावस्था पेंशन चाहिए",
+      "expected_state": "WAITING_FOR_PROFILE_VALUE",
+      "expected_action": "ASK_PROFILE_FIELD",
+      "expected_field": "age",
+      "message_key": "ask_age"
+    },
+    {
+      "turn_index": 2,
+      "user_text": "मेरी उम्र 40 साल है",
+      "expected_state": "NO_RESULTS",
+      "expected_action": "SHOW_RESULTS",
+      "expected_profile_delta": {
+        "age": 40
+      },
+      "message_key": "no_schemes_eligible"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-028",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "NEGATION",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_neg_003.wav"
+  ],
+  "audio_file": "audio/hi_neg_003.wav",
+  "audio_sha256": "5c936b12d3b107e94d77e606f758447d2e7a0c26bedd3a0815416c73a25fbf80",
+  "duration_seconds": 2.98,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "NEGATION",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "मेरे पास जन आधार कार्ड नहीं है",
+  "context": {
+    "expected_field": null,
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 2880
+  }
+}

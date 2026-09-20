@@ -1,0 +1,60 @@
+{
+  "case_id": "EXT-RJ-017",
+  "task": "extraction",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "TABLE",
+    "BENEFIT",
+    "TIERED",
+    "AGE_BRACKET"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "doc:72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2"
+  ],
+  "source": {
+    "document_id": "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2",
+    "chunk_id": "DOC-72FF2711-CHUNK-0003",
+    "page_number": 2,
+    "source_block_ids": [
+      "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p2-b0"
+    ],
+    "text_snippet": "| Age Bracket | Monthly Pension |\n| 58 - 75 years | ₹1,150 |\n| Above 75 years | ₹1,500 |",
+    "contains_table": true,
+    "contains_ocr": false,
+    "language": "en"
+  },
+  "expected_facts": [
+    {
+      "field": "benefits.monthly_pension_tier1",
+      "operator": "EQ",
+      "value": 1150,
+      "currency": "INR",
+      "period": "MONTHLY",
+      "evidence_quote": "| 58 - 75 years | ₹1,150 |",
+      "evidence_page": 2,
+      "evidence_block_ids": [
+        "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p2-b0"
+      ]
+    },
+    {
+      "field": "benefits.monthly_pension_tier2",
+      "operator": "EQ",
+      "value": 1500,
+      "currency": "INR",
+      "period": "MONTHLY",
+      "evidence_quote": "| Above 75 years | ₹1,500 |",
+      "evidence_page": 2,
+      "evidence_block_ids": [
+        "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p2-b0"
+      ]
+    }
+  ],
+  "is_negative": false,
+  "is_security_test": false
+}

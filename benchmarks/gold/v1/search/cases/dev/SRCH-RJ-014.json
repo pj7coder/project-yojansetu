@@ -1,0 +1,32 @@
+{
+  "case_id": "SRCH-RJ-014",
+  "task": "search",
+  "split": "DEV",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "HARD",
+  "tags": [
+    "FARMING",
+    "AGRICULTURE"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "query:खेती के लिए आर्थिक मदद"
+  ],
+  "query": "खेती के लिए आर्थिक मदद",
+  "language": "hi",
+  "query_type": "NATURAL",
+  "profile": {
+    "district": "Jaipur",
+    "state": "Rajasthan"
+  },
+  "expected": {
+    "relevance_judgments": [],
+    "acceptable_top_set": [],
+    "must_appear_top_5": [],
+    "must_not_appear_top_k": [],
+    "expected_empty": true
+  }
+}

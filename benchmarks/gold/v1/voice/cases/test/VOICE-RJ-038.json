@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-038",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "HINDI_NOISY",
+    "AUDIO",
+    "LIGHT_NOISE"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_noise_001.wav"
+  ],
+  "audio_file": "audio/hi_noise_001.wav",
+  "audio_sha256": "6e97a294bcafa0002e9983a9ae7a1818ef34bbede160bac1ca647d0c6a7c8a4f",
+  "duration_seconds": 2.38,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "HINDI_NOISY",
+  "noise_condition": "LIGHT_NOISE",
+  "reference_transcript": "मेरी उम्र बासठ वर्ष है",
+  "context": {
+    "expected_field": "age",
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": "age",
+    "operator": "EQ",
+    "value": 62,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 2280
+  }
+}

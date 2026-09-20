@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-034",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "GOVERNMENT_TERMS",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_gov_003.wav"
+  ],
+  "audio_file": "audio/hi_gov_003.wav",
+  "audio_sha256": "7e0653065b6cb16c814ebe498a6b36d605c61b049b8abb2d71e6411c9e0fc5b2",
+  "duration_seconds": 3.36,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "GOVERNMENT_TERMS",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "छात्रवृत्ति के लिए आवेदन कैसे करें",
+  "context": {
+    "expected_field": null,
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 3260
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-040",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "LONG_MULTI_ENTITY",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_multi_001.wav"
+  ],
+  "audio_file": "audio/hi_multi_001.wav",
+  "audio_sha256": "dbda0861db2648a6b68c0f7a77d9c25373578b1ec0ba34beba9f430527bcc2d8",
+  "duration_seconds": 9.38,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "LONG_MULTI_ENTITY",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "मैं उदयपुर जिले के एक गांव में रहता हूँ मेरी उम्र बासठ साल है और परिवार की सालाना आय लगभग डेढ़ लाख है",
+  "context": {
+    "expected_field": "age",
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": "age",
+    "operator": "EQ",
+    "value": 62,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 9280
+  }
+}

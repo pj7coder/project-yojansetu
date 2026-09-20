@@ -1,0 +1,361 @@
+{
+  "_metadata": {
+    "dataset_name": "rajasthan_districts",
+    "dataset_type": "curated_reference_data",
+    "version": "1.0",
+    "last_updated": "2026-09-06",
+    "provenance_note": "Curated reference dataset covering Rajasthan active and reorganized districts for deterministic validation. Development and test reference data; official gazette alignment verified."
+  },
+  "districts": [
+    {
+      "code": "RJ-AJM",
+      "name": "Ajmer",
+      "name_hi": "अजमेर",
+      "aliases": ["ajmer", "अजमेर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-ALW",
+      "name": "Alwar",
+      "name_hi": "अलवर",
+      "aliases": ["alwar", "अलवर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-ANO",
+      "name": "Anupgarh",
+      "name_hi": "अनूपगढ़",
+      "aliases": ["anupgarh", "अनूपगढ़", "anoopgarh"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-BAL",
+      "name": "Balotra",
+      "name_hi": "बालोतरा",
+      "aliases": ["balotra", "बालोतरा"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-BSW",
+      "name": "Banswara",
+      "name_hi": "बांसवाड़ा",
+      "aliases": ["banswara", "बांसवाड़ा", "bansdwara"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-BRN",
+      "name": "Baran",
+      "name_hi": "बारां",
+      "aliases": ["baran", "बारां"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-BMR",
+      "name": "Barmer",
+      "name_hi": "बाड़मेर",
+      "aliases": ["barmer", "बाड़मेर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-BHR",
+      "name": "Beawar",
+      "name_hi": "ब्यावर",
+      "aliases": ["beawar", "ब्यावर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-BHT",
+      "name": "Bharatpur",
+      "name_hi": "भरतपुर",
+      "aliases": ["bharatpur", "भरतपुर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-BHL",
+      "name": "Bhilwara",
+      "name_hi": "भीलवाड़ा",
+      "aliases": ["bhilwara", "भीलवाड़ा"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-BKN",
+      "name": "Bikaner",
+      "name_hi": "बीकानेर",
+      "aliases": ["bikaner", "बीकानेर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-BND",
+      "name": "Bundi",
+      "name_hi": "बूंदी",
+      "aliases": ["bundi", "बूंदी"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-CHT",
+      "name": "Chittorgarh",
+      "name_hi": "चित्तौड़गढ़",
+      "aliases": ["chittorgarh", "चित्तौड़गढ़", "chittor"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-CHR",
+      "name": "Churu",
+      "name_hi": "चूरू",
+      "aliases": ["churu", "चूरू"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-DSA",
+      "name": "Dausa",
+      "name_hi": "दौसा",
+      "aliases": ["dausa", "दौसा"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-DEG",
+      "name": "Deeg",
+      "name_hi": "डीग",
+      "aliases": ["deeg", "डीग"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-DDW",
+      "name": "Didwana-Kuchaman",
+      "name_hi": "डीडवाना-कुचामन",
+      "aliases": ["didwana kuchaman", "didwana-kuchaman", "डीडवाना-कुचामन", "didwana", "kuchaman"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-DDU",
+      "name": "Dudu",
+      "name_hi": "दूदू",
+      "aliases": ["dudu", "दूदू"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-DHL",
+      "name": "Dholpur",
+      "name_hi": "धौलपुर",
+      "aliases": ["dholpur", "धौलपुर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-DNG",
+      "name": "Dungarpur",
+      "name_hi": "डूंगरपुर",
+      "aliases": ["dungarpur", "डूंगरपुर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-GAN",
+      "name": "Ganganagar",
+      "name_hi": "गंगानगर",
+      "aliases": ["ganganagar", "गंगानगर", "sri ganganagar", "श्रीगंगानगर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-GNC",
+      "name": "Gangapur City",
+      "name_hi": "गंगापुर सिटी",
+      "aliases": ["gangapur city", "गंगापुर सिटी", "gangapur"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-HAN",
+      "name": "Hanumangarh",
+      "name_hi": "हनुमानगढ़",
+      "aliases": ["hanumangarh", "हनुमानगढ़"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-JPR",
+      "name": "Jaipur",
+      "name_hi": "जयपुर",
+      "aliases": ["jaipur", "जयपुर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-JRU",
+      "name": "Jaipur Rural",
+      "name_hi": "जयपुर ग्रामीण",
+      "aliases": ["jaipur rural", "जयपुर ग्रामीण"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-JSM",
+      "name": "Jaisalmer",
+      "name_hi": "जैसलमेर",
+      "aliases": ["jaisalmer", "जैसलमेर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-JAL",
+      "name": "Jalore",
+      "name_hi": "जालोर",
+      "aliases": ["jalore", "जालोर", "jalor"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-JLW",
+      "name": "Jhalawar",
+      "name_hi": "झालावाड़",
+      "aliases": ["jhalawar", "झालावाड़"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-JJN",
+      "name": "Jhunjhunu",
+      "name_hi": "झुंझुनू",
+      "aliases": ["jhunjhunu", "झुंझुनू", "jhunjhunun"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-JDH",
+      "name": "Jodhpur",
+      "name_hi": "जोधपुर",
+      "aliases": ["jodhpur", "जोधपुर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-JDR",
+      "name": "Jodhpur Rural",
+      "name_hi": "जोधपुर ग्रामीण",
+      "aliases": ["jodhpur rural", "जोधपुर ग्रामीण"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-KRL",
+      "name": "Karauli",
+      "name_hi": "करौली",
+      "aliases": ["karauli", "करौली"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-KEK",
+      "name": "Kekri",
+      "name_hi": "केकड़ी",
+      "aliases": ["kekri", "केकड़ी"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-KHW",
+      "name": "Khairthal-Tijara",
+      "name_hi": "खैरथल-तिजारा",
+      "aliases": ["khairthal tijara", "khairthal-tijara", "खैरथल-तिजारा", "khairthal", "tijara"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-KOT",
+      "name": "Kota",
+      "name_hi": "कोटा",
+      "aliases": ["kota", "कोटा"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-KTP",
+      "name": "Kotputli-Behror",
+      "name_hi": "कोटपूतली-बहरोड़",
+      "aliases": ["kotputli behror", "kotputli-behror", "कोटपूतली-बहरोड़", "kotputli", "behror"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-NAG",
+      "name": "Nagaur",
+      "name_hi": "नागौर",
+      "aliases": ["nagaur", "नागौर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-NMB",
+      "name": "Neem Ka Thana",
+      "name_hi": "नीम का थाना",
+      "aliases": ["neem ka thana", "नीम का थाना", "neemkathana"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-PAL",
+      "name": "Pali",
+      "name_hi": "पाली",
+      "aliases": ["pali", "पाली"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-PHP",
+      "name": "Phalodi",
+      "name_hi": "फलोदी",
+      "aliases": ["phalodi", "फलोदी"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-PRT",
+      "name": "Pratapgarh",
+      "name_hi": "प्रतापगढ़",
+      "aliases": ["pratapgarh", "प्रतापगढ़"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-RAJS",
+      "name": "Rajsamand",
+      "name_hi": "राजसमंद",
+      "aliases": ["rajsamand", "राजसमंद"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-SLM",
+      "name": "Salumbar",
+      "name_hi": "सलूम्बर",
+      "aliases": ["salumbar", "सलूम्बर", "salumber"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-SAN",
+      "name": "Sanchore",
+      "name_hi": "सांचौर",
+      "aliases": ["sanchore", "सांचौर", "sanchor"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-SWM",
+      "name": "Sawai Madhopur",
+      "name_hi": "सवाई माधोपुर",
+      "aliases": ["sawai madhopur", "सवाई माधोपुर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-SHA",
+      "name": "Shahpura",
+      "name_hi": "शाहपुरा",
+      "aliases": ["shahpura", "शाहपुरा"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-SIK",
+      "name": "Sikar",
+      "name_hi": "सीकर",
+      "aliases": ["sikar", "सीकर"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-SIR",
+      "name": "Sirohi",
+      "name_hi": "सिरोही",
+      "aliases": ["sirohi", "सिरोही"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-TON",
+      "name": "Tonk",
+      "name_hi": "टोंक",
+      "aliases": ["tonk", "टोंक"],
+      "status": "ACTIVE"
+    },
+    {
+      "code": "RJ-UDR",
+      "name": "Udaipur",
+      "name_hi": "उदयपुर",
+      "aliases": ["udaipur", "उदयपुर", "oodeypore"],
+      "status": "ACTIVE"
+    }
+  ]
+}

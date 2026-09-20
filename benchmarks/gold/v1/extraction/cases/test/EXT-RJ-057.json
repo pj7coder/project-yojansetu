@@ -1,0 +1,46 @@
+{
+  "case_id": "EXT-RJ-057",
+  "task": "extraction",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "HINDI",
+    "BENEFIT",
+    "DEV_CIRCULAR"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "doc:72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2"
+  ],
+  "source": {
+    "document_id": "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2",
+    "chunk_id": "DOC-72FF2711-CHUNK-0002",
+    "page_number": 1,
+    "source_block_ids": [
+      "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p1-b3"
+    ],
+    "text_snippet": "पेंशन राशि ₹1,000 प्रति माह सीधे बैंक खाते में हस्तांतरित की जाएगी।",
+    "contains_table": false,
+    "contains_ocr": false,
+    "language": "hi"
+  },
+  "expected_facts": [
+    {
+      "field": "benefits.monthly_amount",
+      "operator": "EQ",
+      "value": 1000,
+      "unit": "INR",
+      "evidence_quote": "पेंशन राशि ₹1,000 प्रति माह सीधे बैंक खाते में हस्तांतरित की जाएगी।",
+      "evidence_page": 1,
+      "evidence_block_ids": [
+        "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p1-b3"
+      ]
+    }
+  ],
+  "is_negative": false,
+  "is_security_test": false
+}

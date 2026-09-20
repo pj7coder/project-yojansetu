@@ -1,0 +1,266 @@
+[
+  {
+    "id": "TTS-HI-Q-001",
+    "category": "QUESTION",
+    "display_text": "आपकी आयु क्या है?",
+    "expected_speech_text": "आपकी आयु क्या है?",
+    "critical_terms": ["आयु"],
+    "description": "Short conversational age inquiry"
+  },
+  {
+    "id": "TTS-HI-Q-002",
+    "category": "QUESTION",
+    "display_text": "आपके परिवार की वार्षिक आय कितनी है?",
+    "expected_speech_text": "आपके परिवार की वार्षिक आय कितनी है?",
+    "critical_terms": ["वार्षिक आय"],
+    "description": "Annual family income inquiry"
+  },
+  {
+    "id": "TTS-HI-Q-003",
+    "category": "QUESTION",
+    "display_text": "आप राजस्थान के किस जिले में रहते हैं?",
+    "expected_speech_text": "आप राजस्थान के किस जिले में रहते हैं?",
+    "critical_terms": ["राजस्थान", "जिले"],
+    "description": "District residence inquiry"
+  },
+  {
+    "id": "TTS-HI-CONF-001",
+    "category": "CONFIRMATION",
+    "display_text": "आपने अपनी आयु 62 वर्ष बताई है। क्या यह सही है?",
+    "expected_speech_text": "आपने अपनी आयु बासठ वर्ष बताई है। क्या यह सही है?",
+    "critical_terms": ["बासठ वर्ष", "सही है"],
+    "description": "Age confirmation with normalized number"
+  },
+  {
+    "id": "TTS-HI-CONF-002",
+    "category": "CONFIRMATION",
+    "display_text": "आपने वार्षिक पारिवारिक आय ₹1,50,000 बताई है। क्या यह सही है?",
+    "expected_speech_text": "आपने वार्षिक पारिवारिक आय एक लाख पचास हजार रुपये बताई है। क्या यह सही है?",
+    "critical_terms": ["एक लाख पचास हजार रुपये", "सही है"],
+    "description": "Income confirmation with ₹ currency normalization"
+  },
+  {
+    "id": "TTS-HI-AGE-001",
+    "category": "AGE",
+    "display_text": "पात्रता के लिए न्यूनतम आयु 60 वर्ष होनी चाहिए।",
+    "expected_speech_text": "पात्रता के लिए न्यूनतम आयु साठ वर्ष होनी चाहिए।",
+    "critical_terms": ["साठ वर्ष"],
+    "description": "Age boundary 60"
+  },
+  {
+    "id": "TTS-HI-AGE-002",
+    "category": "AGE",
+    "display_text": "वरिष्ठ नागरिक पेंशन 65 वर्ष से अधिक आयु के नागरिकों के लिए है।",
+    "expected_speech_text": "वरिष्ठ नागरिक पेंशन पैंसठ वर्ष से अधिक आयु के नागरिकों के लिए है।",
+    "critical_terms": ["पैंसठ वर्ष से अधिक"],
+    "description": "Age boundary 65"
+  },
+  {
+    "id": "TTS-HI-CURR-001",
+    "category": "CURRENCY",
+    "display_text": "इस योजना में ₹500 का पंजीकरण शुल्क देय है।",
+    "expected_speech_text": "इस योजना में पांच सौ रुपये का पंजीकरण शुल्क देय है।",
+    "critical_terms": ["पांच सौ रुपये"],
+    "description": "Currency ₹500"
+  },
+  {
+    "id": "TTS-HI-CURR-002",
+    "category": "CURRENCY",
+    "display_text": "वार्षिक पारिवारिक आय ₹2,00,000 से कम होनी चाहिए।",
+    "expected_speech_text": "वार्षिक पारिवारिक आय दो लाख रुपये से कम होनी चाहिए।",
+    "critical_terms": ["दो लाख रुपये से कम"],
+    "description": "Currency ₹2,00,000 with boundary"
+  },
+  {
+    "id": "TTS-HI-CURR-003",
+    "category": "CURRENCY",
+    "display_text": "उच्चतम वित्तीय सहायता ₹2,50,000 तक स्वीकृत है।",
+    "expected_speech_text": "उच्चतम वित्तीय सहायता दो लाख पचास हजार रुपये तक स्वीकृत है।",
+    "critical_terms": ["दो लाख पचास हजार रुपये"],
+    "description": "Currency ₹2,50,000"
+  },
+  {
+    "id": "TTS-HI-CURR-004",
+    "category": "CURRENCY",
+    "display_text": "चिरंजीवी बीमा योजना में ₹10,00,000 तक का स्वास्थ्य कवर मिलता है।",
+    "expected_speech_text": "चिरंजीवी बीमा योजना में दस लाख रुपये तक का स्वास्थ्य कवर मिलता है।",
+    "critical_terms": ["दस लाख रुपये"],
+    "description": "Currency ₹10,00,000"
+  },
+  {
+    "id": "TTS-HI-CURR-005",
+    "category": "CURRENCY",
+    "display_text": "आय सीमा 1.5 लाख रुपये निर्धारित की गई है।",
+    "expected_speech_text": "आय सीमा एक लाख पचास हजार रुपये निर्धारित की गई है।",
+    "critical_terms": ["एक लाख पचास हजार रुपये"],
+    "description": "Decimal scale 1.5 lakh"
+  },
+  {
+    "id": "TTS-HI-BENEFIT-001",
+    "category": "BENEFIT",
+    "display_text": "इस योजना में पात्र नागरिकों को ₹1,000 प्रति माह दिए जाते हैं।",
+    "expected_speech_text": "इस योजना में पात्र नागरिकों को एक हजार रुपये प्रति माह दिए जाते हैं।",
+    "critical_terms": ["एक हजार रुपये प्रति माह"],
+    "description": "Monthly benefit rate preservation"
+  },
+  {
+    "id": "TTS-HI-PCT-001",
+    "category": "PERCENTAGE",
+    "display_text": "इस योजना के लिए दिव्यांगता 40% या अधिक होनी चाहिए।",
+    "expected_speech_text": "इस योजना के लिए दिव्यांगता चालीस प्रतिशत या अधिक होनी चाहिए।",
+    "critical_terms": ["चालीस प्रतिशत या अधिक"],
+    "description": "Disability percentage 40%"
+  },
+  {
+    "id": "TTS-HI-PCT-002",
+    "category": "PERCENTAGE",
+    "display_text": "छात्रवृत्ति हेतु न्यूनतम 45% अंक अनिवार्य हैं।",
+    "expected_speech_text": "छात्रवृत्ति हेतु न्यूनतम पैंतालीस प्रतिशत अंक अनिवार्य हैं।",
+    "critical_terms": ["पैंतालीस प्रतिशत"],
+    "description": "Percentage 45%"
+  },
+  {
+    "id": "TTS-HI-PCT-003",
+    "category": "PERCENTAGE",
+    "display_text": "मेधावी छात्र योजना में 75% उपस्थिति आवश्यक है।",
+    "expected_speech_text": "मेधावी छात्र योजना में पचहत्तर प्रतिशत उपस्थिति आवश्यक है।",
+    "critical_terms": ["पचहत्तर प्रतिशत"],
+    "description": "Percentage 75%"
+  },
+  {
+    "id": "TTS-HI-DATE-001",
+    "category": "DATE",
+    "display_text": "नया सत्र 1 अक्टूबर 2026 से प्रारंभ होगा।",
+    "expected_speech_text": "नया सत्र एक अक्टूबर दो हजार छब्बीस से प्रारंभ होगा।",
+    "critical_terms": ["एक अक्टूबर", "दो हजार छब्बीस"],
+    "description": "Date 1 October 2026"
+  },
+  {
+    "id": "TTS-HI-DATE-002",
+    "category": "DATE",
+    "display_text": "आवेदन की अंतिम तिथि 31 मार्च 2027 है।",
+    "expected_speech_text": "आवेदन की अंतिम तिथि इकतीस मार्च दो हजार सत्ताईस है।",
+    "critical_terms": ["इकतीस मार्च", "दो हजार सत्ताईस"],
+    "description": "Deadline 31 March 2027"
+  },
+  {
+    "id": "TTS-HI-DATE-003",
+    "category": "DATE",
+    "display_text": "समारोह 15 अगस्त 2026 को आयोजित किया जाएगा।",
+    "expected_speech_text": "समारोह पंद्रह अगस्त दो हजार छब्बीस को आयोजित किया जाएगा।",
+    "critical_terms": ["पंद्रह अगस्त", "दो हजार छब्बीस"],
+    "description": "Date 15 August 2026"
+  },
+  {
+    "id": "TTS-HI-DIST-001",
+    "category": "DISTRICT",
+    "display_text": "उदयपुर और डूंगरपुर जिलों में विशेष जनजाति उपयोजना लागू है।",
+    "expected_speech_text": "उदयपुर और डूंगरपुर जिलों में विशेष जनजाति उपयोजना लागू है।",
+    "critical_terms": ["उदयपुर", "डूंगरपुर"],
+    "description": "Districts Udaipur and Dungarpur"
+  },
+  {
+    "id": "TTS-HI-DIST-002",
+    "category": "DISTRICT",
+    "display_text": "बांसवाड़ा और प्रतापगढ़ के आदिवासी किसानों के लिए विशेष अनुदान है।",
+    "expected_speech_text": "बांसवाड़ा और प्रतापगढ़ के आदिवासी किसानों के लिए विशेष अनुदान है।",
+    "critical_terms": ["बांसवाड़ा", "प्रतापगढ़"],
+    "description": "Districts Banswara and Pratapgarh"
+  },
+  {
+    "id": "TTS-HI-DIST-003",
+    "category": "DISTRICT",
+    "display_text": "चित्तौड़गढ़ और झालावाड़ जिलों में सौर ऊर्जा पंप योजना उपलब्ध है।",
+    "expected_speech_text": "चित्तौड़गढ़ और झालावाड़ जिलों में सौर ऊर्जा पंप योजना उपलब्ध है।",
+    "critical_terms": ["चित्तौड़गढ़", "झालावाड़"],
+    "description": "Districts Chittorgarh and Jhalawar"
+  },
+  {
+    "id": "TTS-HI-DIST-004",
+    "category": "DISTRICT",
+    "display_text": "जैसलमेर, श्रीगंगानगर और सवाई माधोपुर के नागरिक भी पात्र हैं।",
+    "expected_speech_text": "जैसलमेर, श्रीगंगानगर और सवाई माधोपुर के नागरिक भी पात्र हैं।",
+    "critical_terms": ["जैसलमेर", "श्रीगंगानगर", "सवाई माधोपुर"],
+    "description": "Districts Jaisalmer, Sri Ganganagar, Sawai Madhopur"
+  },
+  {
+    "id": "TTS-HI-GOV-001",
+    "category": "GOVERNMENT_TERM",
+    "display_text": "इस योजना के लिए जन आधार और आय प्रमाण पत्र आवश्यक हैं।",
+    "expected_speech_text": "इस योजना के लिए जन आधार और आय प्रमाण पत्र आवश्यक हैं।",
+    "critical_terms": ["जन आधार", "आय प्रमाण पत्र"],
+    "description": "Government documents Jan Aadhaar and Income Certificate"
+  },
+  {
+    "id": "TTS-HI-GOV-002",
+    "category": "GOVERNMENT_TERM",
+    "display_text": "मूल निवास प्रमाण पत्र और दिव्यांग प्रमाण पत्र संलग्न करें।",
+    "expected_speech_text": "मूल निवास प्रमाण पत्र और दिव्यांग प्रमाण पत्र संलग्न करें।",
+    "critical_terms": ["मूल निवास प्रमाण पत्र", "दिव्यांग प्रमाण पत्र"],
+    "description": "Domicile and Disability certificates"
+  },
+  {
+    "id": "TTS-HI-ACR-001",
+    "category": "ACRONYM",
+    "display_text": "क्या आपके परिवार के पास BPL राशन कार्ड है?",
+    "expected_speech_text": "क्या आपके परिवार के पास बी पी एल राशन कार्ड है?",
+    "critical_terms": ["बी पी एल"],
+    "description": "BPL acronym expansion"
+  },
+  {
+    "id": "TTS-HI-ACR-002",
+    "category": "ACRONYM",
+    "display_text": "आप SSO पोर्टल पर अपने जन आधार से लॉगिन कर सकते हैं।",
+    "expected_speech_text": "आप एस एस ओ पोर्टल पर अपने जन आधार से लॉगिन कर सकते हैं।",
+    "critical_terms": ["एस एस ओ"],
+    "description": "SSO acronym expansion"
+  },
+  {
+    "id": "TTS-HI-APP-001",
+    "category": "APPLICATION",
+    "display_text": "इस योजना के लिए आवेदन ई-मित्र के माध्यम से किया जा सकता है।",
+    "expected_speech_text": "इस योजना के लिए आवेदन ई-मित्र के माध्यम से किया जा सकता है।",
+    "critical_terms": ["ई-मित्र"],
+    "description": "e-Mitra application path"
+  },
+  {
+    "id": "TTS-HI-APP-002",
+    "category": "APPLICATION",
+    "display_text": "नागरिक e-Mitra केंद्र पर जाकर बायोमेट्रिक सत्यापन करवाएं।",
+    "expected_speech_text": "नागरिक ई-मित्र केंद्र पर जाकर बायोमेट्रिक सत्यापन करवाएं।",
+    "critical_terms": ["ई-मित्र"],
+    "description": "Latin e-Mitra alias expansion"
+  },
+  {
+    "id": "TTS-HI-NEG-001",
+    "category": "NEGATION",
+    "display_text": "यदि आपको पहले से यह लाभ मिल रहा है, तो आप पात्र नहीं हैं।",
+    "expected_speech_text": "यदि आपको पहले से यह लाभ मिल रहा है, तो आप पात्र नहीं हैं।",
+    "critical_terms": ["पात्र नहीं हैं"],
+    "description": "Critical negation clarity"
+  },
+  {
+    "id": "TTS-HI-BOUND-001",
+    "category": "BOUNDARY",
+    "display_text": "वार्षिक पारिवारिक आय <= ₹2,00,000 होनी चाहिए।",
+    "expected_speech_text": "वार्षिक पारिवारिक आय दो लाख रुपये या उससे कम होनी चाहिए।",
+    "critical_terms": ["दो लाख रुपये या उससे कम"],
+    "description": "Inclusive mathematical boundary <= ₹2,00,000"
+  },
+  {
+    "id": "TTS-HI-LIST-001",
+    "category": "DOCUMENTS",
+    "display_text": "आपको तीन दस्तावेज चाहिए: जन आधार, आय प्रमाण पत्र, और मूल निवास प्रमाण पत्र।",
+    "expected_speech_text": "आपको तीन दस्तावेज चाहिए: जन आधार, आय प्रमाण पत्र, और मूल निवास प्रमाण पत्र।",
+    "critical_terms": ["तीन दस्तावेज", "जन आधार", "आय प्रमाण पत्र"],
+    "description": "List prosody and pause handling"
+  },
+  {
+    "id": "TTS-HI-LONG-001",
+    "category": "LONG_MESSAGE",
+    "display_text": "आपकी जानकारी के आधार पर तीन योजनाएँ मिली हैं। पहली योजना मुख्यमंत्री वृद्धजन सम्मान पेंशन योजना है जिसमें मासिक आर्थिक सहायता दी जाती है।",
+    "expected_speech_text": "आपकी जानकारी के आधार पर तीन योजनाएँ मिली हैं। पहली योजना मुख्यमंत्री वृद्धजन सम्मान पेंशन योजना है जिसमें मासिक आर्थिक सहायता दी जाती है।",
+    "critical_terms": ["तीन योजनाएँ", "मुख्यमंत्री वृद्धजन सम्मान पेंशन"],
+    "description": "Longer conversational response stability"
+  }
+]

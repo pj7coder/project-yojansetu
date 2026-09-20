@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-009",
+  "task": "voice",
+  "split": "DEV",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "INCOME",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_inc_004.wav"
+  ],
+  "audio_file": "audio/hi_inc_004.wav",
+  "audio_sha256": "53ff70e73669fb5c5e1bfc6685b37903fb95e0b57dbd6dfa761748cefd0e5325",
+  "duration_seconds": 3.17,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "INCOME",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "हमारी वार्षिक आय दो लाख रुपये है",
+  "context": {
+    "expected_field": null,
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 3070
+  }
+}

@@ -1,0 +1,3476 @@
+{
+  "dataset_version": "1.0",
+  "created_at": "2026-09-07T14:00:00Z",
+  "annotation_guidelines_version": "1.0",
+  "schema_versions": {
+    "extraction": "1.0",
+    "eligibility": "1.0",
+    "search": "1.0",
+    "voice": "1.0",
+    "conversation": "1.0"
+  },
+  "task_counts": {
+    "extraction": 60,
+    "eligibility": 120,
+    "search": 50,
+    "voice": 42,
+    "conversation": 8
+  },
+  "split_counts": {
+    "extraction": {
+      "DEV": 15,
+      "VALIDATION": 19,
+      "TEST": 26
+    },
+    "eligibility": {
+      "DEV": 30,
+      "VALIDATION": 30,
+      "TEST": 60
+    },
+    "search": {
+      "DEV": 15,
+      "VALIDATION": 15,
+      "TEST": 20
+    },
+    "voice": {
+      "DEV": 10,
+      "VALIDATION": 12,
+      "TEST": 20
+    },
+    "conversation": {
+      "DEV": 2,
+      "VALIDATION": 2,
+      "TEST": 4
+    }
+  },
+  "cases": [
+    {
+      "case_id": "EXT-RJ-001",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "ELIGIBILITY",
+        "AGE",
+        "RESIDENCY",
+        "CLEAN_PDF"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-001.json"
+    },
+    {
+      "case_id": "EXT-RJ-002",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "ELIGIBILITY",
+        "AGE",
+        "RESIDENCY",
+        "CLEAN_PDF"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-002.json"
+    },
+    {
+      "case_id": "EXT-RJ-003",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "ELIGIBILITY",
+        "AGE",
+        "RESIDENCY",
+        "CLEAN_PDF"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-003.json"
+    },
+    {
+      "case_id": "EXT-RJ-004",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "ELIGIBILITY",
+        "AGE",
+        "RESIDENCY",
+        "CLEAN_PDF"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-004.json"
+    },
+    {
+      "case_id": "EXT-RJ-005",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "ELIGIBILITY",
+        "AGE",
+        "RESIDENCY",
+        "CLEAN_PDF"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-005.json"
+    },
+    {
+      "case_id": "EXT-RJ-006",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "ELIGIBILITY",
+        "AGE",
+        "RESIDENCY",
+        "CLEAN_PDF"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-006.json"
+    },
+    {
+      "case_id": "EXT-RJ-007",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "ELIGIBILITY",
+        "AGE",
+        "RESIDENCY",
+        "CLEAN_PDF"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-007.json"
+    },
+    {
+      "case_id": "EXT-RJ-008",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "ELIGIBILITY",
+        "AGE",
+        "RESIDENCY",
+        "CLEAN_PDF"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-008.json"
+    },
+    {
+      "case_id": "EXT-RJ-009",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "ELIGIBILITY",
+        "AGE",
+        "RESIDENCY",
+        "CLEAN_PDF"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-009.json"
+    },
+    {
+      "case_id": "EXT-RJ-010",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "ELIGIBILITY",
+        "AGE",
+        "RESIDENCY",
+        "CLEAN_PDF"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-010.json"
+    },
+    {
+      "case_id": "EXT-RJ-011",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TABLE",
+        "BENEFIT",
+        "TIERED",
+        "AGE_BRACKET"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-011.json"
+    },
+    {
+      "case_id": "EXT-RJ-012",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TABLE",
+        "BENEFIT",
+        "TIERED",
+        "AGE_BRACKET"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-012.json"
+    },
+    {
+      "case_id": "EXT-RJ-013",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TABLE",
+        "BENEFIT",
+        "TIERED",
+        "AGE_BRACKET"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-013.json"
+    },
+    {
+      "case_id": "EXT-RJ-014",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TABLE",
+        "BENEFIT",
+        "TIERED",
+        "AGE_BRACKET"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-014.json"
+    },
+    {
+      "case_id": "EXT-RJ-015",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TABLE",
+        "BENEFIT",
+        "TIERED",
+        "AGE_BRACKET"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-015.json"
+    },
+    {
+      "case_id": "EXT-RJ-016",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TABLE",
+        "BENEFIT",
+        "TIERED",
+        "AGE_BRACKET"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-016.json"
+    },
+    {
+      "case_id": "EXT-RJ-017",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TABLE",
+        "BENEFIT",
+        "TIERED",
+        "AGE_BRACKET"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-017.json"
+    },
+    {
+      "case_id": "EXT-RJ-018",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TABLE",
+        "BENEFIT",
+        "TIERED",
+        "AGE_BRACKET"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-018.json"
+    },
+    {
+      "case_id": "EXT-RJ-019",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TABLE",
+        "BENEFIT",
+        "TIERED",
+        "AGE_BRACKET"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-019.json"
+    },
+    {
+      "case_id": "EXT-RJ-020",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TABLE",
+        "BENEFIT",
+        "TIERED",
+        "AGE_BRACKET"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-020.json"
+    },
+    {
+      "case_id": "EXT-RJ-021",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "OCR",
+        "TABLE",
+        "BENEFIT",
+        "SCANNED_PAGE"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-021.json"
+    },
+    {
+      "case_id": "EXT-RJ-022",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "OCR",
+        "TABLE",
+        "BENEFIT",
+        "SCANNED_PAGE"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-022.json"
+    },
+    {
+      "case_id": "EXT-RJ-023",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "OCR",
+        "TABLE",
+        "BENEFIT",
+        "SCANNED_PAGE"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-023.json"
+    },
+    {
+      "case_id": "EXT-RJ-024",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "OCR",
+        "TABLE",
+        "BENEFIT",
+        "SCANNED_PAGE"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-024.json"
+    },
+    {
+      "case_id": "EXT-RJ-025",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "OCR",
+        "TABLE",
+        "BENEFIT",
+        "SCANNED_PAGE"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-025.json"
+    },
+    {
+      "case_id": "EXT-RJ-026",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "OCR",
+        "TABLE",
+        "BENEFIT",
+        "SCANNED_PAGE"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-026.json"
+    },
+    {
+      "case_id": "EXT-RJ-027",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "OCR",
+        "TABLE",
+        "BENEFIT",
+        "SCANNED_PAGE"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-027.json"
+    },
+    {
+      "case_id": "EXT-RJ-028",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "OCR",
+        "TABLE",
+        "BENEFIT",
+        "SCANNED_PAGE"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-028.json"
+    },
+    {
+      "case_id": "EXT-RJ-029",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "OCR",
+        "TABLE",
+        "BENEFIT",
+        "SCANNED_PAGE"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-029.json"
+    },
+    {
+      "case_id": "EXT-RJ-030",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "OCR",
+        "TABLE",
+        "BENEFIT",
+        "SCANNED_PAGE"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-030.json"
+    },
+    {
+      "case_id": "EXT-RJ-031",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DOCUMENTS",
+        "JAN_AADHAAR",
+        "BANK",
+        "APPLICATION"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-031.json"
+    },
+    {
+      "case_id": "EXT-RJ-032",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DOCUMENTS",
+        "JAN_AADHAAR",
+        "BANK",
+        "APPLICATION"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-032.json"
+    },
+    {
+      "case_id": "EXT-RJ-033",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DOCUMENTS",
+        "JAN_AADHAAR",
+        "BANK",
+        "APPLICATION"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-033.json"
+    },
+    {
+      "case_id": "EXT-RJ-034",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DOCUMENTS",
+        "JAN_AADHAAR",
+        "BANK",
+        "APPLICATION"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-034.json"
+    },
+    {
+      "case_id": "EXT-RJ-035",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DOCUMENTS",
+        "JAN_AADHAAR",
+        "BANK",
+        "APPLICATION"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-035.json"
+    },
+    {
+      "case_id": "EXT-RJ-036",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DOCUMENTS",
+        "JAN_AADHAAR",
+        "BANK",
+        "APPLICATION"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-036.json"
+    },
+    {
+      "case_id": "EXT-RJ-037",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DOCUMENTS",
+        "JAN_AADHAAR",
+        "BANK",
+        "APPLICATION"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-037.json"
+    },
+    {
+      "case_id": "EXT-RJ-038",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DOCUMENTS",
+        "JAN_AADHAAR",
+        "BANK",
+        "APPLICATION"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-038.json"
+    },
+    {
+      "case_id": "EXT-RJ-039",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DOCUMENTS",
+        "JAN_AADHAAR",
+        "BANK",
+        "APPLICATION"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-039.json"
+    },
+    {
+      "case_id": "EXT-RJ-040",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DOCUMENTS",
+        "JAN_AADHAAR",
+        "BANK",
+        "APPLICATION"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-040.json"
+    },
+    {
+      "case_id": "EXT-RJ-041",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATIVE_CASE",
+        "HALLUCINATION_TEST",
+        "PROCEDURAL"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-041.json"
+    },
+    {
+      "case_id": "EXT-RJ-042",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATIVE_CASE",
+        "HALLUCINATION_TEST",
+        "PROCEDURAL"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-042.json"
+    },
+    {
+      "case_id": "EXT-RJ-043",
+      "task": "extraction",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATIVE_CASE",
+        "HALLUCINATION_TEST",
+        "PROCEDURAL"
+      ],
+      "relative_path": "extraction/cases/dev/EXT-RJ-043.json"
+    },
+    {
+      "case_id": "EXT-RJ-044",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATIVE_CASE",
+        "HALLUCINATION_TEST",
+        "PROCEDURAL"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-044.json"
+    },
+    {
+      "case_id": "EXT-RJ-045",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATIVE_CASE",
+        "HALLUCINATION_TEST",
+        "PROCEDURAL"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-045.json"
+    },
+    {
+      "case_id": "EXT-RJ-046",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATIVE_CASE",
+        "HALLUCINATION_TEST",
+        "PROCEDURAL"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-046.json"
+    },
+    {
+      "case_id": "EXT-RJ-047",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATIVE_CASE",
+        "HALLUCINATION_TEST",
+        "PROCEDURAL"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-047.json"
+    },
+    {
+      "case_id": "EXT-RJ-048",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATIVE_CASE",
+        "HALLUCINATION_TEST",
+        "PROCEDURAL"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-048.json"
+    },
+    {
+      "case_id": "EXT-RJ-049",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATIVE_CASE",
+        "HALLUCINATION_TEST",
+        "PROCEDURAL"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-049.json"
+    },
+    {
+      "case_id": "EXT-RJ-050",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATIVE_CASE",
+        "HALLUCINATION_TEST",
+        "PROCEDURAL"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-050.json"
+    },
+    {
+      "case_id": "EXT-RJ-051",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "SECURITY_TEST",
+        "PROMPT_INJECTION",
+        "ROBUSTNESS"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-051.json"
+    },
+    {
+      "case_id": "EXT-RJ-052",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINDI",
+        "AGE_MIN",
+        "DEV_CIRCULAR"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-052.json"
+    },
+    {
+      "case_id": "EXT-RJ-053",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINDI",
+        "INCOME_MAX",
+        "DEV_CIRCULAR"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-053.json"
+    },
+    {
+      "case_id": "EXT-RJ-054",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINDI",
+        "AMENDMENT_DATE",
+        "DEV_CIRCULAR"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-054.json"
+    },
+    {
+      "case_id": "EXT-RJ-055",
+      "task": "extraction",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINDI",
+        "DOMICILE",
+        "DEV_CIRCULAR"
+      ],
+      "relative_path": "extraction/cases/validation/EXT-RJ-055.json"
+    },
+    {
+      "case_id": "EXT-RJ-056",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINDI",
+        "EXCLUSION",
+        "DEV_CIRCULAR"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-056.json"
+    },
+    {
+      "case_id": "EXT-RJ-057",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINDI",
+        "BENEFIT",
+        "DEV_CIRCULAR"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-057.json"
+    },
+    {
+      "case_id": "EXT-RJ-058",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINDI",
+        "APPLICATION",
+        "DEV_CIRCULAR"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-058.json"
+    },
+    {
+      "case_id": "EXT-RJ-059",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINDI",
+        "DISABILITY",
+        "DEV_CIRCULAR"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-059.json"
+    },
+    {
+      "case_id": "EXT-RJ-060",
+      "task": "extraction",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINDI",
+        "FARMER_RULE",
+        "DEV_CIRCULAR"
+      ],
+      "relative_path": "extraction/cases/test/EXT-RJ-060.json"
+    },
+    {
+      "case_id": "ELG-RJ-001",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "BOUNDARY",
+        "AGE_EXACT_MIN"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-001.json"
+    },
+    {
+      "case_id": "ELG-RJ-002",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "BOUNDARY",
+        "AGE_ONE_BELOW"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-002.json"
+    },
+    {
+      "case_id": "ELG-RJ-003",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "BOUNDARY",
+        "AGE_ONE_ABOVE"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-003.json"
+    },
+    {
+      "case_id": "ELG-RJ-004",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "BOUNDARY",
+        "INCOME_EXACT_MAX"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-004.json"
+    },
+    {
+      "case_id": "ELG-RJ-005",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "BOUNDARY",
+        "INCOME_ONE_ABOVE"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-005.json"
+    },
+    {
+      "case_id": "ELG-RJ-006",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "BOUNDARY",
+        "INCOME_ONE_BELOW"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-006.json"
+    },
+    {
+      "case_id": "ELG-RJ-007",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "SHORT_CIRCUIT",
+        "FALSE_AND_UNKNOWN"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-007.json"
+    },
+    {
+      "case_id": "ELG-RJ-008",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TRI_STATE",
+        "MISSING_FIELD"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-008.json"
+    },
+    {
+      "case_id": "ELG-RJ-009",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "BOOLEAN",
+        "BPL_FALSE"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-009.json"
+    },
+    {
+      "case_id": "ELG-RJ-010",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "BOOLEAN",
+        "BPL_UNKNOWN"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-010.json"
+    },
+    {
+      "case_id": "ELG-RJ-011",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION",
+        "GOVT_EMPLOYEE"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-011.json"
+    },
+    {
+      "case_id": "ELG-RJ-012",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION",
+        "INCOME_TAX"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-012.json"
+    },
+    {
+      "case_id": "ELG-RJ-013",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "INCOME_TYPE",
+        "PERSONAL_VS_FAMILY"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-013.json"
+    },
+    {
+      "case_id": "ELG-RJ-014",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DOMICILE",
+        "RESIDENCE_VS_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-014.json"
+    },
+    {
+      "case_id": "ELG-RJ-015",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TEMPORAL",
+        "BEFORE_AMENDMENT"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-015.json"
+    },
+    {
+      "case_id": "ELG-RJ-016",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "TEMPORAL",
+        "AFTER_AMENDMENT"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-016.json"
+    },
+    {
+      "case_id": "ELG-RJ-017",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-017.json"
+    },
+    {
+      "case_id": "ELG-RJ-018",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "UNEMPLOYED"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-018.json"
+    },
+    {
+      "case_id": "ELG-RJ-019",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-019.json"
+    },
+    {
+      "case_id": "ELG-RJ-020",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-020.json"
+    },
+    {
+      "case_id": "ELG-RJ-021",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-021.json"
+    },
+    {
+      "case_id": "ELG-RJ-022",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-022.json"
+    },
+    {
+      "case_id": "ELG-RJ-023",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-023.json"
+    },
+    {
+      "case_id": "ELG-RJ-024",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "RETIRED"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-024.json"
+    },
+    {
+      "case_id": "ELG-RJ-025",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-025.json"
+    },
+    {
+      "case_id": "ELG-RJ-026",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-026.json"
+    },
+    {
+      "case_id": "ELG-RJ-027",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-027.json"
+    },
+    {
+      "case_id": "ELG-RJ-028",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-028.json"
+    },
+    {
+      "case_id": "ELG-RJ-029",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-029.json"
+    },
+    {
+      "case_id": "ELG-RJ-030",
+      "task": "eligibility",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "FARMER"
+      ],
+      "relative_path": "eligibility/cases/dev/ELG-RJ-030.json"
+    },
+    {
+      "case_id": "ELG-RJ-031",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-031.json"
+    },
+    {
+      "case_id": "ELG-RJ-032",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-032.json"
+    },
+    {
+      "case_id": "ELG-RJ-033",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-033.json"
+    },
+    {
+      "case_id": "ELG-RJ-034",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-034.json"
+    },
+    {
+      "case_id": "ELG-RJ-035",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-035.json"
+    },
+    {
+      "case_id": "ELG-RJ-036",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "LABORER"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-036.json"
+    },
+    {
+      "case_id": "ELG-RJ-037",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-037.json"
+    },
+    {
+      "case_id": "ELG-RJ-038",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-038.json"
+    },
+    {
+      "case_id": "ELG-RJ-039",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-039.json"
+    },
+    {
+      "case_id": "ELG-RJ-040",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-040.json"
+    },
+    {
+      "case_id": "ELG-RJ-041",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-041.json"
+    },
+    {
+      "case_id": "ELG-RJ-042",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "ARTISAN"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-042.json"
+    },
+    {
+      "case_id": "ELG-RJ-043",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-043.json"
+    },
+    {
+      "case_id": "ELG-RJ-044",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-044.json"
+    },
+    {
+      "case_id": "ELG-RJ-045",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-045.json"
+    },
+    {
+      "case_id": "ELG-RJ-046",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-046.json"
+    },
+    {
+      "case_id": "ELG-RJ-047",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-047.json"
+    },
+    {
+      "case_id": "ELG-RJ-048",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "UNEMPLOYED"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-048.json"
+    },
+    {
+      "case_id": "ELG-RJ-049",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-049.json"
+    },
+    {
+      "case_id": "ELG-RJ-050",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-050.json"
+    },
+    {
+      "case_id": "ELG-RJ-051",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-051.json"
+    },
+    {
+      "case_id": "ELG-RJ-052",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-052.json"
+    },
+    {
+      "case_id": "ELG-RJ-053",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-053.json"
+    },
+    {
+      "case_id": "ELG-RJ-054",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "RETIRED"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-054.json"
+    },
+    {
+      "case_id": "ELG-RJ-055",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-055.json"
+    },
+    {
+      "case_id": "ELG-RJ-056",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-056.json"
+    },
+    {
+      "case_id": "ELG-RJ-057",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-057.json"
+    },
+    {
+      "case_id": "ELG-RJ-058",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-058.json"
+    },
+    {
+      "case_id": "ELG-RJ-059",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-059.json"
+    },
+    {
+      "case_id": "ELG-RJ-060",
+      "task": "eligibility",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "FARMER"
+      ],
+      "relative_path": "eligibility/cases/validation/ELG-RJ-060.json"
+    },
+    {
+      "case_id": "ELG-RJ-061",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-061.json"
+    },
+    {
+      "case_id": "ELG-RJ-062",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-062.json"
+    },
+    {
+      "case_id": "ELG-RJ-063",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-063.json"
+    },
+    {
+      "case_id": "ELG-RJ-064",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-064.json"
+    },
+    {
+      "case_id": "ELG-RJ-065",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-065.json"
+    },
+    {
+      "case_id": "ELG-RJ-066",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "LABORER"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-066.json"
+    },
+    {
+      "case_id": "ELG-RJ-067",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-067.json"
+    },
+    {
+      "case_id": "ELG-RJ-068",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-068.json"
+    },
+    {
+      "case_id": "ELG-RJ-069",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-069.json"
+    },
+    {
+      "case_id": "ELG-RJ-070",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-070.json"
+    },
+    {
+      "case_id": "ELG-RJ-071",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-071.json"
+    },
+    {
+      "case_id": "ELG-RJ-072",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "ARTISAN"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-072.json"
+    },
+    {
+      "case_id": "ELG-RJ-073",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-073.json"
+    },
+    {
+      "case_id": "ELG-RJ-074",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-074.json"
+    },
+    {
+      "case_id": "ELG-RJ-075",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-075.json"
+    },
+    {
+      "case_id": "ELG-RJ-076",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-076.json"
+    },
+    {
+      "case_id": "ELG-RJ-077",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-077.json"
+    },
+    {
+      "case_id": "ELG-RJ-078",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "UNEMPLOYED"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-078.json"
+    },
+    {
+      "case_id": "ELG-RJ-079",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-079.json"
+    },
+    {
+      "case_id": "ELG-RJ-080",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-080.json"
+    },
+    {
+      "case_id": "ELG-RJ-081",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-081.json"
+    },
+    {
+      "case_id": "ELG-RJ-082",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-082.json"
+    },
+    {
+      "case_id": "ELG-RJ-083",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-083.json"
+    },
+    {
+      "case_id": "ELG-RJ-084",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "RETIRED"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-084.json"
+    },
+    {
+      "case_id": "ELG-RJ-085",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-085.json"
+    },
+    {
+      "case_id": "ELG-RJ-086",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-086.json"
+    },
+    {
+      "case_id": "ELG-RJ-087",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-087.json"
+    },
+    {
+      "case_id": "ELG-RJ-088",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-088.json"
+    },
+    {
+      "case_id": "ELG-RJ-089",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-089.json"
+    },
+    {
+      "case_id": "ELG-RJ-090",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "FARMER"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-090.json"
+    },
+    {
+      "case_id": "ELG-RJ-091",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-091.json"
+    },
+    {
+      "case_id": "ELG-RJ-092",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-092.json"
+    },
+    {
+      "case_id": "ELG-RJ-093",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-093.json"
+    },
+    {
+      "case_id": "ELG-RJ-094",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-094.json"
+    },
+    {
+      "case_id": "ELG-RJ-095",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-095.json"
+    },
+    {
+      "case_id": "ELG-RJ-096",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "LABORER"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-096.json"
+    },
+    {
+      "case_id": "ELG-RJ-097",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-097.json"
+    },
+    {
+      "case_id": "ELG-RJ-098",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-098.json"
+    },
+    {
+      "case_id": "ELG-RJ-099",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-099.json"
+    },
+    {
+      "case_id": "ELG-RJ-100",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-100.json"
+    },
+    {
+      "case_id": "ELG-RJ-101",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-101.json"
+    },
+    {
+      "case_id": "ELG-RJ-102",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "ARTISAN"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-102.json"
+    },
+    {
+      "case_id": "ELG-RJ-103",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-103.json"
+    },
+    {
+      "case_id": "ELG-RJ-104",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-104.json"
+    },
+    {
+      "case_id": "ELG-RJ-105",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-105.json"
+    },
+    {
+      "case_id": "ELG-RJ-106",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-106.json"
+    },
+    {
+      "case_id": "ELG-RJ-107",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-107.json"
+    },
+    {
+      "case_id": "ELG-RJ-108",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "UNEMPLOYED"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-108.json"
+    },
+    {
+      "case_id": "ELG-RJ-109",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-109.json"
+    },
+    {
+      "case_id": "ELG-RJ-110",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-110.json"
+    },
+    {
+      "case_id": "ELG-RJ-111",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-111.json"
+    },
+    {
+      "case_id": "ELG-RJ-112",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-112.json"
+    },
+    {
+      "case_id": "ELG-RJ-113",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-113.json"
+    },
+    {
+      "case_id": "ELG-RJ-114",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "RETIRED"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-114.json"
+    },
+    {
+      "case_id": "ELG-RJ-115",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "UNDERAGE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-115.json"
+    },
+    {
+      "case_id": "ELG-RJ-116",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "OVER_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-116.json"
+    },
+    {
+      "case_id": "ELG-RJ-117",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "MISSING_INCOME"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-117.json"
+    },
+    {
+      "case_id": "ELG-RJ-118",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NON_DOMICILE"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-118.json"
+    },
+    {
+      "case_id": "ELG-RJ-119",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "EXCLUSION"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-119.json"
+    },
+    {
+      "case_id": "ELG-RJ-120",
+      "task": "eligibility",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "STANDARD_ELIGIBLE",
+        "FARMER"
+      ],
+      "relative_path": "eligibility/cases/test/ELG-RJ-120.json"
+    },
+    {
+      "case_id": "SRCH-RJ-001",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "PENSION",
+        "HINDI",
+        "SENIOR"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-001.json"
+    },
+    {
+      "case_id": "SRCH-RJ-002",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "PENSION",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-002.json"
+    },
+    {
+      "case_id": "SRCH-RJ-003",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "AGE_BASED",
+        "SENIOR"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-003.json"
+    },
+    {
+      "case_id": "SRCH-RJ-004",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "FARMING",
+        "AGRICULTURE"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-004.json"
+    },
+    {
+      "case_id": "SRCH-RJ-005",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "BPL",
+        "SOCIAL_SECURITY"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-005.json"
+    },
+    {
+      "case_id": "SRCH-RJ-006",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "PENSION"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-006.json"
+    },
+    {
+      "case_id": "SRCH-RJ-007",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-007.json"
+    },
+    {
+      "case_id": "SRCH-RJ-008",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "AGE_BASED"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-008.json"
+    },
+    {
+      "case_id": "SRCH-RJ-009",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINGLISH",
+        "PENSION"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-009.json"
+    },
+    {
+      "case_id": "SRCH-RJ-010",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINGLISH",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-010.json"
+    },
+    {
+      "case_id": "SRCH-RJ-011",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "PENSION",
+        "HINDI",
+        "SENIOR"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-011.json"
+    },
+    {
+      "case_id": "SRCH-RJ-012",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "PENSION",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-012.json"
+    },
+    {
+      "case_id": "SRCH-RJ-013",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "AGE_BASED",
+        "SENIOR"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-013.json"
+    },
+    {
+      "case_id": "SRCH-RJ-014",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "FARMING",
+        "AGRICULTURE"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-014.json"
+    },
+    {
+      "case_id": "SRCH-RJ-015",
+      "task": "search",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "BPL",
+        "SOCIAL_SECURITY"
+      ],
+      "relative_path": "search/cases/dev/SRCH-RJ-015.json"
+    },
+    {
+      "case_id": "SRCH-RJ-016",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "PENSION"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-016.json"
+    },
+    {
+      "case_id": "SRCH-RJ-017",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-017.json"
+    },
+    {
+      "case_id": "SRCH-RJ-018",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "AGE_BASED"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-018.json"
+    },
+    {
+      "case_id": "SRCH-RJ-019",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINGLISH",
+        "PENSION"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-019.json"
+    },
+    {
+      "case_id": "SRCH-RJ-020",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINGLISH",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-020.json"
+    },
+    {
+      "case_id": "SRCH-RJ-021",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "PENSION",
+        "HINDI",
+        "SENIOR"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-021.json"
+    },
+    {
+      "case_id": "SRCH-RJ-022",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "PENSION",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-022.json"
+    },
+    {
+      "case_id": "SRCH-RJ-023",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "AGE_BASED",
+        "SENIOR"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-023.json"
+    },
+    {
+      "case_id": "SRCH-RJ-024",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "FARMING",
+        "AGRICULTURE"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-024.json"
+    },
+    {
+      "case_id": "SRCH-RJ-025",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "BPL",
+        "SOCIAL_SECURITY"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-025.json"
+    },
+    {
+      "case_id": "SRCH-RJ-026",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "PENSION"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-026.json"
+    },
+    {
+      "case_id": "SRCH-RJ-027",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-027.json"
+    },
+    {
+      "case_id": "SRCH-RJ-028",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "AGE_BASED"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-028.json"
+    },
+    {
+      "case_id": "SRCH-RJ-029",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINGLISH",
+        "PENSION"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-029.json"
+    },
+    {
+      "case_id": "SRCH-RJ-030",
+      "task": "search",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINGLISH",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/validation/SRCH-RJ-030.json"
+    },
+    {
+      "case_id": "SRCH-RJ-031",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "PENSION",
+        "HINDI",
+        "SENIOR"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-031.json"
+    },
+    {
+      "case_id": "SRCH-RJ-032",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "PENSION",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-032.json"
+    },
+    {
+      "case_id": "SRCH-RJ-033",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "AGE_BASED",
+        "SENIOR"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-033.json"
+    },
+    {
+      "case_id": "SRCH-RJ-034",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "FARMING",
+        "AGRICULTURE"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-034.json"
+    },
+    {
+      "case_id": "SRCH-RJ-035",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "BPL",
+        "SOCIAL_SECURITY"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-035.json"
+    },
+    {
+      "case_id": "SRCH-RJ-036",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "PENSION"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-036.json"
+    },
+    {
+      "case_id": "SRCH-RJ-037",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-037.json"
+    },
+    {
+      "case_id": "SRCH-RJ-038",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "AGE_BASED"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-038.json"
+    },
+    {
+      "case_id": "SRCH-RJ-039",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINGLISH",
+        "PENSION"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-039.json"
+    },
+    {
+      "case_id": "SRCH-RJ-040",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINGLISH",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-040.json"
+    },
+    {
+      "case_id": "SRCH-RJ-041",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "PENSION",
+        "HINDI",
+        "SENIOR"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-041.json"
+    },
+    {
+      "case_id": "SRCH-RJ-042",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "PENSION",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-042.json"
+    },
+    {
+      "case_id": "SRCH-RJ-043",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "AGE_BASED",
+        "SENIOR"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-043.json"
+    },
+    {
+      "case_id": "SRCH-RJ-044",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "FARMING",
+        "AGRICULTURE"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-044.json"
+    },
+    {
+      "case_id": "SRCH-RJ-045",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "NEGATIVE_RANKING",
+        "INELIGIBLE_FILTER"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-045.json"
+    },
+    {
+      "case_id": "SRCH-RJ-046",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "PENSION"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-046.json"
+    },
+    {
+      "case_id": "SRCH-RJ-047",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "KEYWORD"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-047.json"
+    },
+    {
+      "case_id": "SRCH-RJ-048",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "ENGLISH",
+        "AGE_BASED"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-048.json"
+    },
+    {
+      "case_id": "SRCH-RJ-049",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NO_QUERY",
+        "PROFILE_ONLY"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-049.json"
+    },
+    {
+      "case_id": "SRCH-RJ-050",
+      "task": "search",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "HARD",
+      "tags": [
+        "NO_RESULTS",
+        "ZERO_HALLUCINATION"
+      ],
+      "relative_path": "search/cases/test/SRCH-RJ-050.json"
+    },
+    {
+      "case_id": "VOICE-RJ-001",
+      "task": "voice",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "AGE",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/dev/VOICE-RJ-001.json"
+    },
+    {
+      "case_id": "VOICE-RJ-002",
+      "task": "voice",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "AGE",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/dev/VOICE-RJ-002.json"
+    },
+    {
+      "case_id": "VOICE-RJ-003",
+      "task": "voice",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "AGE",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/dev/VOICE-RJ-003.json"
+    },
+    {
+      "case_id": "VOICE-RJ-004",
+      "task": "voice",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "AGE",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/dev/VOICE-RJ-004.json"
+    },
+    {
+      "case_id": "VOICE-RJ-005",
+      "task": "voice",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "AGE",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/dev/VOICE-RJ-005.json"
+    },
+    {
+      "case_id": "VOICE-RJ-006",
+      "task": "voice",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "INCOME",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/dev/VOICE-RJ-006.json"
+    },
+    {
+      "case_id": "VOICE-RJ-007",
+      "task": "voice",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "INCOME",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/dev/VOICE-RJ-007.json"
+    },
+    {
+      "case_id": "VOICE-RJ-008",
+      "task": "voice",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "INCOME",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/dev/VOICE-RJ-008.json"
+    },
+    {
+      "case_id": "VOICE-RJ-009",
+      "task": "voice",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "INCOME",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/dev/VOICE-RJ-009.json"
+    },
+    {
+      "case_id": "VOICE-RJ-010",
+      "task": "voice",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "INCOME",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/dev/VOICE-RJ-010.json"
+    },
+    {
+      "case_id": "VOICE-RJ-011",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "INCOME",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-011.json"
+    },
+    {
+      "case_id": "VOICE-RJ-012",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DISTRICT",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-012.json"
+    },
+    {
+      "case_id": "VOICE-RJ-013",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DISTRICT",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-013.json"
+    },
+    {
+      "case_id": "VOICE-RJ-014",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DISTRICT",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-014.json"
+    },
+    {
+      "case_id": "VOICE-RJ-015",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DISTRICT",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-015.json"
+    },
+    {
+      "case_id": "VOICE-RJ-016",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DISTRICT",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-016.json"
+    },
+    {
+      "case_id": "VOICE-RJ-017",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DISTRICT",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-017.json"
+    },
+    {
+      "case_id": "VOICE-RJ-018",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DISTRICT",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-018.json"
+    },
+    {
+      "case_id": "VOICE-RJ-019",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DISTRICT",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-019.json"
+    },
+    {
+      "case_id": "VOICE-RJ-020",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "DISTRICT",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-020.json"
+    },
+    {
+      "case_id": "VOICE-RJ-021",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "SHORT_ANSWER",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-021.json"
+    },
+    {
+      "case_id": "VOICE-RJ-022",
+      "task": "voice",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "SHORT_ANSWER",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/validation/VOICE-RJ-022.json"
+    },
+    {
+      "case_id": "VOICE-RJ-023",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "SHORT_ANSWER",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-023.json"
+    },
+    {
+      "case_id": "VOICE-RJ-024",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "SHORT_ANSWER",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-024.json"
+    },
+    {
+      "case_id": "VOICE-RJ-025",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "SHORT_ANSWER",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-025.json"
+    },
+    {
+      "case_id": "VOICE-RJ-026",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATION",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-026.json"
+    },
+    {
+      "case_id": "VOICE-RJ-027",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATION",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-027.json"
+    },
+    {
+      "case_id": "VOICE-RJ-028",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NEGATION",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-028.json"
+    },
+    {
+      "case_id": "VOICE-RJ-029",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "CODE_MIXED",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-029.json"
+    },
+    {
+      "case_id": "VOICE-RJ-030",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "CODE_MIXED",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-030.json"
+    },
+    {
+      "case_id": "VOICE-RJ-031",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "CODE_MIXED",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-031.json"
+    },
+    {
+      "case_id": "VOICE-RJ-032",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "GOVERNMENT_TERMS",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-032.json"
+    },
+    {
+      "case_id": "VOICE-RJ-033",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "GOVERNMENT_TERMS",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-033.json"
+    },
+    {
+      "case_id": "VOICE-RJ-034",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "GOVERNMENT_TERMS",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-034.json"
+    },
+    {
+      "case_id": "VOICE-RJ-035",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "RAJASTHANI_DIALECT_STYLE",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-035.json"
+    },
+    {
+      "case_id": "VOICE-RJ-036",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "RAJASTHANI_DIALECT_STYLE",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-036.json"
+    },
+    {
+      "case_id": "VOICE-RJ-037",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "RAJASTHANI_DIALECT_STYLE",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-037.json"
+    },
+    {
+      "case_id": "VOICE-RJ-038",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINDI_NOISY",
+        "AUDIO",
+        "LIGHT_NOISE"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-038.json"
+    },
+    {
+      "case_id": "VOICE-RJ-039",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "HINDI_NOISY",
+        "AUDIO",
+        "MODERATE_NOISE"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-039.json"
+    },
+    {
+      "case_id": "VOICE-RJ-040",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "LONG_MULTI_ENTITY",
+        "AUDIO",
+        "CLEAN"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-040.json"
+    },
+    {
+      "case_id": "VOICE-RJ-041",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "EASY",
+      "tags": [
+        "SILENCE",
+        "NO_SPEECH"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-041.json"
+    },
+    {
+      "case_id": "VOICE-RJ-042",
+      "task": "voice",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "NOISE_ONLY",
+        "NO_SPEECH"
+      ],
+      "relative_path": "voice/cases/test/VOICE-RJ-042.json"
+    },
+    {
+      "case_id": "CONV-RJ-001",
+      "task": "conversation",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "CONVERSATION",
+        "MULTI_TURN",
+        "STATE_MACHINE"
+      ],
+      "relative_path": "conversation/cases/dev/CONV-RJ-001.json"
+    },
+    {
+      "case_id": "CONV-RJ-002",
+      "task": "conversation",
+      "split": "DEV",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "CONVERSATION",
+        "MULTI_TURN",
+        "STATE_MACHINE"
+      ],
+      "relative_path": "conversation/cases/dev/CONV-RJ-002.json"
+    },
+    {
+      "case_id": "CONV-RJ-003",
+      "task": "conversation",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "CONVERSATION",
+        "MULTI_TURN",
+        "STATE_MACHINE"
+      ],
+      "relative_path": "conversation/cases/validation/CONV-RJ-003.json"
+    },
+    {
+      "case_id": "CONV-RJ-004",
+      "task": "conversation",
+      "split": "VALIDATION",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "CONVERSATION",
+        "MULTI_TURN",
+        "STATE_MACHINE"
+      ],
+      "relative_path": "conversation/cases/validation/CONV-RJ-004.json"
+    },
+    {
+      "case_id": "CONV-RJ-005",
+      "task": "conversation",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "CONVERSATION",
+        "MULTI_TURN",
+        "STATE_MACHINE"
+      ],
+      "relative_path": "conversation/cases/test/CONV-RJ-005.json"
+    },
+    {
+      "case_id": "CONV-RJ-006",
+      "task": "conversation",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "CONVERSATION",
+        "MULTI_TURN",
+        "STATE_MACHINE"
+      ],
+      "relative_path": "conversation/cases/test/CONV-RJ-006.json"
+    },
+    {
+      "case_id": "CONV-RJ-007",
+      "task": "conversation",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "CONVERSATION",
+        "MULTI_TURN",
+        "STATE_MACHINE"
+      ],
+      "relative_path": "conversation/cases/test/CONV-RJ-007.json"
+    },
+    {
+      "case_id": "CONV-RJ-008",
+      "task": "conversation",
+      "split": "TEST",
+      "status": "HUMAN_VERIFIED",
+      "difficulty": "NORMAL",
+      "tags": [
+        "CONVERSATION",
+        "MULTI_TURN",
+        "STATE_MACHINE"
+      ],
+      "relative_path": "conversation/cases/test/CONV-RJ-008.json"
+    }
+  ],
+  "dataset_sha256": "14467fd3edbe21f63a3a16b104089f845e194ce116ea0a2e563a85a7c686b46e"
+}

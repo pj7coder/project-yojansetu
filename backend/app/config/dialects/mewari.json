@@ -1,0 +1,12 @@
+{
+  "_metadata": {
+    "lexicon_name": "mewari",
+    "version": "1.0",
+    "description": "Reviewed Mewari speech tokens for conservative semantic normalization."
+  },
+  "mappings": {
+    "म्हाके": "हमारे",
+    "म्हाने": "हमें",
+    "थाने": "आपको"
+  }
+}

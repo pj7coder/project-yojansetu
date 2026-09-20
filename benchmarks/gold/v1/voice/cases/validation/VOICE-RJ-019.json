@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-019",
+  "task": "voice",
+  "split": "VALIDATION",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "DISTRICT",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_dist_008.wav"
+  ],
+  "audio_file": "audio/hi_dist_008.wav",
+  "audio_sha256": "9df83e927bcf63a541b559ab0d7ad5f75bbaf9e316b329049ed98532e53a5e40",
+  "duration_seconds": 3.07,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "DISTRICT",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "हम श्रीगंगानगर के रहने वाले हैं",
+  "context": {
+    "expected_field": "district",
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": "district",
+    "operator": "EQ",
+    "value": "Sri Ganganagar",
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 2970
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "case_id": "ELG-RJ-001",
+  "task": "eligibility",
+  "split": "DEV",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "HARD",
+  "tags": [
+    "BOUNDARY",
+    "AGE_EXACT_MIN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "scheme_version:e54ebf76-b896-4292-b033-ce77e913bc35"
+  ],
+  "scheme_version_id": "e54ebf76-b896-4292-b033-ce77e913bc35",
+  "evaluation_date": "2026-09-01",
+  "profile": {
+    "age": 60,
+    "family_income": 150000,
+    "domicile": "RAJASTHAN"
+  },
+  "expected": {
+    "status": "ELIGIBLE",
+    "decisive_rules": [
+      "age >= 60",
+      "family_income <= 200000",
+      "domicile == RAJASTHAN"
+    ],
+    "missing_fields": [],
+    "exclusion_triggered": false,
+    "explanation": "Evaluated deterministically according to Day 14 rules."
+  }
+}

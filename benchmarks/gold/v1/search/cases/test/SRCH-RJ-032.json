@@ -1,0 +1,42 @@
+{
+  "case_id": "SRCH-RJ-032",
+  "task": "search",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "PENSION",
+    "KEYWORD"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "query:वृद्धावस्था पेंशन राजस्थान"
+  ],
+  "query": "वृद्धावस्था पेंशन राजस्थान",
+  "language": "hi",
+  "query_type": "KEYWORD",
+  "profile": {
+    "district": "Jaipur",
+    "state": "Rajasthan"
+  },
+  "expected": {
+    "relevance_judgments": [
+      {
+        "scheme_id": "e54ebf76-b896-4292-b033-ce77e913bc35",
+        "relevance": "HIGH",
+        "reason": "Direct domain and intent match"
+      }
+    ],
+    "acceptable_top_set": [
+      "e54ebf76-b896-4292-b033-ce77e913bc35"
+    ],
+    "must_appear_top_5": [
+      "e54ebf76-b896-4292-b033-ce77e913bc35"
+    ],
+    "must_not_appear_top_k": [],
+    "expected_empty": false
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-037",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "RAJASTHANI_DIALECT_STYLE",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:raj_dia_003.wav"
+  ],
+  "audio_file": "audio/raj_dia_003.wav",
+  "audio_sha256": "8bdb86c9dd7db766e29a143f0b935e4d28e7a3fd7f230e09d7e4d5008a4baff3",
+  "duration_seconds": 3.26,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "RAJASTHANI_DIALECT_STYLE",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "म्हारो जन आधार कार्ड बन्योड़ो कोनी",
+  "context": {
+    "expected_field": null,
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 3160
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-002",
+  "task": "voice",
+  "split": "DEV",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "AGE",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_age_002.wav"
+  ],
+  "audio_file": "audio/hi_age_002.wav",
+  "audio_sha256": "16961226fd5965f79f7ef59977901b653a45e3971c4a163700d7eb04314f7136",
+  "duration_seconds": 2.25,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "AGE",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "मैं अट्ठावन साल का हूँ",
+  "context": {
+    "expected_field": "age",
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": "age",
+    "operator": "EQ",
+    "value": 58,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 2150
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-010",
+  "task": "voice",
+  "split": "DEV",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "INCOME",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_inc_005.wav"
+  ],
+  "audio_file": "audio/hi_inc_005.wav",
+  "audio_sha256": "3cddc042eb0da707484d9f1db91b743990e04bb87fa78881ad316b3143c82207",
+  "duration_seconds": 3.26,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "INCOME",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "मेरी आय पंद्रह हजार रुपये महीना है",
+  "context": {
+    "expected_field": null,
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 3160
+  }
+}

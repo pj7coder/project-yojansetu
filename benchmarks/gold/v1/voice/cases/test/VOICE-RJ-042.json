@@ -1,0 +1,41 @@
+{
+  "case_id": "VOICE-RJ-042",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "NOISE_ONLY",
+    "NO_SPEECH",
+    "VAD_TEST"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:noise_only.wav"
+  ],
+  "audio_file": "audio/noise_only.wav",
+  "audio_sha256": "dcf2a9389cd7f567594e657a106274a259c662944527007fa3934761a9e37f51",
+  "duration_seconds": 2.0,
+  "sample_rate": 16000,
+  "speaker_id": "SYNTHETIC_NOISE",
+  "speech_category": "NOISE",
+  "noise_condition": "WHITE_NOISE",
+  "reference_transcript": "",
+  "context": {
+    "expected_field": "family_income",
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null
+  },
+  "vad": {
+    "contains_speech": false,
+    "speech_start_ms": null,
+    "speech_end_ms": null
+  }
+}

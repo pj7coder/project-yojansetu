@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-032",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "GOVERNMENT_TERMS",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_gov_001.wav"
+  ],
+  "audio_file": "audio/hi_gov_001.wav",
+  "audio_sha256": "59788e847d0b3dbbe397eaf933b41fb204cbf1c59217f1e7039fa2f94805ab08",
+  "duration_seconds": 2.66,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "GOVERNMENT_TERMS",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "मेरे पास जन आधार कार्ड है",
+  "context": {
+    "expected_field": null,
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 2560
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-039",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "HINDI_NOISY",
+    "AUDIO",
+    "MODERATE_NOISE"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_noise_002.wav"
+  ],
+  "audio_file": "audio/hi_noise_002.wav",
+  "audio_sha256": "c66c259a6866bff25c19a491c07f7f045723d2cdf216a573d9e47dcfb8849912",
+  "duration_seconds": 3.43,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "HINDI_NOISY",
+  "noise_condition": "MODERATE_NOISE",
+  "reference_transcript": "परिवार की वार्षिक आय डेढ़ लाख रुपये है",
+  "context": {
+    "expected_field": null,
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 3330
+  }
+}

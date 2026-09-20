@@ -1,0 +1,12 @@
+{
+  "name": "project-jansetu",
+  "version": "0.1.0",
+  "private": true,
+  "description": "JanSetu - Offline-First Vernacular Government Scheme Assistant for Citizens of Rajasthan",
+  "scripts": {
+    "dev": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "start": "npm run start --prefix frontend",
+    "lint": "npm run lint --prefix frontend"
+  }
+}

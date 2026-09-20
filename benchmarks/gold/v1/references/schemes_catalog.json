@@ -1,0 +1,75 @@
+{
+  "catalog_version": "1.0",
+  "jurisdiction": "Rajasthan",
+  "verified_schemes": [
+    {
+      "scheme_version_id": "e54ebf76-b896-4292-b033-ce77e913bc35",
+      "official_name_hi": "राजस्थान वृद्धावस्था पेंशन योजना",
+      "official_name_en": "Rajasthan Old Age Pension Scheme",
+      "department": "Social Justice and Empowerment Department",
+      "domain": "pension",
+      "effective_date": "2024-04-01",
+      "status": "HUMAN_VERIFIED",
+      "source_document_id": "de06a6a2-0a2c-46ed-a39e-7b12fbd66a98",
+      "rules": {
+        "age_min": 60,
+        "family_income_max": 200000,
+        "domicile": "RAJASTHAN",
+        "exclusions": ["GOVERNMENT_EMPLOYEE", "INCOME_TAX_PAYER"]
+      },
+      "benefits": {
+        "type": "CASH_TRANSFER",
+        "monthly_amount": 1000
+      }
+    },
+    {
+      "scheme_version_id": "ecbc3b33-e249-42ea-b03c-1622ee09d265",
+      "official_name_hi": "मुख्यमंत्री वृद्धजन सम्मान पेंशन योजना (पुनरीक्षित)",
+      "official_name_en": "Mukhyamantri Vridhjan Samman Pension Yojana (Revised)",
+      "department": "Social Justice and Empowerment Department",
+      "domain": "pension",
+      "effective_date": "2025-01-01",
+      "status": "HUMAN_VERIFIED",
+      "source_document_id": "f9794d5c-d2ed-4d2c-8f21-88404f418790",
+      "rules": {
+        "age_min": 60,
+        "family_income_max": 200000,
+        "domicile": "RAJASTHAN",
+        "exclusions": ["GOVERNMENT_EMPLOYEE"]
+      },
+      "benefits": {
+        "type": "CASH_TRANSFER",
+        "monthly_amount": 1000
+      }
+    },
+    {
+      "scheme_version_id": "16b7059a-1a57-4618-8fbe-bc3c80cd5826",
+      "official_name_hi": "मुख्यमंत्री वृद्धजन सम्मान पेंशन योजना (संस्करण 1)",
+      "official_name_en": "Mukhyamantri Vridhjan Samman Pension Yojana (v1)",
+      "department": "Social Justice and Empowerment Department",
+      "domain": "pension",
+      "effective_date": "2024-04-01",
+      "status": "HUMAN_VERIFIED",
+      "rules": {
+        "age_min": 60,
+        "family_income_max": 200000,
+        "domicile": "RAJASTHAN"
+      }
+    },
+    {
+      "scheme_version_id": "4c2771f3-97d2-435b-885c-6922f6578844",
+      "official_name_hi": "मुख्यमंत्री वृद्धजन सम्मान पेंशन योजना (संशोधित 2026)",
+      "official_name_en": "Mukhyamantri Vridhjan Samman Pension Yojana (Amended 2026)",
+      "department": "Social Justice and Empowerment Department",
+      "domain": "pension",
+      "effective_date": "2026-04-01",
+      "status": "HUMAN_VERIFIED",
+      "notes": "Amended income ceiling from Rs 2,00,000 to Rs 3,00,000 effective 1 April 2026",
+      "rules": {
+        "age_min": 60,
+        "family_income_max": 300000,
+        "domicile": "RAJASTHAN"
+      }
+    }
+  ]
+}

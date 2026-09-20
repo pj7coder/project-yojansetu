@@ -1,0 +1,67 @@
+{
+  "case_id": "EXT-RJ-002",
+  "task": "extraction",
+  "split": "DEV",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "EASY",
+  "tags": [
+    "ELIGIBILITY",
+    "AGE",
+    "RESIDENCY",
+    "CLEAN_PDF"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "doc:72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2"
+  ],
+  "source": {
+    "document_id": "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2",
+    "chunk_id": "DOC-72FF2711-CHUNK-0002",
+    "page_number": 1,
+    "source_block_ids": [
+      "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p1-b3"
+    ],
+    "text_snippet": "All applicants must be above 58 years of age and permanent residents of Rajasthan. Provided that individuals in government service shall not be eligible.",
+    "contains_table": false,
+    "contains_ocr": false,
+    "language": "en"
+  },
+  "expected_facts": [
+    {
+      "field": "eligibility.age",
+      "operator": "GT",
+      "value": 58,
+      "unit": "years",
+      "evidence_quote": "All applicants must be above 58 years of age",
+      "evidence_page": 1,
+      "evidence_block_ids": [
+        "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p1-b3"
+      ]
+    },
+    {
+      "field": "eligibility.domicile",
+      "operator": "EQ",
+      "value": "RAJASTHAN",
+      "evidence_quote": "permanent residents of Rajasthan",
+      "evidence_page": 1,
+      "evidence_block_ids": [
+        "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p1-b3"
+      ]
+    },
+    {
+      "field": "exclusions.government_service",
+      "operator": "EQ",
+      "value": true,
+      "evidence_quote": "individuals in government service shall not be eligible",
+      "evidence_page": 1,
+      "evidence_block_ids": [
+        "72ff2711-d1b6-40be-ab6c-7d51ba8ae8e2-p1-b4"
+      ]
+    }
+  ],
+  "is_negative": false,
+  "is_security_test": false
+}

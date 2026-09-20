@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-011",
+  "task": "voice",
+  "split": "VALIDATION",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "INCOME",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_inc_006.wav"
+  ],
+  "audio_file": "audio/hi_inc_006.wav",
+  "audio_sha256": "d40575ab75cac600dbff30192c140ff81a6df1ee666ef9dea814cfa3620f08dc",
+  "duration_seconds": 3.77,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "INCOME",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "परिवार की कुल कमाई एक लाख अस्सी हजार है",
+  "context": {
+    "expected_field": null,
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 3670
+  }
+}

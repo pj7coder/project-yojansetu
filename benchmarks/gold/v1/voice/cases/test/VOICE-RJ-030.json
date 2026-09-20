@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-030",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "CODE_MIXED",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:hi_mix_002.wav"
+  ],
+  "audio_file": "audio/hi_mix_002.wav",
+  "audio_sha256": "3c78bbbdd946b211ac9d4ed7eff320f8ff906b871eb57b0bd94d3ca52a79a004",
+  "duration_seconds": 3.81,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "CODE_MIXED",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "मुझे farmer subsidy के बारे में जानकारी चाहिए",
+  "context": {
+    "expected_field": null,
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 3710
+  }
+}

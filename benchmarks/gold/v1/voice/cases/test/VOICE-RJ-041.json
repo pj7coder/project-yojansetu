@@ -1,0 +1,41 @@
+{
+  "case_id": "VOICE-RJ-041",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "EASY",
+  "tags": [
+    "SILENCE",
+    "NO_SPEECH",
+    "VAD_TEST"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:silence.wav"
+  ],
+  "audio_file": "audio/silence.wav",
+  "audio_sha256": "20eaebffe1816e0ffa6f7f854f5ef4ea80d5349faaf0ce1fec1b713e7fde58fa",
+  "duration_seconds": 2.0,
+  "sample_rate": 16000,
+  "speaker_id": "SYNTHETIC_SILENCE",
+  "speech_category": "SILENCE",
+  "noise_condition": "ZERO",
+  "reference_transcript": "",
+  "context": {
+    "expected_field": "age",
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": null,
+    "operator": null,
+    "value": null
+  },
+  "vad": {
+    "contains_speech": false,
+    "speech_start_ms": null,
+    "speech_end_ms": null
+  }
+}

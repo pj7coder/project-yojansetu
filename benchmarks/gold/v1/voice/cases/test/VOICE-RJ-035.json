@@ -1,0 +1,42 @@
+{
+  "case_id": "VOICE-RJ-035",
+  "task": "voice",
+  "split": "TEST",
+  "status": "HUMAN_VERIFIED",
+  "difficulty": "NORMAL",
+  "tags": [
+    "RAJASTHANI_DIALECT_STYLE",
+    "AUDIO",
+    "CLEAN"
+  ],
+  "created_at": "2026-09-07T14:00:00Z",
+  "reviewed_at": "2026-09-07T14:00:00Z",
+  "annotated_by": "HUMAN_ANNOTATOR_RAJ",
+  "reviewed_by": "HUMAN_REVIEWER_GOV",
+  "source_references": [
+    "audio:raj_dia_001.wav"
+  ],
+  "audio_file": "audio/raj_dia_001.wav",
+  "audio_sha256": "e68c51dae908b2ec03298aac30e6de7806c9428d9130f588609a8c72449c9fb0",
+  "duration_seconds": 4.56,
+  "sample_rate": 16000,
+  "speaker_id": "RAJ_SPK_CONSENTED",
+  "speech_category": "RAJASTHANI_DIALECT_STYLE",
+  "noise_condition": "CLEAN",
+  "reference_transcript": "म्हारी उम्र बासठ साल है अर म्हारी कमाई डेढ़ लाख है",
+  "context": {
+    "expected_field": "age",
+    "conversation_state": "WAITING_FOR_PROFILE_VALUE"
+  },
+  "expected_meaning": {
+    "field": "age",
+    "operator": "EQ",
+    "value": 62,
+    "is_confirmation": null
+  },
+  "vad": {
+    "contains_speech": true,
+    "speech_start_ms": 100,
+    "speech_end_ms": 4460
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_metadata": {
+    "lexicon_name": "marwari",
+    "version": "1.0",
+    "description": "Reviewed Marwari speech tokens for conservative semantic normalization."
+  },
+  "mappings": {
+    "उमर": "उम्र",
+    "टाबर": "बच्चे",
+    "टाबरिया": "बच्चे",
+    "बापूजी": "पिता",
+    "मायड़": "माता"
+  }
+}
