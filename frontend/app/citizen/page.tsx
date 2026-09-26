@@ -25,6 +25,7 @@ import CitationDrawer from "../../components/citizen/CitationDrawer";
 import EmitraSlipModal from "../../components/citizen/EmitraSlipModal";
 import SchemeDetails from "../../components/citizen/SchemeDetails";
 import { RAJASTHAN_FLAGSHIP_SCHEMES } from "../../lib/rajasthanSchemesData";
+import { extractDemographicsFromText } from "../../lib/extractDemographics";
 
 interface ChatMessage {
   id: string;
@@ -48,6 +49,7 @@ export default function CitizenPage() {
   const [parameters, setParameters] = useState<CitizenParameters>(
     DEFAULT_CITIZEN_PARAMETERS
   );
+  const [lastUpdatedField, setLastUpdatedField] = useState<string | null>(null);
 
   // Layout Drawers (Sidebar & Right Panel)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -321,8 +323,23 @@ export default function CitizenPage() {
     const currentSession = activeSessionId || `chat_${Date.now()}`;
     if (!activeSessionId) setActiveSessionId(currentSession);
 
+    // Dynamically extract demographic entities from the user query
+    const extracted = extractDemographicsFromText(query);
+    let activeParams = parameters;
+    if (Object.keys(extracted).length > 0) {
+      activeParams = {
+        ...parameters,
+        ...extracted,
+      };
+      setParameters(activeParams);
+      const keys = Object.keys(extracted);
+      if (keys.length > 0) {
+        setLastUpdatedField(keys[0]);
+      }
+    }
+
     try {
-      const context = getContextFromParameters(parameters);
+      const context = getContextFromParameters(activeParams);
       const resp: AgentQueryResponse = await sendAgentQuery(
         query,
         context,
@@ -368,9 +385,20 @@ export default function CitizenPage() {
   // Right Panel "Apply to Chat"
   const handleApplyParametersToChat = (newParams: CitizenParameters) => {
     setParameters(newParams);
+    const detailsHi: string[] = [];
+    if (newParams.age !== null) detailsHi.push(`उम्र ${newParams.age} वर्ष`);
+    if (newParams.gender) detailsHi.push(newParams.gender === "FEMALE" ? "महिला" : newParams.gender === "MALE" ? "पुरुष" : "अन्य");
+    if (newParams.category) detailsHi.push(`${newParams.category} श्रेणी`);
+    if (newParams.income !== null) detailsHi.push(`वार्षिक आय ₹${newParams.income.toLocaleString("en-IN")}`);
+    if (newParams.occupation) detailsHi.push(`व्यवसाय ${newParams.occupation}`);
+    if (newParams.district) detailsHi.push(`जिला ${newParams.district}`);
+    if (newParams.landBigha !== null && newParams.landBigha > 0) detailsHi.push(`भूमि ${newParams.landBigha} बीघा`);
+    if (newParams.isWidow) detailsHi.push("एकल नारी/विधवा");
+    if (newParams.isDisabled) detailsHi.push("दिव्यांग");
+
     const query = isHi
-      ? `मेरी प्रोफाइल: उम्र ${newParams.age} वर्ष, ${newParams.gender === "FEMALE" ? "महिला" : "पुरुष"}, ${newParams.category} श्रेणी, वार्षिक आय ₹${newParams.income.toLocaleString("en-IN")}, व्यवसाय ${newParams.occupation}, जिला ${newParams.district}, भूमि ${newParams.landBigha} बीघा। मुझे किन सरकारी योजनाओं का लाभ मिलेगा?`
-      : `My profile: Age ${newParams.age}, ${newParams.gender.toLowerCase()}, ${newParams.category}, Annual income ₹${newParams.income.toLocaleString("en-IN")}, Occupation ${newParams.occupation}, District ${newParams.district}, Land ${newParams.landBigha} bigha. What schemes and pensions am I eligible for?`;
+      ? `मेरी प्रोफाइल: ${detailsHi.join(", ") || "सामान्य नागरिक"}। मुझे किन सरकारी योजनाओं का लाभ मिलेगा?`
+      : `My profile: ${detailsHi.join(", ") || "citizen"}. What government schemes and pensions am I eligible for?`;
 
     handleSendMessage(query);
   };
@@ -420,6 +448,19 @@ export default function CitizenPage() {
           transcript += event.results[i][0].transcript;
         }
         setInputText(transcript);
+
+        // Dynamically extract demographics as user speaks
+        const liveEntities = extractDemographicsFromText(transcript);
+        if (Object.keys(liveEntities).length > 0) {
+          setParameters((prev) => ({
+            ...prev,
+            ...liveEntities,
+          }));
+          const keys = Object.keys(liveEntities);
+          if (keys.length > 0) {
+            setLastUpdatedField(keys[0]);
+          }
+        }
       };
 
       recognition.onerror = (event: any) => {
@@ -776,6 +817,7 @@ export default function CitizenPage() {
           lang={lang}
           isOpen={isParamsOpen}
           onClose={() => setIsParamsOpen(false)}
+          lastUpdatedField={lastUpdatedField}
         />
       </div>
 
@@ -795,9 +837,9 @@ export default function CitizenPage() {
           onClose={() => setIsEmitraSlipOpen(false)}
           language={lang}
           citizenName={parameters.gender === "FEMALE" ? "नागरिक (महिला)" : "नागरिक"}
-          district={parameters.district}
-          age={parameters.age}
-          gender={parameters.gender}
+          district={parameters.district ?? undefined}
+          age={parameters.age ?? undefined}
+          gender={parameters.gender ?? undefined}
           schemes={messages.flatMap((m) => m.schemes || [])}
           documents={messages.flatMap((m) => m.documents || [])}
           kioskInfo={messages.find((m) => m.kioskInfo)?.kioskInfo || null}

@@ -1,43 +1,43 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { RajasthanDistrictItem } from "../../types/citizen";
 import { getRajasthanDistricts } from "../../lib/api";
 
 export interface CitizenParameters {
-  age: number;
-  gender: "MALE" | "FEMALE" | "OTHER";
-  category: "GENERAL" | "OBC" | "SC" | "ST" | "EWS" | "MBC";
-  income: number;
-  occupation: string;
-  residence: "RURAL" | "URBAN";
-  district: string;
-  rationCard: "NONE" | "BPL" | "STATE_BPL" | "AAY" | "NFSA";
+  age: number | null;
+  gender: "MALE" | "FEMALE" | "OTHER" | null;
+  category: "GENERAL" | "OBC" | "SC" | "ST" | "EWS" | "MBC" | null;
+  income: number | null;
+  occupation: string | null;
+  residence: "RURAL" | "URBAN" | null;
+  district: string | null;
+  rationCard: "NONE" | "BPL" | "STATE_BPL" | "AAY" | "NFSA" | null;
   isWidow: boolean;
   isDisabled: boolean;
   disabilityPercent: number;
-  landBigha: number;
-  hasJanAadhaar: boolean;
+  landBigha: number | null;
+  hasJanAadhaar: boolean | null;
   isStudent: boolean;
-  maritalStatus: "MARRIED" | "SINGLE" | "WIDOW" | "DIVORCED";
+  maritalStatus: "MARRIED" | "SINGLE" | "WIDOW" | "DIVORCED" | null;
 }
 
 export const DEFAULT_CITIZEN_PARAMETERS: CitizenParameters = {
-  age: 45,
-  gender: "FEMALE",
-  category: "OBC",
-  income: 120000,
-  occupation: "FARMER",
-  residence: "RURAL",
-  district: "Jaipur",
-  rationCard: "BPL",
+  age: null,
+  gender: null,
+  category: null,
+  income: null,
+  occupation: null,
+  residence: null,
+  district: null,
+  rationCard: null,
   isWidow: false,
   isDisabled: false,
   disabilityPercent: 40,
-  landBigha: 2,
-  hasJanAadhaar: true,
+  landBigha: null,
+  hasJanAadhaar: null,
   isStudent: false,
-  maritalStatus: "MARRIED",
+  maritalStatus: null,
 };
 
 interface CitizenParameterPanelProps {
@@ -47,6 +47,7 @@ interface CitizenParameterPanelProps {
   lang: "hi" | "en";
   isOpen?: boolean;
   onClose?: () => void;
+  lastUpdatedField?: string | null;
 }
 
 export function CitizenParameterPanel({
@@ -56,15 +57,93 @@ export function CitizenParameterPanel({
   lang = "hi",
   isOpen = true,
   onClose,
+  lastUpdatedField,
 }: CitizenParameterPanelProps) {
   const isHi = lang === "hi";
   const [districts, setDistricts] = useState<RajasthanDistrictItem[]>([]);
+
+  // Smooth slider display values (visibly animated when changed)
+  const [displayedAge, setDisplayedAge] = useState<number>(parameters.age ?? 0);
+  const [displayedIncome, setDisplayedIncome] = useState<number>(parameters.income ?? 0);
+  const [highlightedField, setHighlightedField] = useState<string | null>(null);
+
+  const prevAgeRef = useRef<number | null>(parameters.age);
+  const prevIncomeRef = useRef<number | null>(parameters.income);
+  const ageAnimRef = useRef<number | null>(null);
+  const incomeAnimRef = useRef<number | null>(null);
 
   useEffect(() => {
     getRajasthanDistricts()
       .then((data) => setDistricts(data))
       .catch(() => {});
   }, []);
+
+  // Smooth animation helper
+  const animateValue = (
+    from: number,
+    to: number,
+    durationMs: number,
+    onStep: (val: number) => void,
+    animRef: React.MutableRefObject<number | null>
+  ) => {
+    if (animRef.current) cancelAnimationFrame(animRef.current);
+    const startTime = performance.now();
+    const step = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / durationMs, 1);
+      // Easing out cubic for natural deceleration
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(from + (to - from) * ease);
+      onStep(current);
+      if (progress < 1) {
+        animRef.current = requestAnimationFrame(step);
+      } else {
+        animRef.current = null;
+      }
+    };
+    animRef.current = requestAnimationFrame(step);
+  };
+
+  // Visibly animate age slider moving when parameters.age changes
+  useEffect(() => {
+    if (parameters.age !== null && parameters.age !== prevAgeRef.current) {
+      const from = prevAgeRef.current ?? 18;
+      const to = parameters.age;
+      prevAgeRef.current = to;
+      animateValue(from, to, 600, (val) => setDisplayedAge(val), ageAnimRef);
+      setHighlightedField("age");
+      const timer = setTimeout(() => setHighlightedField(null), 3000);
+      return () => clearTimeout(timer);
+    } else if (parameters.age === null) {
+      prevAgeRef.current = null;
+      setDisplayedAge(0);
+    }
+  }, [parameters.age]);
+
+  // Visibly animate income slider moving when parameters.income changes
+  useEffect(() => {
+    if (parameters.income !== null && parameters.income !== prevIncomeRef.current) {
+      const from = prevIncomeRef.current ?? 0;
+      const to = parameters.income;
+      prevIncomeRef.current = to;
+      animateValue(from, to, 600, (val) => setDisplayedIncome(val), incomeAnimRef);
+      setHighlightedField("income");
+      const timer = setTimeout(() => setHighlightedField(null), 3000);
+      return () => clearTimeout(timer);
+    } else if (parameters.income === null) {
+      prevIncomeRef.current = null;
+      setDisplayedIncome(0);
+    }
+  }, [parameters.income]);
+
+  // Track external highlight prop
+  useEffect(() => {
+    if (lastUpdatedField) {
+      setHighlightedField(lastUpdatedField);
+      const timer = setTimeout(() => setHighlightedField(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [lastUpdatedField]);
 
   const update = <K extends keyof CitizenParameters>(key: K, val: CitizenParameters[K]) => {
     onChange({
@@ -73,7 +152,7 @@ export function CitizenParameterPanel({
     });
   };
 
-  // Quick 1-click Preset Personas
+  // 1-Click Preset Personas
   const applyPreset = (preset: "FARMER" | "SENIOR" | "STUDENT" | "WIDOW") => {
     if (preset === "FARMER") {
       onChange({
@@ -146,6 +225,13 @@ export function CitizenParameterPanel({
     }
   };
 
+  // Helper for dynamic highlight classes
+  const getHighlightClass = (fieldName: string) => {
+    return highlightedField === fieldName
+      ? "ring-2 ring-orange-500 bg-orange-50/70 shadow-sm rounded-xl p-2 transition-all duration-500 animate-pulse"
+      : "transition-all duration-300";
+  };
+
   return (
     <aside
       className={`h-full flex flex-col bg-white border-l border-slate-200 transition-all duration-200 z-20 shadow-lg lg:shadow-none ${
@@ -161,7 +247,7 @@ export function CitizenParameterPanel({
               {isHi ? "नागरिक पैरामीटर" : "Citizen Parameters"}
             </h2>
             <p className="text-[10px] text-slate-500">
-              {isHi ? "अपनी जानकारी अनुकूलित करें" : "Customize profile details"}
+              {isHi ? "बोलकर या चुनकर विवरण बदलें" : "Speaks or tap to change details"}
             </p>
           </div>
         </div>
@@ -170,15 +256,15 @@ export function CitizenParameterPanel({
           <button
             type="button"
             onClick={() => onChange(DEFAULT_CITIZEN_PARAMETERS)}
-            title={isHi ? "रीसेट करें" : "Reset defaults"}
-            className="px-2 py-1 text-[11px] font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-md hover:bg-slate-100 transition"
+            title={isHi ? "सभी विवरण रीसेट करें" : "Clear all details"}
+            className="px-2 py-1 text-[11px] font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-md hover:bg-slate-100 transition cursor-pointer"
           >
-            {isHi ? "रीसेट" : "Reset"}
+            {isHi ? "रीसेट (खाली करें)" : "Reset"}
           </button>
           {onClose && (
             <button
               onClick={onClose}
-              className="lg:hidden p-1 rounded hover:bg-slate-200 text-slate-500 text-sm"
+              className="lg:hidden p-1 rounded hover:bg-slate-200 text-slate-500 text-sm cursor-pointer"
             >
               ✕
             </button>
@@ -190,13 +276,13 @@ export function CitizenParameterPanel({
       <div className="p-2.5 bg-orange-50/60 border-b border-orange-100">
         <div className="text-[10px] font-black text-orange-800 uppercase tracking-wide mb-1.5 flex items-center justify-between">
           <span>{isHi ? "त्वरित प्रोफाइल चुनें" : "Quick 1-Click Profiles"}</span>
-          <span className="text-[9px] text-orange-600">Preset</span>
+          <span className="text-[9px] text-orange-600 font-semibold">Demo Presets</span>
         </div>
         <div className="grid grid-cols-2 gap-1.5">
           <button
             type="button"
             onClick={() => applyPreset("FARMER")}
-            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer"
+            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer active:scale-95"
           >
             <div className="text-[11px] font-bold text-slate-800">🌾 {isHi ? "किसान" : "Farmer"}</div>
             <div className="text-[9px] text-slate-500">48 yr • BPL • 3 बीघा</div>
@@ -204,7 +290,7 @@ export function CitizenParameterPanel({
           <button
             type="button"
             onClick={() => applyPreset("SENIOR")}
-            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer"
+            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer active:scale-95"
           >
             <div className="text-[11px] font-bold text-slate-800">👴 {isHi ? "वृद्ध नागरिक" : "Senior"}</div>
             <div className="text-[9px] text-slate-500">65 yr • AAY • SC</div>
@@ -212,7 +298,7 @@ export function CitizenParameterPanel({
           <button
             type="button"
             onClick={() => applyPreset("STUDENT")}
-            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer"
+            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer active:scale-95"
           >
             <div className="text-[11px] font-bold text-slate-800">🎓 {isHi ? "विद्यार्थी" : "Student"}</div>
             <div className="text-[9px] text-slate-500">20 yr • ST • Udaipur</div>
@@ -220,7 +306,7 @@ export function CitizenParameterPanel({
           <button
             type="button"
             onClick={() => applyPreset("WIDOW")}
-            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer"
+            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer active:scale-95"
           >
             <div className="text-[11px] font-bold text-slate-800">👩 {isHi ? "महिला/विधवा" : "Widow"}</div>
             <div className="text-[9px] text-slate-500">52 yr • Pension</div>
@@ -230,49 +316,85 @@ export function CitizenParameterPanel({
 
       {/* Main Parameters Form */}
       <div className="flex-1 overflow-y-auto p-3.5 space-y-4 text-xs scrollbar-thin">
-        {/* 1. Age */}
-        <div className="space-y-1.5">
+        {/* 1. Age (With Visible Moving Slider Animation) */}
+        <div className={`space-y-1.5 ${getHighlightClass("age")}`}>
           <div className="flex items-center justify-between">
             <label className="font-bold text-slate-700 flex items-center gap-1">
               <span>🎂</span>
               <span>{isHi ? "आयु (वर्ष)" : "Age (Years)"}</span>
+              {highlightedField === "age" && (
+                <span className="text-[9px] text-orange-600 bg-orange-100 font-bold px-1.5 py-0.2 rounded-full animate-bounce">
+                  ✨ {isHi ? "स्वतः अपडेट" : "Auto-Updated"}
+                </span>
+              )}
             </label>
             <div className="flex items-center gap-1.5">
               <button
                 type="button"
-                onClick={() => update("age", Math.max(1, parameters.age - 1))}
-                className="w-5 h-5 rounded bg-slate-100 border border-slate-300 flex items-center justify-center font-bold text-slate-700 hover:bg-slate-200"
+                onClick={() => update("age", Math.max(10, (parameters.age ?? 18) - 1))}
+                className="w-5 h-5 rounded bg-slate-100 border border-slate-300 flex items-center justify-center font-bold text-slate-700 hover:bg-slate-200 cursor-pointer"
               >
                 -
               </button>
-              <span className="font-black text-slate-900 w-8 text-center bg-slate-50 py-0.5 rounded border border-slate-200">
-                {parameters.age}
+              <span className="font-black text-slate-900 min-w-10 text-center bg-slate-50 py-0.5 rounded border border-slate-200 text-xs">
+                {parameters.age !== null ? `${displayedAge || parameters.age} वर्ष` : "--"}
               </span>
               <button
                 type="button"
-                onClick={() => update("age", Math.min(100, parameters.age + 1))}
-                className="w-5 h-5 rounded bg-slate-100 border border-slate-300 flex items-center justify-center font-bold text-slate-700 hover:bg-slate-200"
+                onClick={() => update("age", Math.min(100, (parameters.age ?? 18) + 1))}
+                className="w-5 h-5 rounded bg-slate-100 border border-slate-300 flex items-center justify-center font-bold text-slate-700 hover:bg-slate-200 cursor-pointer"
               >
                 +
               </button>
             </div>
           </div>
-          <input
-            type="range"
-            min="10"
-            max="95"
-            value={parameters.age}
-            onChange={(e) => update("age", parseInt(e.target.value))}
-            className="w-full accent-orange-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
-          />
+
+          {/* Range Slider - Visibly animates moving thumb */}
+          <div className="relative pt-1">
+            <input
+              type="range"
+              min="10"
+              max="95"
+              value={parameters.age !== null ? displayedAge : 10}
+              onChange={(e) => {
+                const val = parseInt(e.target.value);
+                setDisplayedAge(val);
+                update("age", val);
+              }}
+              className={`w-full accent-orange-600 cursor-pointer h-2 bg-slate-200 rounded-lg transition-all ${
+                parameters.age === null ? "opacity-50" : "opacity-100"
+              }`}
+            />
+            {parameters.age === null && (
+              <span className="text-[10px] text-slate-400 italic block text-right mt-0.5">
+                {isHi ? "कोई आयु निर्धारित नहीं" : "No age set (Move slider or speak)"}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* 2. Gender */}
-        <div className="space-y-1.5">
-          <label className="font-bold text-slate-700 flex items-center gap-1">
-            <span>⚧️</span>
-            <span>{isHi ? "लिंग" : "Gender"}</span>
-          </label>
+        <div className={`space-y-1.5 ${getHighlightClass("gender")}`}>
+          <div className="flex items-center justify-between">
+            <label className="font-bold text-slate-700 flex items-center gap-1">
+              <span>⚧️</span>
+              <span>{isHi ? "लिंग" : "Gender"}</span>
+              {highlightedField === "gender" && (
+                <span className="text-[9px] text-orange-600 bg-orange-100 font-bold px-1.5 py-0.2 rounded-full animate-bounce">
+                  ✨ {isHi ? "पहचाना गया" : "Detected"}
+                </span>
+              )}
+            </label>
+            {parameters.gender !== null && (
+              <button
+                type="button"
+                onClick={() => update("gender", null)}
+                className="text-[10px] text-slate-400 hover:text-slate-600 underline"
+              >
+                {isHi ? "हटाएं" : "Clear"}
+              </button>
+            )}
+          </div>
           <div className="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
             {[
               { id: "MALE", hi: "पुरुष", en: "Male" },
@@ -287,13 +409,13 @@ export function CitizenParameterPanel({
                   if (g.id !== "FEMALE") {
                     update("isWidow", false);
                     if (parameters.maritalStatus === "WIDOW") {
-                      update("maritalStatus", "MARRIED");
+                      update("maritalStatus", null);
                     }
                   }
                 }}
-                className={`py-1.5 px-2 rounded-md font-bold text-[11px] transition ${
+                className={`py-1.5 px-2 rounded-md font-bold text-[11px] transition cursor-pointer ${
                   parameters.gender === g.id
-                    ? "bg-white text-orange-600 shadow-xs"
+                    ? "bg-white text-orange-600 shadow-xs ring-1 ring-orange-500/30"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -304,20 +426,36 @@ export function CitizenParameterPanel({
         </div>
 
         {/* 3. Social Category */}
-        <div className="space-y-1.5">
-          <label className="font-bold text-slate-700 flex items-center gap-1">
-            <span>🏷️</span>
-            <span>{isHi ? "जाति श्रेणी" : "Social Category"}</span>
-          </label>
+        <div className={`space-y-1.5 ${getHighlightClass("category")}`}>
+          <div className="flex items-center justify-between">
+            <label className="font-bold text-slate-700 flex items-center gap-1">
+              <span>🏷️</span>
+              <span>{isHi ? "जाति श्रेणी" : "Social Category"}</span>
+              {highlightedField === "category" && (
+                <span className="text-[9px] text-orange-600 bg-orange-100 font-bold px-1.5 py-0.2 rounded-full animate-bounce">
+                  ✨ {isHi ? "अपडेट" : "Updated"}
+                </span>
+              )}
+            </label>
+            {parameters.category !== null && (
+              <button
+                type="button"
+                onClick={() => update("category", null)}
+                className="text-[10px] text-slate-400 hover:text-slate-600 underline"
+              >
+                {isHi ? "हटाएं" : "Clear"}
+              </button>
+            )}
+          </div>
           <div className="grid grid-cols-3 gap-1">
             {(["GENERAL", "OBC", "SC", "ST", "EWS", "MBC"] as const).map((cat) => (
               <button
                 key={cat}
                 type="button"
                 onClick={() => update("category", cat)}
-                className={`py-1 rounded-lg border text-[11px] font-bold transition ${
+                className={`py-1 rounded-lg border text-[11px] font-bold transition cursor-pointer ${
                   parameters.category === cat
-                    ? "bg-orange-600 text-white border-orange-600 shadow-xs"
+                    ? "bg-orange-600 text-white border-orange-600 shadow-xs ring-1 ring-orange-600"
                     : "bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-300"
                 }`}
               >
@@ -327,17 +465,25 @@ export function CitizenParameterPanel({
           </div>
         </div>
 
-        {/* 4. Annual Income */}
-        <div className="space-y-1.5">
+        {/* 4. Annual Income (With Slider Animation) */}
+        <div className={`space-y-1.5 ${getHighlightClass("income")}`}>
           <div className="flex items-center justify-between">
             <label className="font-bold text-slate-700 flex items-center gap-1">
               <span>💰</span>
               <span>{isHi ? "वार्षिक पारिवारिक आय" : "Annual Income"}</span>
+              {highlightedField === "income" && (
+                <span className="text-[9px] text-emerald-700 bg-emerald-100 font-bold px-1.5 py-0.2 rounded-full animate-bounce">
+                  ✨ {isHi ? "स्वतः अपडेट" : "Auto-Updated"}
+                </span>
+              )}
             </label>
             <span className="font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[11px]">
-              ₹{parameters.income.toLocaleString("en-IN")}
+              {parameters.income !== null
+                ? `₹${(displayedIncome || parameters.income).toLocaleString("en-IN")}`
+                : "--"}
             </span>
           </div>
+
           <div className="grid grid-cols-4 gap-1">
             {[
               { label: "₹0", val: 0 },
@@ -349,9 +495,9 @@ export function CitizenParameterPanel({
                 key={p.val}
                 type="button"
                 onClick={() => update("income", p.val)}
-                className={`py-1 rounded border text-[10px] font-bold transition ${
+                className={`py-1 rounded border text-[10px] font-bold transition cursor-pointer ${
                   parameters.income === p.val
-                    ? "bg-emerald-600 text-white border-emerald-600"
+                    ? "bg-emerald-600 text-white border-emerald-600 shadow-2xs"
                     : "bg-slate-50 text-slate-600 border-slate-200 hover:border-slate-300"
                 }`}
               >
@@ -359,33 +505,48 @@ export function CitizenParameterPanel({
               </button>
             ))}
           </div>
+
           <input
             type="range"
             min="0"
             max="600000"
             step="10000"
-            value={parameters.income}
-            onChange={(e) => update("income", parseInt(e.target.value) || 0)}
-            className="w-full accent-emerald-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg mt-1"
+            value={parameters.income !== null ? displayedIncome : 0}
+            onChange={(e) => {
+              const val = parseInt(e.target.value) || 0;
+              setDisplayedIncome(val);
+              update("income", val);
+            }}
+            className={`w-full accent-emerald-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg mt-1 transition-all ${
+              parameters.income === null ? "opacity-50" : "opacity-100"
+            }`}
           />
         </div>
 
         {/* 5. Occupation */}
-        <div className="space-y-1.5">
-          <label className="font-bold text-slate-700 flex items-center gap-1">
-            <span>💼</span>
-            <span>{isHi ? "व्यवसाय / कार्य" : "Occupation"}</span>
-          </label>
+        <div className={`space-y-1.5 ${getHighlightClass("occupation")}`}>
+          <div className="flex items-center justify-between">
+            <label className="font-bold text-slate-700 flex items-center gap-1">
+              <span>💼</span>
+              <span>{isHi ? "व्यवसाय / कार्य" : "Occupation"}</span>
+              {highlightedField === "occupation" && (
+                <span className="text-[9px] text-orange-600 bg-orange-100 font-bold px-1.5 py-0.2 rounded-full animate-bounce">
+                  ✨ {isHi ? "पहचाना गया" : "Detected"}
+                </span>
+              )}
+            </label>
+          </div>
           <select
-            value={parameters.occupation}
+            value={parameters.occupation ?? ""}
             onChange={(e) => {
-              const occ = e.target.value;
+              const occ = e.target.value || null;
               update("occupation", occ);
               if (occ === "STUDENT") update("isStudent", true);
               else update("isStudent", false);
             }}
-            className="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:outline-none focus:border-orange-500"
+            className="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:outline-none focus:border-orange-500 cursor-pointer"
           >
+            <option value="">{isHi ? "-- कोई व्यवसाय नहीं चुना (None) --" : "-- None Selected --"}</option>
             <option value="FARMER">{isHi ? "कृषक / किसान (Farmer)" : "Farmer"}</option>
             <option value="LABORER">{isHi ? "दिहाड़ी श्रमिक / मजदूर (Daily Wage)" : "Laborer / Daily Wage"}</option>
             <option value="STUDENT">{isHi ? "विद्यार्थी / छात्र (Student)" : "Student"}</option>
@@ -398,7 +559,7 @@ export function CitizenParameterPanel({
 
         {/* 6. Residence & District */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="space-y-1">
+          <div className={`space-y-1 ${getHighlightClass("residence")}`}>
             <label className="font-bold text-slate-700 text-[11px]">
               {isHi ? "निवास क्षेत्र" : "Area"}
             </label>
@@ -406,8 +567,8 @@ export function CitizenParameterPanel({
               <button
                 type="button"
                 onClick={() => update("residence", "RURAL")}
-                className={`flex-1 py-1.5 text-[10px] font-bold ${
-                  parameters.residence === "RURAL" ? "bg-orange-600 text-white" : "text-slate-600"
+                className={`flex-1 py-1.5 text-[10px] font-bold cursor-pointer transition ${
+                  parameters.residence === "RURAL" ? "bg-orange-600 text-white" : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 {isHi ? "ग्रामीण" : "Rural"}
@@ -415,8 +576,8 @@ export function CitizenParameterPanel({
               <button
                 type="button"
                 onClick={() => update("residence", "URBAN")}
-                className={`flex-1 py-1.5 text-[10px] font-bold ${
-                  parameters.residence === "URBAN" ? "bg-orange-600 text-white" : "text-slate-600"
+                className={`flex-1 py-1.5 text-[10px] font-bold cursor-pointer transition ${
+                  parameters.residence === "URBAN" ? "bg-orange-600 text-white" : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 {isHi ? "शहरी" : "Urban"}
@@ -424,15 +585,16 @@ export function CitizenParameterPanel({
             </div>
           </div>
 
-          <div className="space-y-1">
+          <div className={`space-y-1 ${getHighlightClass("district")}`}>
             <label className="font-bold text-slate-700 text-[11px]">
               {isHi ? "गृह जिला" : "District"}
             </label>
             <select
-              value={parameters.district}
-              onChange={(e) => update("district", e.target.value)}
-              className="w-full p-1.5 rounded-lg bg-slate-50 border border-slate-200 text-[11px] font-medium text-slate-800 focus:outline-none focus:border-orange-500"
+              value={parameters.district ?? ""}
+              onChange={(e) => update("district", e.target.value || null)}
+              className="w-full p-1.5 rounded-lg bg-slate-50 border border-slate-200 text-[11px] font-medium text-slate-800 focus:outline-none focus:border-orange-500 cursor-pointer"
             >
+              <option value="">{isHi ? "-- जिला चुनें --" : "-- Select District --"}</option>
               {districts.length > 0 ? (
                 districts.map((d) => (
                   <option key={d.name_en} value={d.name_en}>
@@ -455,11 +617,27 @@ export function CitizenParameterPanel({
         </div>
 
         {/* 7. Economic Card */}
-        <div className="space-y-1.5">
-          <label className="font-bold text-slate-700 flex items-center gap-1">
-            <span>💳</span>
-            <span>{isHi ? "राशन कार्ड / आर्थिक श्रेणी" : "Ration Card / Tier"}</span>
-          </label>
+        <div className={`space-y-1.5 ${getHighlightClass("rationCard")}`}>
+          <div className="flex items-center justify-between">
+            <label className="font-bold text-slate-700 flex items-center gap-1">
+              <span>💳</span>
+              <span>{isHi ? "राशन कार्ड / आर्थिक श्रेणी" : "Ration Card / Tier"}</span>
+              {highlightedField === "rationCard" && (
+                <span className="text-[9px] text-amber-700 bg-amber-100 font-bold px-1.5 py-0.2 rounded-full animate-bounce">
+                  ✨ {isHi ? "पहचाना गया" : "Detected"}
+                </span>
+              )}
+            </label>
+            {parameters.rationCard !== null && (
+              <button
+                type="button"
+                onClick={() => update("rationCard", null)}
+                className="text-[10px] text-slate-400 hover:text-slate-600 underline"
+              >
+                {isHi ? "हटाएं" : "Clear"}
+              </button>
+            )}
+          </div>
           <div className="grid grid-cols-3 gap-1">
             {[
               { id: "AAY", label: "अंत्योदय (AAY)" },
@@ -472,9 +650,9 @@ export function CitizenParameterPanel({
                 key={r.id}
                 type="button"
                 onClick={() => update("rationCard", r.id as any)}
-                className={`py-1 px-1 rounded-lg border text-[10px] font-bold truncate transition ${
+                className={`py-1 px-1 rounded-lg border text-[10px] font-bold truncate transition cursor-pointer ${
                   parameters.rationCard === r.id
-                    ? "bg-amber-600 text-white border-amber-600 shadow-xs"
+                    ? "bg-amber-600 text-white border-amber-600 shadow-xs ring-1 ring-amber-600"
                     : "bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-300"
                 }`}
               >
@@ -491,7 +669,7 @@ export function CitizenParameterPanel({
           </label>
 
           {/* Disability Toggle */}
-          <div className="p-2 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
+          <div className={`p-2 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5 ${getHighlightClass("isDisabled")}`}>
             <div className="flex items-center justify-between">
               <span className="font-semibold text-slate-700 flex items-center gap-1">
                 <span>♿</span>
@@ -520,27 +698,26 @@ export function CitizenParameterPanel({
             )}
           </div>
 
-          {/* Widow Toggle (if female) */}
-          {parameters.gender === "FEMALE" && (
-            <div className="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
-              <span className="font-semibold text-slate-700 flex items-center gap-1">
-                <span>👩</span>
-                <span>{isHi ? "एकल नारी / विधवा / परित्यक्ता" : "Widow / Single Woman"}</span>
-              </span>
-              <input
-                type="checkbox"
-                checked={parameters.isWidow || parameters.maritalStatus === "WIDOW"}
-                onChange={(e) => {
-                  update("isWidow", e.target.checked);
-                  update("maritalStatus", e.target.checked ? "WIDOW" : "MARRIED");
-                }}
-                className="w-4 h-4 accent-orange-600 rounded cursor-pointer"
-              />
-            </div>
-          )}
+          {/* Widow Toggle */}
+          <div className={`p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between ${getHighlightClass("isWidow")}`}>
+            <span className="font-semibold text-slate-700 flex items-center gap-1">
+              <span>👩</span>
+              <span>{isHi ? "एकल नारी / विधवा / परित्यक्ता" : "Widow / Single Woman"}</span>
+            </span>
+            <input
+              type="checkbox"
+              checked={parameters.isWidow || parameters.maritalStatus === "WIDOW"}
+              onChange={(e) => {
+                update("isWidow", e.target.checked);
+                update("maritalStatus", e.target.checked ? "WIDOW" : null);
+                if (e.target.checked) update("gender", "FEMALE");
+              }}
+              className="w-4 h-4 accent-orange-600 rounded cursor-pointer"
+            />
+          </div>
 
           {/* Agricultural Land Bigha */}
-          <div className="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
+          <div className={`p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between ${getHighlightClass("landBigha")}`}>
             <span className="font-semibold text-slate-700 flex items-center gap-1">
               <span>🌾</span>
               <span>{isHi ? "कृषि भूमि (बीघा)" : "Agricultural Land"}</span>
@@ -550,8 +727,15 @@ export function CitizenParameterPanel({
                 type="number"
                 min="0"
                 max="50"
-                value={parameters.landBigha}
-                onChange={(e) => update("landBigha", Math.max(0, parseInt(e.target.value) || 0))}
+                value={parameters.landBigha !== null ? parameters.landBigha : ""}
+                placeholder="0"
+                onChange={(e) => {
+                  const val = e.target.value === "" ? null : Math.max(0, parseInt(e.target.value) || 0);
+                  update("landBigha", val);
+                  if (val !== null && val > 0 && !parameters.occupation) {
+                    update("occupation", "FARMER");
+                  }
+                }}
                 className="w-14 py-0.5 px-1.5 rounded bg-white border border-slate-300 font-bold text-slate-900 text-center text-xs"
               />
               <span className="text-[10px] text-slate-500">{isHi ? "बीघा" : "bigha"}</span>
