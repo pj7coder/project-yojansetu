@@ -65,7 +65,7 @@ export default function AdminOverviewPage() {
       <div className="flex items-center justify-between pb-1 border-b border-slate-200">
         <div className="flex items-center gap-2.5">
           <h1 className="text-lg font-black text-slate-900 tracking-tight">
-            Operations Control
+            🇮🇳 National & State Operations Control
           </h1>
           <span
             className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold ${
@@ -87,15 +87,20 @@ export default function AdminOverviewPage() {
             />
             {overview.system_status}
           </span>
+          <span className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+            <span>🌐</span>
+            <span>Live Data Sync (Port 8000)</span>
+          </span>
         </div>
-        <div className="flex items-center gap-3 text-[11px] text-slate-400">
+        <div className="flex items-center gap-3 text-[11px] text-slate-500">
           <span>Synced: {new Date(overview.generated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
           <button
             onClick={loadData}
-            title="Refresh metrics"
-            className="p-1 rounded hover:bg-slate-200 text-slate-600 transition"
+            title="Refresh metrics from backend"
+            className="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition cursor-pointer"
           >
-            🔄
+            <span>🔄</span>
+            <span>Refresh</span>
           </button>
         </div>
       </div>

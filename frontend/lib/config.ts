@@ -8,6 +8,6 @@ export const config = {
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1",
   appName: "YojanSetu",
   appNameHindi: "योजनसेतु",
-  appSubtitleHindi: "राजस्थान सरकारी योजना सहायता",
-  appTagline: "Offline-first vernacular government-scheme discovery assistant for Rajasthan",
+  appSubtitleHindi: "राष्ट्रीय एवं राज्य जनकल्याण योजना सेतु (भारत)",
+  appTagline: "All-India AI-Powered Public Welfare Discovery & Statutory Eligibility Verification",
 } as const;

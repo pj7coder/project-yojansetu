@@ -11,6 +11,7 @@ export interface CitizenParameters {
   income: number | null;
   occupation: string | null;
   residence: "RURAL" | "URBAN" | null;
+  state: string | null;
   district: string | null;
   rationCard: "NONE" | "BPL" | "STATE_BPL" | "AAY" | "NFSA" | null;
   isWidow: boolean;
@@ -29,6 +30,7 @@ export const DEFAULT_CITIZEN_PARAMETERS: CitizenParameters = {
   income: null,
   occupation: null,
   residence: null,
+  state: null,
   district: null,
   rationCard: null,
   isWidow: false,
@@ -557,62 +559,91 @@ export function CitizenParameterPanel({
           </select>
         </div>
 
-        {/* 6. Residence & District */}
-        <div className="grid grid-cols-2 gap-2">
-          <div className={`space-y-1 ${getHighlightClass("residence")}`}>
-            <label className="font-bold text-slate-700 text-[11px]">
-              {isHi ? "निवास क्षेत्र" : "Area"}
-            </label>
-            <div className="flex rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
-              <button
-                type="button"
-                onClick={() => update("residence", "RURAL")}
-                className={`flex-1 py-1.5 text-[10px] font-bold cursor-pointer transition ${
-                  parameters.residence === "RURAL" ? "bg-orange-600 text-white" : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                {isHi ? "ग्रामीण" : "Rural"}
-              </button>
-              <button
-                type="button"
-                onClick={() => update("residence", "URBAN")}
-                className={`flex-1 py-1.5 text-[10px] font-bold cursor-pointer transition ${
-                  parameters.residence === "URBAN" ? "bg-orange-600 text-white" : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                {isHi ? "शहरी" : "Urban"}
-              </button>
-            </div>
-          </div>
-
-          <div className={`space-y-1 ${getHighlightClass("district")}`}>
-            <label className="font-bold text-slate-700 text-[11px]">
-              {isHi ? "गृह जिला" : "District"}
+        {/* 6. Location: State & District */}
+        <div className="space-y-2">
+          <div className={`space-y-1 ${getHighlightClass("state")}`}>
+            <label className="font-bold text-slate-700 text-[11px] flex items-center justify-between">
+              <span>🇮🇳 {isHi ? "राज्य / केंद्र शासित प्रदेश" : "State / UT (All India)"}</span>
+              {parameters.state && (
+                <button
+                  type="button"
+                  onClick={() => update("state", null)}
+                  className="text-[10px] text-slate-400 hover:text-slate-600 underline"
+                >
+                  {isHi ? "रीसेट" : "Reset"}
+                </button>
+              )}
             </label>
             <select
-              value={parameters.district ?? ""}
-              onChange={(e) => update("district", e.target.value || null)}
-              className="w-full p-1.5 rounded-lg bg-slate-50 border border-slate-200 text-[11px] font-medium text-slate-800 focus:outline-none focus:border-orange-500 cursor-pointer"
+              value={parameters.state ?? ""}
+              onChange={(e) => update("state", e.target.value || null)}
+              className="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 cursor-pointer"
             >
-              <option value="">{isHi ? "-- जिला चुनें --" : "-- Select District --"}</option>
-              {districts.length > 0 ? (
-                districts.map((d) => (
-                  <option key={d.name_en} value={d.name_en}>
-                    {isHi ? d.name_hi : d.name_en}
-                  </option>
-                ))
-              ) : (
-                <>
-                  <option value="Jaipur">जयपुर (Jaipur)</option>
-                  <option value="Jodhpur">जोधपुर (Jodhpur)</option>
-                  <option value="Udaipur">उदयपुर (Udaipur)</option>
-                  <option value="Kota">कोटा (Kota)</option>
-                  <option value="Bikaner">बीकानेर (Bikaner)</option>
-                  <option value="Ajmer">अजमेर (Ajmer)</option>
-                  <option value="Alwar">अलवर (Alwar)</option>
-                </>
-              )}
+              <option value="">{isHi ? "समस्त भारत (राष्ट्रीय योजनाएं)" : "All India (National Schemes)"}</option>
+              <option value="Rajasthan">राजस्थान (Rajasthan)</option>
+              <option value="Uttar Pradesh">उत्तर प्रदेश (Uttar Pradesh)</option>
+              <option value="Maharashtra">महाराष्ट्र (Maharashtra)</option>
+              <option value="Bihar">बिहार (Bihar)</option>
+              <option value="Madhya Pradesh">मध्य प्रदेश (Madhya Pradesh)</option>
+              <option value="West Bengal">पश्चिम बंगाल (West Bengal)</option>
+              <option value="Gujarat">गुजरात (Gujarat)</option>
+              <option value="Karnataka">कर्नाटक (Karnataka)</option>
+              <option value="Tamil Nadu">तमिलनाडु (Tamil Nadu)</option>
+              <option value="Andhra Pradesh">आंध्र प्रदेश (Andhra Pradesh)</option>
+              <option value="Telangana">तेलंगाना (Telangana)</option>
+              <option value="Kerala">केरल (Kerala)</option>
+              <option value="Punjab">पंजाब (Punjab)</option>
+              <option value="Haryana">हरियाणा (Haryana)</option>
+              <option value="Delhi">दिल्ली NCR (Delhi)</option>
+              <option value="Jharkhand">झारखंड (Jharkhand)</option>
+              <option value="Odisha">ओडिशा (Odisha)</option>
+              <option value="Assam">असम (Assam)</option>
+              <option value="Chhattisgarh">छत्तीसगढ़ (Chhattisgarh)</option>
+              <option value="Uttarakhand">उत्तराखंड (Uttarakhand)</option>
+              <option value="Himachal Pradesh">हिमाचल प्रदेश (Himachal Pradesh)</option>
+              <option value="Jammu & Kashmir">जम्मू एवं कश्मीर (Jammu & Kashmir)</option>
             </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div className={`space-y-1 ${getHighlightClass("residence")}`}>
+              <label className="font-bold text-slate-700 text-[11px]">
+                {isHi ? "निवास क्षेत्र" : "Area"}
+              </label>
+              <div className="flex rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
+                <button
+                  type="button"
+                  onClick={() => update("residence", "RURAL")}
+                  className={`flex-1 py-1.5 text-[10px] font-bold cursor-pointer transition ${
+                    parameters.residence === "RURAL" ? "bg-orange-600 text-white" : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  {isHi ? "ग्रामीण" : "Rural"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => update("residence", "URBAN")}
+                  className={`flex-1 py-1.5 text-[10px] font-bold cursor-pointer transition ${
+                    parameters.residence === "URBAN" ? "bg-orange-600 text-white" : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  {isHi ? "शहरी" : "Urban"}
+                </button>
+              </div>
+            </div>
+
+            <div className={`space-y-1 ${getHighlightClass("district")}`}>
+              <label className="font-bold text-slate-700 text-[11px]">
+                {isHi ? "गृह जिला / शहर" : "District / City"}
+              </label>
+              <input
+                type="text"
+                value={parameters.district ?? ""}
+                onChange={(e) => update("district", e.target.value || null)}
+                placeholder={isHi ? "जैसे: जयपुर, लखनऊ, पटना..." : "e.g. Jaipur, Lucknow..."}
+                className="w-full p-1.5 rounded-lg bg-slate-50 border border-slate-200 text-[11px] font-medium text-slate-800 focus:outline-none focus:border-orange-500"
+              />
+            </div>
           </div>
         </div>
 

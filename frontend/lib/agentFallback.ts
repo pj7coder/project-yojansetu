@@ -795,43 +795,24 @@ function evaluateConfidenceAndFollowUp(
   // SCENARIO 7: GENERAL DISCOVERY (No facts provided yet)
   // =========================================================================
   else {
-    score = 0.25;
-    missing.push("category_of_need");
-    pending.push("नागरिक की मुख्य आवश्यकता व श्रेणी");
-
-    candidates.push(
-      {
-        scheme_code: "RAJ-PEN-001",
-        name_en: "Vridhjan Pension",
-        name_hi: "वृद्धजन सम्मान पेंशन (₹1,000/माह)",
-        eligibility_status: "CRITERIA_UNVERIFIED",
-      },
-      {
-        scheme_code: "RAJ-AGRI-001",
-        name_en: "Kisan Sahayata",
-        name_hi: "किसान सहायता योजना (₹8,000/वर्ष)",
-        eligibility_status: "CRITERIA_UNVERIFIED",
-      },
-      {
-        scheme_code: "RAJ-HEALTH-001",
-        name_en: "Ayushman Arogya",
-        name_hi: "आयुष्मान आरोग्य योजना (₹25 लाख कवर)",
-        eligibility_status: "UNIVERSAL_MATCH",
-      }
-    );
+    score = 0.15;
+    missing.push("profile_facts");
+    pending.push("नागरिक की आयु, व्यवसाय एवं राज्य");
 
     followUp = {
       question_id: "ask_initial_need",
       field: "occupation",
-      question_hi: "राजस्थान सरकार की 150+ कल्याणकारी योजनाओं में से आपके लिए 100% सटीक योजना खोजने हेतु: आप मुख्य रूप से किस वर्ग या सहायता के बारे में जानना चाहते हैं?",
-      question_en: "To discover 100% accurate welfare schemes among 150+ state programs: Which category of welfare assistance do you need?",
-      rationale_hi: "अधूरी जानकारी पर भ्रमित न करके सटीक मार्गदर्शन प्रदान करना।",
-      rationale_en: "Zero-hallucination policy requires confirming the primary welfare domain.",
+      question_hi: "नमस्ते! भारत सरकार एवं समस्त राज्य सरकारों की 450+ जन कल्याणकारी योजनाओं में से आपके लिए 100% सही व सर्वाधिक लाभ वाली योजना खोजने के लिए, मुझे आपकी कुछ बुनियादी जानकारी की आवश्यकता होगी।\n\nकृपया मुझे बताएं:\n1. आपकी वर्तमान उम्र (आयु) कितनी है?\n2. आपका मुख्य कार्य/व्यवसाय क्या है? (जैसे किसान, विद्यार्थी, दैनिक श्रमिक, छोटा व्यापार, या वरिष्ठ नागरिक)\n3. आप भारत के किस राज्य में रहते हैं?",
+      question_en: "Namaste! To find the exact welfare schemes, direct benefit transfers (DBT), and financial assistance tailored for you among 450+ Central and State welfare programs, I need a few basic details first.\n\nPlease share:\n1. What is your current age?\n2. What is your primary occupation or role? (Farmer, Student, Artisan / Worker, Homemaker, or Senior Citizen?)\n3. Which State/UT of India do you reside in?",
+      rationale_hi: "सटीक पात्रता सत्यापन के लिए बुनियादी जानकारी आवश्यक है ताकि कोई गलत अनुमान न लगे।",
+      rationale_en: "Basic profile details are required to accurately evaluate statutory eligibility without assumptions.",
       options: [
-        { label_hi: "🌾 किसान एवं कृषि ऋण/सब्सिडी", label_en: "Farmer Assistance", value: { occupation: "FARMER" } },
-        { label_hi: "👴 60+ वर्ष वृद्धावस्था पेंशन", label_en: "Old Age Pension", value: { age: 60 } },
+        { label_hi: "🌾 किसान / कृषि सम्मान निधि (PM-KISAN)", label_en: "Farmer / PM-KISAN", value: { occupation: "FARMER" } },
+        { label_hi: "👴 60+ वरिष्ठ नागरिक पेंशन (Old Age Pension)", label_en: "Senior Citizen Pension", value: { age: 60 } },
+        { label_hi: "🎓 विद्यार्थी / छात्रवृत्ति (Scholarship)", label_en: "Student / Scholarship", value: { occupation: "STUDENT" } },
         { label_hi: "👩 महिला कल्याण व विधवा पेंशन", label_en: "Women / Widow Scheme", value: { gender: "FEMALE", isWidow: true } },
-        { label_hi: "🎓 छात्रवृत्ति व निःशुल्क कोचिंग", label_en: "Student Scholarship", value: { occupation: "STUDENT" } },
+        { label_hi: "🔨 विश्वकर्मा कारीगर / मुद्रा ऋण", label_en: "Artisan / Mudra Loan", value: { occupation: "SELF_EMPLOYED" } },
+        { label_hi: "🏥 आयुष्मान स्वास्थ्य सुरक्षा (₹5 लाख)", label_en: "Health Cover (₹5 Lakh)", value: { occupation: "LABORER" } },
       ],
     };
   }
@@ -925,14 +906,19 @@ function synthesizeFollowUpAnswer(
   const pct = Math.round(score * 100);
   if (isHi) {
     const lines: string[] = [];
-    lines.push(`🔒 **पात्रता निर्धारण प्रक्रियाधीन (सटीकता: ${pct}%)**`);
-    lines.push("योजनसेतु अधूरी जानकारी पर योजनाएं स्वीकृत नहीं करता। आपकी 100% सही पात्रता जांचने के लिए मुझे 1 मुख्य प्रश्न का उत्तर चाहिए:\n");
+    if (score < 0.4) {
+      lines.push("नमस्ते! भारत सरकार एवं समस्त राज्य सरकारों की जन कल्याणकारी योजनाओं में से आपके लिए 100% सही व सर्वाधिक लाभ वाली योजना खोजने के लिए, मुझे आपकी कुछ बुनियादी जानकारी की आवश्यकता होगी:\n");
+    } else {
+      lines.push(`🔒 **पात्रता निर्धारण प्रक्रियाधीन (सत्यापन स्तर: ${pct}%)**`);
+      lines.push("सटीक व कानूनी रूप से मान्य सरकारी योजना स्वीकृत करने हेतु एक महत्वपूर्ण जानकारी आवश्यक है:\n");
+    }
+
     lines.push(`❓ **${question.question_hi}**`);
     if (question.rationale_hi) {
       lines.push(`*ℹ️ नियम: ${question.rationale_hi}*`);
     }
 
-    if (candidates.length > 0) {
+    if (candidates.length > 0 && score >= 0.6) {
       lines.push(`\n💡 *प्रारंभिक संभावित योजनाएं*: ${candidates.map((c) => c.name_hi).join(", ")}`);
     }
 
@@ -940,14 +926,19 @@ function synthesizeFollowUpAnswer(
     return lines.join("\n");
   } else {
     const lines: string[] = [];
-    lines.push(`🔒 **Eligibility Verification in Progress (Confidence: ${pct}%)**`);
-    lines.push("YojanSetu never assumes eligibility without decisive statutory proof. Please clarify the following essential question:\n");
+    if (score < 0.4) {
+      lines.push("Greetings! To discover the exact government welfare schemes and financial benefits tailored for you, I need a few basic details first:\n");
+    } else {
+      lines.push(`🔒 **Eligibility Verification in Progress (Confidence: ${pct}%)**`);
+      lines.push("To confirm official statutory entitlement without premature assumptions, please clarify this key detail:\n");
+    }
+
     lines.push(`❓ **${question.question_en}**`);
     if (question.rationale_en) {
       lines.push(`*ℹ️ Statutory Rule: ${question.rationale_en}*`);
     }
 
-    if (candidates.length > 0) {
+    if (candidates.length > 0 && score >= 0.6) {
       lines.push(`\n💡 *Potential Candidate Schemes*: ${candidates.map((c) => c.name_en).join(", ")}`);
     }
 

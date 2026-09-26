@@ -157,14 +157,12 @@ export function CitizenChatSidebar({
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (confirm(isHi ? "क्या आप इस चैट को हटाना चाहते हैं?" : "Delete this conversation?")) {
-                      onDeleteSession(session.id);
-                    }
+                    onDeleteSession(session.id);
                   }}
-                  className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-rose-950/60 hover:text-rose-400 text-slate-500 transition-opacity"
-                  title={isHi ? "चैट हटाएं" : "Delete chat"}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-700/60 active:scale-90 transition opacity-80 sm:opacity-0 sm:group-hover:opacity-100 flex-shrink-0 cursor-pointer"
+                  title={isHi ? "यह चैट हटाएं" : "Delete conversation"}
                 >
-                  🗑️
+                  <span className="text-sm">🗑️</span>
                 </button>
               </div>
             );

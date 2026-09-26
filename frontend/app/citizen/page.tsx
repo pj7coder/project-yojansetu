@@ -228,8 +228,8 @@ export default function CitizenPage() {
       id: `msg_${Date.now()}`,
       sender: "assistant",
       text: isHi
-        ? "नमस्ते! मैं आपका योजनसेतु AI सहायक हूँ। राजस्थान सरकार की पेंशन, कृषि, स्वास्थ्य, छात्रवृत्ति व स्वरोजगार योजनाओं की सटीक जानकारी के लिए पूछें।"
-        : "Hello! I am your YojanSetu AI Assistant. Ask any question regarding Rajasthan welfare schemes, pensions, farmer subsidies, or healthcare benefits.",
+        ? "नमस्ते! मैं आपका योजनसेतु AI सहायक हूँ। भारत सरकार एवं समस्त राज्य सरकारों की पेंशन, कृषि (PM-KISAN), स्वास्थ्य (आयुष्मान भारत), छात्रवृत्ति, आवास (PMAY) व स्वरोजगार (मुद्रा/विश्वकर्मा) योजनाओं की सटीक जानकारी के लिए पूछें।"
+        : "Hello! I am your YojanSetu AI Assistant. Ask any question regarding Central & State welfare schemes, PM-KISAN, Ayushman Bharat, Pensions, PMAY, or Mudra loans.",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     };
 
@@ -279,6 +279,15 @@ export default function CitizenPage() {
       }
     } catch (e) {
       console.error("Error deleting session:", e);
+    }
+  };
+
+  // Clear or reset the active chat immediately
+  const handleClearCurrentChat = () => {
+    if (activeSessionId) {
+      handleDeleteSession(activeSessionId);
+    } else {
+      startNewChat();
     }
   };
 
@@ -540,6 +549,19 @@ export default function CitizenPage() {
 
         {/* Right Controls */}
         <div className="flex items-center gap-2">
+          {/* Clear Current Chat Button */}
+          <button
+            type="button"
+            onClick={handleClearCurrentChat}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 transition cursor-pointer"
+            title={isHi ? "वर्तमान बातचीत हटाएं / नया चैट" : "Clear conversation"}
+          >
+            <span>🗑️</span>
+            <span className="hidden sm:inline">
+              {isHi ? "चैट हटाएं" : "Clear Chat"}
+            </span>
+          </button>
+
           <LanguageToggle currentLang={lang} onLanguageChange={(l) => setLang(l)} />
 
           <button
@@ -674,7 +696,7 @@ export default function CitizenPage() {
                     )}
 
                     {/* Candidate Schemes under verification */}
-                    {msg.candidateSchemes && msg.candidateSchemes.length > 0 && (!msg.schemes || msg.schemes.length === 0) && (
+                    {msg.candidateSchemes && msg.candidateSchemes.length > 0 && (!msg.schemes || msg.schemes.length === 0) && msg.confidenceScore !== undefined && msg.confidenceScore >= 0.5 && (
                       <div className="mt-3 pt-2.5 border-t border-slate-200 space-y-1.5">
                         <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wide flex items-center gap-1">
                           <span>💡</span>

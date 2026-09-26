@@ -1,5 +1,14 @@
 import { config } from "./config";
 import { executeFallbackAgent, getFallbackTools } from "./agentFallback";
+import {
+  getFallbackAdminOverview,
+  getFallbackAdminPipeline,
+  getFallbackAdminActivity,
+  getFallbackAdminSystemStatus,
+  getFallbackAdminSchemes,
+  getFallbackAdminDocuments,
+  getFallbackAdminConflicts,
+} from "./adminFallback";
 import { processDialogueTurn, toCitizenSchemeCard, DialogueProfile } from "./voiceConversationEngine";
 import { DatabaseHealthResponse, HealthResponse } from "../types/health";
 import {
@@ -870,6 +879,11 @@ export async function getAdminOverview(forceRefresh: boolean = false): Promise<A
       const data = (await response.json()) as AdminOverviewResponse;
       cachedOverview = { data, ts: Date.now() };
       return data;
+    } catch (err) {
+      console.warn("Backend admin overview unreachable, using operational fallback:", err);
+      const fallback = getFallbackAdminOverview();
+      cachedOverview = { data: fallback, ts: Date.now() };
+      return fallback;
     } finally {
       inFlightOverview = null;
     }
@@ -907,6 +921,11 @@ export async function getAdminPipeline(forceRefresh: boolean = false): Promise<A
       const data = (await response.json()) as AdminPipelineResponse;
       cachedPipeline = { data, ts: Date.now() };
       return data;
+    } catch (err) {
+      console.warn("Backend pipeline status unreachable, using operational fallback:", err);
+      const fallback = getFallbackAdminPipeline();
+      cachedPipeline = { data: fallback, ts: Date.now() };
+      return fallback;
     } finally {
       inFlightPipeline = null;
     }
@@ -974,6 +993,11 @@ export async function getAdminSystemStatus(forceRefresh: boolean = false): Promi
       const data = (await response.json()) as AdminSystemStatusResponse;
       cachedSystemStatus = { data, ts: Date.now() };
       return data;
+    } catch (err) {
+      console.warn("Backend system status unreachable, using operational fallback:", err);
+      const fallback = getFallbackAdminSystemStatus();
+      cachedSystemStatus = { data: fallback, ts: Date.now() };
+      return fallback;
     } finally {
       inFlightSystemStatus = null;
     }
@@ -987,18 +1011,23 @@ export async function getAdminSystemStatus(forceRefresh: boolean = false): Promi
  * Fetch operational activity stream (zero citizen data).
  */
 export async function getAdminActivity(limit: number = 25): Promise<AdminActivityResponse> {
-  const url = `${config.apiBaseUrl}/admin/dashboard/activity?limit=${limit}`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: ADMIN_AUTH_HEADERS,
-    cache: "no-store",
-  });
+  try {
+    const url = `${config.apiBaseUrl}/admin/dashboard/activity?limit=${limit}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: ADMIN_AUTH_HEADERS,
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    throw new ApiError(`Failed to fetch activity feed: HTTP ${response.status}`, response.status);
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch activity feed: HTTP ${response.status}`, response.status);
+    }
+
+    return (await response.json()) as AdminActivityResponse;
+  } catch (err) {
+    console.warn("Backend activity feed unreachable, using operational fallback:", err);
+    return getFallbackAdminActivity(limit);
   }
-
-  return (await response.json()) as AdminActivityResponse;
 }
 
 /**
@@ -1010,24 +1039,29 @@ export async function getAdminConflicts(params?: {
   page?: number;
   page_size?: number;
 }): Promise<AdminConflictListResponse> {
-  const qs = new URLSearchParams();
-  if (params?.conflict_type) qs.append("conflict_type", params.conflict_type);
-  if (params?.severity) qs.append("severity", params.severity);
-  if (params?.page) qs.append("page", params.page.toString());
-  if (params?.page_size) qs.append("page_size", params.page_size.toString());
+  try {
+    const qs = new URLSearchParams();
+    if (params?.conflict_type) qs.append("conflict_type", params.conflict_type);
+    if (params?.severity) qs.append("severity", params.severity);
+    if (params?.page) qs.append("page", params.page.toString());
+    if (params?.page_size) qs.append("page_size", params.page_size.toString());
 
-  const url = `${config.apiBaseUrl}/admin/conflicts?${qs.toString()}`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: ADMIN_AUTH_HEADERS,
-    cache: "no-store",
-  });
+    const url = `${config.apiBaseUrl}/admin/conflicts?${qs.toString()}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: ADMIN_AUTH_HEADERS,
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    throw new ApiError(`Failed to fetch conflicts: HTTP ${response.status}`, response.status);
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch conflicts: HTTP ${response.status}`, response.status);
+    }
+
+    return (await response.json()) as AdminConflictListResponse;
+  } catch (err) {
+    console.warn("Backend conflicts unreachable, using operational fallback:", err);
+    return getFallbackAdminConflicts();
   }
-
-  return (await response.json()) as AdminConflictListResponse;
 }
 
 /**
@@ -1041,26 +1075,31 @@ export async function getAdminDocuments(params?: {
   page?: number;
   page_size?: number;
 }): Promise<AdminDocumentListResponse> {
-  const qs = new URLSearchParams();
-  if (params?.status) qs.append("status", params.status);
-  if (params?.ingestion_method) qs.append("ingestion_method", params.ingestion_method);
-  if (params?.failed_only) qs.append("failed_only", "true");
-  if (params?.query) qs.append("query", params.query);
-  if (params?.page) qs.append("page", params.page.toString());
-  if (params?.page_size) qs.append("page_size", params.page_size.toString());
+  try {
+    const qs = new URLSearchParams();
+    if (params?.status) qs.append("status", params.status);
+    if (params?.ingestion_method) qs.append("ingestion_method", params.ingestion_method);
+    if (params?.failed_only) qs.append("failed_only", "true");
+    if (params?.query) qs.append("query", params.query);
+    if (params?.page) qs.append("page", params.page.toString());
+    if (params?.page_size) qs.append("page_size", params.page_size.toString());
 
-  const url = `${config.apiBaseUrl}/admin/documents?${qs.toString()}`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: ADMIN_AUTH_HEADERS,
-    cache: "no-store",
-  });
+    const url = `${config.apiBaseUrl}/admin/documents?${qs.toString()}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: ADMIN_AUTH_HEADERS,
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    throw new ApiError(`Failed to fetch documents: HTTP ${response.status}`, response.status);
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch documents: HTTP ${response.status}`, response.status);
+    }
+
+    return (await response.json()) as AdminDocumentListResponse;
+  } catch (err) {
+    console.warn("Backend documents unreachable, using operational fallback:", err);
+    return getFallbackAdminDocuments();
   }
-
-  return (await response.json()) as AdminDocumentListResponse;
 }
 
 /**
@@ -1073,25 +1112,30 @@ export async function getAdminSchemes(params?: {
   page?: number;
   page_size?: number;
 }): Promise<AdminSchemeListResponse> {
-  const qs = new URLSearchParams();
-  if (params?.status) qs.append("status", params.status);
-  if (params?.department_id) qs.append("department_id", params.department_id);
-  if (params?.query) qs.append("query", params.query);
-  if (params?.page) qs.append("page", params.page.toString());
-  if (params?.page_size) qs.append("page_size", params.page_size.toString());
+  try {
+    const qs = new URLSearchParams();
+    if (params?.status) qs.append("status", params.status);
+    if (params?.department_id) qs.append("department_id", params.department_id);
+    if (params?.query) qs.append("query", params.query);
+    if (params?.page) qs.append("page", params.page.toString());
+    if (params?.page_size) qs.append("page_size", params.page_size.toString());
 
-  const url = `${config.apiBaseUrl}/admin/schemes?${qs.toString()}`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: ADMIN_AUTH_HEADERS,
-    cache: "no-store",
-  });
+    const url = `${config.apiBaseUrl}/admin/schemes?${qs.toString()}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: ADMIN_AUTH_HEADERS,
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    throw new ApiError(`Failed to fetch schemes: HTTP ${response.status}`, response.status);
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch schemes: HTTP ${response.status}`, response.status);
+    }
+
+    return (await response.json()) as AdminSchemeListResponse;
+  } catch (err) {
+    console.warn("Backend schemes unreachable, using operational fallback:", err);
+    return getFallbackAdminSchemes();
   }
-
-  return (await response.json()) as AdminSchemeListResponse;
 }
 
 /**
