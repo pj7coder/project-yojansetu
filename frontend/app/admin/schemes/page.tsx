@@ -25,7 +25,7 @@ export default function AdminSchemesPage() {
   const [total, setTotal] = useState<number>(0);
   const [overview, setOverview] = useState<AdminOverviewResponse | null>(null);
   const [page, setPage] = useState<number>(1);
-  const [pageSize] = useState<number>(25);
+  const [pageSize, setPageSize] = useState<number>(50);
 
   // Filters
   const [statusFilter, setStatusFilter] = useState<string>("");
@@ -534,6 +534,66 @@ export default function AdminSchemesPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {/* Schemes Pagination & Page-Size Controls */}
+        {total > 0 && (
+          <div className="px-4 py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+            <div className="flex flex-wrap items-center gap-2">
+              <span>
+                Showing <span className="font-bold text-slate-900">{Math.min((page - 1) * pageSize + 1, total)}</span> to <span className="font-bold text-slate-900">{Math.min(page * pageSize, total)}</span> of <span className="font-bold text-slate-900">{total}</span> schemes
+              </span>
+              <span className="text-slate-300 hidden sm:inline">•</span>
+              <div className="flex items-center gap-1.5">
+                <span>Per page:</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setPage(1);
+                  }}
+                  className="px-2 py-0.5 bg-white border border-slate-300 rounded text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
+                >
+                  <option value={25}>25</option>
+                  <option value={50}>50 (Show All)</option>
+                  <option value={100}>100</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page <= 1}
+                className="px-3 py-1 text-xs font-medium rounded border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:pointer-events-none transition cursor-pointer"
+              >
+                ← Previous
+              </button>
+              {Array.from({ length: Math.ceil(total / pageSize) }, (_, i) => i + 1).map((p) => (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => setPage(p)}
+                  className={`w-7 h-7 rounded text-xs font-bold transition cursor-pointer ${
+                    page === p
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : "border border-slate-300 bg-white hover:bg-slate-50 text-slate-700"
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.min(Math.ceil(total / pageSize), p + 1))}
+                disabled={page >= Math.ceil(total / pageSize)}
+                className="px-3 py-1 text-xs font-medium rounded border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:pointer-events-none transition cursor-pointer"
+              >
+                Next →
+              </button>
+            </div>
           </div>
         )}
       </div>

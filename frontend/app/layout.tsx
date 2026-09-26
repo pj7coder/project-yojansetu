@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "YOJANSETU | राजस्थान सरकारी योजना सहायता",
+  title: "YOJANSETU | राष्ट्रीय एवं राज्य जनकल्याण योजना सेतु (भारत)",
   description:
-    "Offline-first vernacular Rajasthan government scheme discovery assistant.",
+    "All-India AI-Powered Public Welfare Discovery & Statutory Eligibility Verification across Central and State Governments.",
 };
 
 export default function RootLayout({

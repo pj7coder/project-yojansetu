@@ -38,17 +38,17 @@ export default function AdminLayout({
   }, []);
 
   return (
-    <div className="h-screen w-full bg-slate-100 flex text-slate-800 font-sans antialiased overflow-hidden">
+    <div className="min-h-screen w-full bg-slate-100 flex text-slate-800 font-sans antialiased">
       <AdminSidebar />
-      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         <AdminHeader
           systemStatus={systemStatus}
           statusReasons={statusReasons}
           onRefresh={() => fetchStatus(true)}
           isRefreshing={isRefreshing}
         />
-        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 flex flex-col">
-          <div className="w-full mx-auto flex-1 flex flex-col min-h-0">{children}</div>
+        <main className="flex-1 p-3 sm:p-5 lg:p-6 overflow-y-visible">
+          <div className="w-full mx-auto max-w-7xl">{children}</div>
         </main>
       </div>
     </div>
