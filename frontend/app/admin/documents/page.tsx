@@ -453,7 +453,7 @@ export default function AdminDocumentsPage() {
               </span>
             </div>
             <p className="text-[11px] text-slate-500">
-              Drop any Rajasthan government PDF or Excel circular (.pdf, .xlsx, .xls, .csv) into this directory. Files are automatically detected, ingested, parsed, and published directly to the database without requiring human verification.
+              Drop any Central or State government PDF or Excel circular (.pdf, .xlsx, .xls, .csv) into this directory. Files are automatically detected, ingested, parsed, and published directly to the database without requiring human verification.
             </p>
             <div className="text-[10px] font-mono text-slate-500 bg-slate-100 px-2 py-1 rounded inline-block">
               Path: {watchFolder?.folder_path || "storage/watch_folder"} {watchFolder?.pending_count ? `(${watchFolder.pending_count} pending)` : ""}

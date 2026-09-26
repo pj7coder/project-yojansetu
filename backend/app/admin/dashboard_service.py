@@ -224,10 +224,14 @@ class AdminDashboardService:
                 )
             )
 
-        # 4. Human Review Overview
+        # 4. Human Review Overview - accurately matches /review queue criteria
         rev_pending = db.scalar(
-            select(func.count()).select_from(HumanReviewSession).where(
-                HumanReviewSession.status.in_(["OPEN", "IN_PROGRESS"])
+            select(func.count()).select_from(SchemeDraft).where(
+                or_(
+                    SchemeDraft.status == "READY_FOR_HUMAN_REVIEW",
+                    SchemeDraft.status == "IN_HUMAN_REVIEW",
+                    SchemeDraft.status == "EVIDENCE_REVIEW_REQUIRED",
+                )
             )
         ) or 0
         rev_in_review = db.scalar(
@@ -305,50 +309,35 @@ class AdminDashboardService:
             superseded_versions=superseded_versions,
         )
 
-        # 6. Conflicts Overview
-        # Unresolved change sets with conflicts
-        cs_conflicts = db.scalar(
-            select(func.count()).select_from(SchemeChangeSet).where(
-                SchemeChangeSet.status.in_(["CONFLICT_DETECTED", "PENDING_REVIEW"])
-            )
-        ) or 0
+        # 6. Conflicts Overview - accurately matches AdminConflictService
+        from app.admin.conflict_service import AdminConflictService
+        conf_service = AdminConflictService()
+        conf_data = conf_service.list_conflicts(db, page=1, page_size=100)
+        total_conflicts = conf_data.total
+        crit_conflicts = sum(1 for it in conf_data.items if it.severity == "CRITICAL")
 
-        # Unresolved critical validation issues
-        val_conflicts = db.scalar(
-            select(func.count())
-            .select_from(ValidationIssue)
-            .join(SchemeDraft, ValidationIssue.scheme_draft_id == SchemeDraft.id)
-            .where(
-                and_(
-                    ValidationIssue.severity.in_(["CRITICAL", "BLOCKER", "ERROR"]),
-                    SchemeDraft.status.in_(["VALIDATING", "READY_FOR_HUMAN_REVIEW", "IN_REVIEW"]),
-                )
-            )
-        ) or 0
-
-        total_conflicts = cs_conflicts + val_conflicts + rev_critical
         conflicts_overview = ConflictOverview(
             total_unresolved=total_conflicts,
-            critical_count=cs_conflicts + rev_critical,
+            critical_count=crit_conflicts,
         )
 
-        if cs_conflicts > 0:
-            reasons.append(f"{cs_conflicts} pending version change set(s) require conflict resolution")
+        if total_conflicts > 0:
+            reasons.append(f"{total_conflicts} unresolved conflict(s) require review resolution")
             critical_issues.append(
                 CriticalIssue(
                     id="conflict-change-sets",
                     category="CONFLICT",
-                    severity="CRITICAL",
-                    title="Version Change Set Conflict Detected",
-                    description=f"{cs_conflicts} version amendment(s) exhibit contradictory or overlapping conditions",
-                    link="/admin/versions",
+                    severity="CRITICAL" if crit_conflicts > 0 else "WARNING",
+                    title="System Conflict Detected",
+                    description=f"{total_conflicts} unresolved statutory or verification conflict(s) pending officer review",
+                    link="/admin/conflicts",
                     created_at=now.isoformat(),
                 )
             )
 
         # 7. Evaluate System State
         system_status = "HEALTHY"
-        if doc_failed > 5 or source_failing > 2 or (cs_conflicts + rev_critical) > 5:
+        if doc_failed > 5 or source_failing > 2 or crit_conflicts > 5:
             system_status = "CRITICAL"
         elif doc_failed > 0 or source_failing > 0 or total_conflicts > 0 or rev_pending > 5:
             system_status = "WARNING"

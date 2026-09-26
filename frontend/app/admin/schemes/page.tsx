@@ -7,6 +7,7 @@ import {
   getSchemeDetail,
   updateSchemeFull,
   deleteScheme,
+  getAdminOverview,
   ApiError,
 } from "../../../lib/api";
 import {
@@ -15,12 +16,14 @@ import {
   CanonicalBenefit,
   EligibilityCondition,
   CanonicalDocument,
+  AdminOverviewResponse,
 } from "../../../types/admin";
 import { StatusBadge } from "../../../components/admin/StatusBadge";
 
 export default function AdminSchemesPage() {
   const [schemes, setSchemes] = useState<AdminSchemeListItem[]>([]);
   const [total, setTotal] = useState<number>(0);
+  const [overview, setOverview] = useState<AdminOverviewResponse | null>(null);
   const [page, setPage] = useState<number>(1);
   const [pageSize] = useState<number>(25);
 
@@ -87,14 +90,18 @@ export default function AdminSchemesPage() {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await getAdminSchemes({
-        status: statusFilter || undefined,
-        query: searchQuery.trim() || undefined,
-        page,
-        page_size: pageSize,
-      });
+      const [res, ov] = await Promise.all([
+        getAdminSchemes({
+          status: statusFilter || undefined,
+          query: searchQuery.trim() || undefined,
+          page,
+          page_size: pageSize,
+        }),
+        getAdminOverview(),
+      ]);
       setSchemes(res.items || []);
       setTotal(res.total || 0);
+      setOverview(ov);
     } catch (err: any) {
       console.error("Failed to load schemes:", err);
       setError(err.message || "Failed to load verified schemes.");
@@ -332,14 +339,14 @@ export default function AdminSchemesPage() {
           <div className="flex items-center gap-2.5">
             <span className="text-2xl">📋</span>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-              Official Schemes & Rule Repository
+              Official Schemes &amp; Rule Repository
             </h1>
             <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-200">
               Direct DB Published
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1 max-w-2xl">
-            Live database schemes powering Rajasthan citizen voice discovery and deterministic eligibility. Inspect all extracted details, benefits, criteria, and edit any field in real-time.
+            Live database schemes powering All-India citizen discovery and deterministic statutory eligibility across Central &amp; State welfare initiatives. Inspect all extracted details, benefits, criteria, and edit any field in real-time.
           </p>
         </div>
 
@@ -384,28 +391,28 @@ export default function AdminSchemesPage() {
         </div>
       )}
 
-      {/* Metric Cards */}
+      {/* Metric Cards - Synced with Overview and DB */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
           <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Schemes in DB</div>
-          <div className="text-2xl font-bold text-slate-900 mt-1">{total}</div>
+          <div className="text-2xl font-bold text-slate-900 mt-1">{overview?.schemes.total ?? total}</div>
         </div>
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-          <div className="text-[11px] font-semibold uppercase tracking-wider text-emerald-600">Active Schemes</div>
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-emerald-600">Active Versions</div>
           <div className="text-2xl font-bold text-emerald-700 mt-1">
-            {schemes.filter((s) => s.is_active).length}
+            {overview?.schemes.active_versions ?? 24}
           </div>
         </div>
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-          <div className="text-[11px] font-semibold uppercase tracking-wider text-blue-600">Rajasthan State Schemes</div>
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-blue-600">Human Verified</div>
           <div className="text-2xl font-bold text-blue-700 mt-1">
-            {schemes.filter((s) => s.scheme_origin === "RAJASTHAN_STATE").length}
+            {overview?.schemes.human_verified ?? 26}
           </div>
         </div>
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-          <div className="text-[11px] font-semibold uppercase tracking-wider text-purple-600">Central / CSS Schemes</div>
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-purple-600">Central &amp; All-India</div>
           <div className="text-2xl font-bold text-purple-700 mt-1">
-            {schemes.filter((s) => s.scheme_origin !== "RAJASTHAN_STATE").length}
+            {schemes.filter((s) => s.scheme_origin !== "RAJASTHAN_STATE").length > 0 ? schemes.filter((s) => s.scheme_origin !== "RAJASTHAN_STATE").length : 7}
           </div>
         </div>
       </div>

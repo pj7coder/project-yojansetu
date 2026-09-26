@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.admin.schemas import AdminConflictItem, AdminConflictListResponse
 from app.database.models.fact_verification import FactVerification
+from app.database.models.human_review_item import HumanReviewItem
 from app.database.models.human_review_session import HumanReviewSession
 from app.database.models.scheme import Scheme
 from app.database.models.scheme_change_set import SchemeChangeSet
@@ -30,7 +31,53 @@ class AdminConflictService:
         now = datetime.now(timezone.utc)
         items: List[AdminConflictItem] = []
 
-        # 1. Evidence Verification Contradictions (FIELD_VALUE_CONFLICT)
+        # 1. Critical & Contradicted Review Items in Active Review Sessions
+        review_item_stmt = (
+            select(HumanReviewItem, SchemeDraft)
+            .join(HumanReviewSession, HumanReviewItem.review_session_id == HumanReviewSession.id)
+            .join(SchemeDraft, HumanReviewSession.scheme_draft_id == SchemeDraft.id)
+            .where(
+                and_(
+                    HumanReviewSession.status.in_(["OPEN", "IN_PROGRESS"]),
+                    HumanReviewItem.decision == "PENDING",
+                    or_(
+                        HumanReviewItem.verification_result == "CONTRADICTED",
+                        HumanReviewItem.risk_level.in_(["CRITICAL", "HIGH"]),
+                        HumanReviewItem.ocr_risk.is_(True),
+                    ),
+                )
+            )
+        )
+        review_item_rows = db.execute(review_item_stmt).all()
+        for ri, draft in review_item_rows:
+            scheme_title = draft.detected_name or draft.official_name_raw or "Draft Scheme"
+            c_type = "FIELD_VALUE_CONFLICT"
+            if ri.ocr_risk:
+                c_type = "OCR_UNCERTAINTY"
+            elif ri.verification_result == "CONTRADICTED":
+                c_type = "STATUTORY_CONTRADICTION"
+            elif ri.item_type in ["ELIGIBILITY", "LOGICAL_CONNECTOR"]:
+                c_type = "ELIGIBILITY_RULE_CONFLICT"
+
+            sev = "CRITICAL" if (ri.risk_level == "CRITICAL" or ri.verification_result == "CONTRADICTED") else "WARNING"
+            items.append(
+                AdminConflictItem(
+                    id=str(ri.id),
+                    conflict_type=c_type,
+                    severity=sev,
+                    title=f"Verification Issue: {ri.field_path}",
+                    description=f"{ri.item_type} verification requires officer resolution. Risk: {ri.risk_level}, Result: {ri.verification_result or 'Unconfirmed'}",
+                    scheme_id=str(draft.id),
+                    scheme_name=scheme_title,
+                    document_id=str(draft.document_id),
+                    source_count=1,
+                    status="UNRESOLVED_CONTRADICTION" if ri.verification_result == "CONTRADICTED" else "PENDING_OFFICER_REVIEW",
+                    link=f"/admin/review/{draft.id}",
+                    created_at=(ri.created_at or now).isoformat(),
+                )
+            )
+
+        # 2. Evidence Verification Contradictions (FIELD_VALUE_CONFLICT)
         fact_stmt = (
             select(FactVerification, SchemeDraft)
             .join(SchemeDraft, FactVerification.scheme_draft_id == SchemeDraft.id)

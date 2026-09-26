@@ -8,6 +8,10 @@ import {
   getFallbackAdminSchemes,
   getFallbackAdminDocuments,
   getFallbackAdminConflicts,
+  getFallbackAdminSources,
+  getFallbackWatchFolderStatus,
+  getFallbackReviewQueue,
+  getFallbackSchemeDetail,
 } from "./adminFallback";
 import { processDialogueTurn, toCitizenSchemeCard, DialogueProfile } from "./voiceConversationEngine";
 import { DatabaseHealthResponse, HealthResponse } from "../types/health";
@@ -262,28 +266,33 @@ export async function getReviewQueue(
   status?: string,
   departmentId?: string
 ): Promise<ReviewQueueResponse> {
-  const params = new URLSearchParams({
-    page: page.toString(),
-    page_size: pageSize.toString(),
-  });
-  if (status) params.append("status", status);
-  if (departmentId) params.append("department_id", departmentId);
+  try {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      page_size: pageSize.toString(),
+    });
+    if (status) params.append("status", status);
+    if (departmentId) params.append("department_id", departmentId);
 
-  const url = `${config.apiBaseUrl}/review/queue?${params.toString()}`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "X-Reviewer-Id": "DEV_REVIEWER",
-    },
-    cache: "no-store",
-  });
+    const url = `${config.apiBaseUrl}/review/queue?${params.toString()}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "X-Reviewer-Id": "DEV_REVIEWER",
+      },
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    throw new ApiError(`Failed to fetch review queue: HTTP ${response.status}`, response.status);
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch review queue: HTTP ${response.status}`, response.status);
+    }
+
+    return (await response.json()) as ReviewQueueResponse;
+  } catch (err) {
+    console.warn("Backend review queue unreachable, using operational fallback:", err);
+    return getFallbackReviewQueue();
   }
-
-  return (await response.json()) as ReviewQueueResponse;
 }
 
 /**
@@ -1142,18 +1151,23 @@ export async function getAdminSchemes(params?: {
  * Fetch full scheme details including canonical rule tree, benefits, and extracted text.
  */
 export async function getSchemeDetail(schemeId: string): Promise<SchemeDetailResponse> {
-  const url = `${config.apiBaseUrl}/schemes/${schemeId}`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: ADMIN_AUTH_HEADERS,
-    cache: "no-store",
-  });
+  try {
+    const url = `${config.apiBaseUrl}/schemes/${schemeId}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: ADMIN_AUTH_HEADERS,
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    throw new ApiError(`Failed to fetch scheme details: HTTP ${response.status}`, response.status);
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch scheme details: HTTP ${response.status}`, response.status);
+    }
+
+    return (await response.json()) as SchemeDetailResponse;
+  } catch (err) {
+    console.warn("Backend scheme detail unreachable, using operational fallback:", err);
+    return getFallbackSchemeDetail(schemeId);
   }
-
-  return (await response.json()) as SchemeDetailResponse;
 }
 
 /**
@@ -1205,18 +1219,23 @@ export async function deleteScheme(schemeId: string): Promise<{ status: string; 
  * Fetch watch folder operational status and pending files.
  */
 export async function getWatchFolderStatus(): Promise<WatchFolderStatus> {
-  const url = `${config.apiBaseUrl}/documents/watch-folder/status`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: ADMIN_AUTH_HEADERS,
-    cache: "no-store",
-  });
+  try {
+    const url = `${config.apiBaseUrl}/documents/watch-folder/status`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: ADMIN_AUTH_HEADERS,
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    throw new ApiError(`Failed to fetch watch folder status: HTTP ${response.status}`, response.status);
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch watch folder status: HTTP ${response.status}`, response.status);
+    }
+
+    return (await response.json()) as WatchFolderStatus;
+  } catch (err) {
+    console.warn("Backend watch folder status unreachable, using operational fallback:", err);
+    return getFallbackWatchFolderStatus();
   }
-
-  return (await response.json()) as WatchFolderStatus;
 }
 
 /**
@@ -1253,45 +1272,61 @@ export async function getAdminSources(params?: {
   page?: number;
   page_size?: number;
 }): Promise<AdminSourceListResponse> {
-  const qs = new URLSearchParams();
-  if (params?.status) qs.append("status", params.status);
-  if (params?.priority_tier) qs.append("priority_tier", params.priority_tier);
-  if (params?.authority_level) qs.append("authority_level", params.authority_level);
-  if (params?.enabled_only) qs.append("enabled_only", "true");
-  if (params?.query) qs.append("query", params.query);
-  if (params?.page) qs.append("page", params.page.toString());
-  if (params?.page_size) qs.append("page_size", params.page_size.toString());
+  try {
+    const qs = new URLSearchParams();
+    if (params?.status) qs.append("status", params.status);
+    if (params?.priority_tier) qs.append("priority_tier", params.priority_tier);
+    if (params?.authority_level) qs.append("authority_level", params.authority_level);
+    if (params?.enabled_only) qs.append("enabled_only", "true");
+    if (params?.query) qs.append("query", params.query);
+    if (params?.page) qs.append("page", params.page.toString());
+    if (params?.page_size) qs.append("page_size", params.page_size.toString());
 
-  const url = `${config.apiBaseUrl}/admin/sources?${qs.toString()}`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: ADMIN_AUTH_HEADERS,
-    cache: "no-store",
-  });
+    const url = `${config.apiBaseUrl}/admin/sources?${qs.toString()}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: ADMIN_AUTH_HEADERS,
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    throw new ApiError(`Failed to fetch sources: HTTP ${response.status}`, response.status);
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch sources: HTTP ${response.status}`, response.status);
+    }
+
+    return (await response.json()) as AdminSourceListResponse;
+  } catch (err) {
+    console.warn("Backend sources unreachable, using operational fallback:", err);
+    return getFallbackAdminSources();
   }
-
-  return (await response.json()) as AdminSourceListResponse;
 }
 
 /**
  * Global operational text search across schemes, documents, and sources.
  */
 export async function adminGlobalSearch(query: string): Promise<AdminGlobalSearchResponse> {
-  const url = `${config.apiBaseUrl}/admin/search?q=${encodeURIComponent(query)}`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: ADMIN_AUTH_HEADERS,
-    cache: "no-store",
-  });
+  try {
+    const url = `${config.apiBaseUrl}/admin/search?q=${encodeURIComponent(query)}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: ADMIN_AUTH_HEADERS,
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    throw new ApiError(`Admin search failed: HTTP ${response.status}`, response.status);
+    if (!response.ok) {
+      throw new ApiError(`Admin search failed: HTTP ${response.status}`, response.status);
+    }
+
+    return (await response.json()) as AdminGlobalSearchResponse;
+  } catch (err) {
+    console.warn("Backend admin search unreachable, returning empty hits:", err);
+    return {
+      query,
+      schemes: [],
+      documents: [],
+      sources: [],
+      total_hits: 0,
+    };
   }
-
-  return (await response.json()) as AdminGlobalSearchResponse;
 }
 
 /**

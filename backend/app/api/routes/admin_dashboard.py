@@ -254,7 +254,7 @@ def list_conflicts(
     summary="List documents across all pipeline stages with failure details",
 )
 def list_admin_documents(
-    processing_status: Optional[str] = Query(None, description="Filter by exact processing status"),
+    processing_status: Optional[str] = Query(None, alias="status", description="Filter by exact processing status"),
     failed_only: bool = Query(False, description="Only return documents in failed statuses"),
     ingestion_method: Optional[str] = Query(None, description="Filter by ingestion method"),
     query: Optional[str] = Query(None, description="Filter by code or filename"),
