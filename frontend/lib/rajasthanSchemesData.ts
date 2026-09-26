@@ -55,13 +55,15 @@ export const RAJASTHAN_FLAGSHIP_SCHEMES: RajasthanSchemeItem[] = [
     isEligible: (p) => {
       const age = Number(p.age || 0);
       const isFemale = p.gender === 'FEMALE';
-      const income = p.annual_income !== undefined ? Number(p.annual_income) : 40000;
       const ageOk = isFemale ? age >= 55 : age >= 58;
-      return ageOk && income <= 48000;
+      const incomeConfirmed = p.income_confirmed === true || (p.annual_income !== undefined && Number(p.annual_income) <= 48000) || p.is_bpl === true;
+      return Boolean(ageOk && incomeConfirmed);
     },
     needsMoreInfo: (p) => {
       if (p.age === undefined) return 'age';
-      if (p.annual_income === undefined && !p.is_bpl) return 'annual_income';
+      const isFemale = p.gender === 'FEMALE';
+      const ageOk = isFemale ? (p.age >= 55) : (p.age >= 58);
+      if (ageOk && p.annual_income === undefined && !p.is_bpl && !p.income_confirmed) return 'annual_income';
       return null;
     },
   },
@@ -117,11 +119,12 @@ export const RAJASTHAN_FLAGSHIP_SCHEMES: RajasthanSchemeItem[] = [
     apply_channel_en: 'RajKisan Saathi Portal or local e-Mitra kiosk',
     isEligible: (p) => {
       const isFarmer = p.occupation === 'FARMER' || (p.land_area_bigha !== undefined && p.land_area_bigha > 0);
-      const land = p.land_area_bigha !== undefined ? Number(p.land_area_bigha) : 3;
-      return isFarmer && land <= 12.5;
+      const landKnown = p.land_area_bigha !== undefined;
+      const landOk = landKnown && Number(p.land_area_bigha) <= 12.5;
+      return Boolean(isFarmer && landOk);
     },
     needsMoreInfo: (p) => {
-      if (p.occupation === 'FARMER' && p.land_area_bigha === undefined) return 'land_area_bigha';
+      if ((p.occupation === 'FARMER' || p.intent === 'FARMER') && p.land_area_bigha === undefined) return 'land_area_bigha';
       return null;
     },
   },
@@ -149,13 +152,14 @@ export const RAJASTHAN_FLAGSHIP_SCHEMES: RajasthanSchemeItem[] = [
     apply_channel_hi: 'ई-मित्र कियोस्क अथवा सामाजिक सुरक्षा पेंशन पोर्टल',
     apply_channel_en: 'e-Mitra Kiosk or Social Security Pension Portal (SSO)',
     isEligible: (p) => {
-      const isWidowOrSeparated = p.is_widow || p.marital_status === 'WIDOWED' || p.marital_status === 'DIVORCED';
+      const isWidowOrSeparated = Boolean(p.is_widow || p.marital_status === 'WIDOWED' || p.marital_status === 'DIVORCED');
       const age = Number(p.age || 25);
-      const income = p.annual_income !== undefined ? Number(p.annual_income) : 36000;
-      return isWidowOrSeparated && age >= 18 && income <= 48000;
+      const incomeConfirmed = p.income_confirmed === true || (p.annual_income !== undefined && Number(p.annual_income) <= 48000) || p.is_bpl === true;
+      return Boolean(isWidowOrSeparated && age >= 18 && incomeConfirmed);
     },
     needsMoreInfo: (p) => {
-      if (p.is_widow && p.annual_income === undefined && !p.is_bpl) return 'annual_income';
+      const isWidowOrSeparated = Boolean(p.is_widow || p.marital_status === 'WIDOWED' || p.marital_status === 'DIVORCED');
+      if (isWidowOrSeparated && p.annual_income === undefined && !p.is_bpl && !p.income_confirmed) return 'annual_income';
       return null;
     },
   },
@@ -183,9 +187,12 @@ export const RAJASTHAN_FLAGSHIP_SCHEMES: RajasthanSchemeItem[] = [
     apply_channel_hi: 'पालनहार पोर्टल अथवा ई-मित्र कियोस्क द्वारा',
     apply_channel_en: 'Palanhar Portal or local e-Mitra',
     isEligible: (p) => {
-      return Boolean(p.is_widow || p.has_orphan_child || p.is_disabled);
+      return Boolean((p.is_widow || p.has_orphan_child || p.is_disabled) && p.has_school_child === true);
     },
-    needsMoreInfo: () => null,
+    needsMoreInfo: (p) => {
+      if ((p.is_widow || p.has_orphan_child || p.is_disabled) && p.has_school_child === undefined) return 'has_school_child';
+      return null;
+    },
   },
   {
     code: 'RJ-EDU-ANUPRATI',
@@ -213,11 +220,12 @@ export const RAJASTHAN_FLAGSHIP_SCHEMES: RajasthanSchemeItem[] = [
     apply_channel_en: 'SSO Rajasthan (SJMS Coaching Portal) or e-Mitra',
     isEligible: (p) => {
       const isStudent = p.is_student || p.occupation === 'STUDENT' || (p.age && p.age >= 16 && p.age <= 30);
-      const income = p.annual_income !== undefined ? Number(p.annual_income) : 200000;
-      return Boolean(isStudent && income <= 800000);
+      const categoryKnown = p.caste_category !== undefined;
+      const incomeOk = p.annual_income !== undefined ? Number(p.annual_income) <= 800000 : true;
+      return Boolean(isStudent && categoryKnown && incomeOk);
     },
     needsMoreInfo: (p) => {
-      if (p.is_student && p.caste_category === undefined) return 'caste_category';
+      if ((p.is_student || p.occupation === 'STUDENT') && p.caste_category === undefined) return 'caste_category';
       return null;
     },
   },
@@ -245,9 +253,12 @@ export const RAJASTHAN_FLAGSHIP_SCHEMES: RajasthanSchemeItem[] = [
     apply_channel_hi: 'जन आधार से गैस कनेक्शन सीड कराएं अथवा गैस एजेंसी पर दर्ज कराएं',
     apply_channel_en: 'Seed gas connection with Jan Aadhaar at e-Mitra or gas agency',
     isEligible: (p) => {
-      return Boolean(p.is_bpl || p.is_ujjwala_beneficiary || p.annual_income && p.annual_income <= 60000);
+      return Boolean(p.is_bpl || p.is_ujjwala_beneficiary || (p.annual_income !== undefined && Number(p.annual_income) <= 60000));
     },
-    needsMoreInfo: () => null,
+    needsMoreInfo: (p) => {
+      if (p.intent === 'CYLINDER' && p.is_bpl === undefined && p.is_ujjwala_beneficiary === undefined) return 'is_bpl_or_ujjwala';
+      return null;
+    },
   },
   {
     code: 'RJ-SJE-DIVYANG-PENSION',
@@ -273,11 +284,11 @@ export const RAJASTHAN_FLAGSHIP_SCHEMES: RajasthanSchemeItem[] = [
     apply_channel_hi: 'ई-मित्र कियोस्क अथवा सामाजिक सुरक्षा पेंशन पोर्टल',
     apply_channel_en: 'Nearest e-Mitra Kiosk or Social Security Portal',
     isEligible: (p) => {
-      const income = p.annual_income !== undefined ? Number(p.annual_income) : 40000;
-      return Boolean(p.is_disabled && income <= 60000);
+      const incomeOk = (p.annual_income !== undefined && Number(p.annual_income) <= 60000) || p.income_confirmed === true || p.is_bpl === true;
+      return Boolean(p.is_disabled && incomeOk);
     },
     needsMoreInfo: (p) => {
-      if (p.is_disabled && p.annual_income === undefined && !p.is_bpl) return 'annual_income';
+      if (p.is_disabled && p.annual_income === undefined && !p.is_bpl && !p.income_confirmed) return 'annual_income';
       return null;
     },
   },

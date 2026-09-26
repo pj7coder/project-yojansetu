@@ -41,6 +41,7 @@ async def submit_voice_turn(
     audio: UploadFile = File(..., description="Captured citizen microphone audio (WebM, WAV, OGG)"),
     voice_turn_id: str = Form(..., description="Client-generated turn UUID for idempotency"),
     conversation_version: Optional[int] = Form(None, description="Client known conversation version"),
+    client_transcript: Optional[str] = Form(None, description="Optional browser STT transcript fallback"),
     orchestrator: VoiceConversationOrchestrator = Depends(get_voice_orchestrator),
     db: Session = Depends(get_db),
 ) -> VoiceTurnResult:
@@ -63,6 +64,7 @@ async def submit_voice_turn(
             conversation_version=conversation_version,
             filename_hint=audio.filename or "recording.webm",
             db_session=db,
+            client_transcript=client_transcript,
         )
 
     except SessionNotFoundError:

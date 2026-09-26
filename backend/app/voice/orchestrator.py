@@ -113,6 +113,7 @@ class VoiceConversationOrchestrator:
         conversation_version: Optional[int] = None,
         filename_hint: str = "voice_turn.webm",
         db_session: Optional[Session] = None,
+        client_transcript: Optional[str] = None,
     ) -> VoiceTurnResult:
         """
         Executes a single conversational voice turn:
@@ -197,34 +198,43 @@ class VoiceConversationOrchestrator:
 
             # Handle No Speech Detected
             if processed_audio.status == AudioProcessingStatus.NO_SPEECH_DETECTED or not processed_audio.segments:
-                logger.info(f"VAD detected no speech in voice turn '{voice_turn_id}' for session '{session_id}'")
-                self.metrics.record_turn(vad_ms=timings.vad_ms, error_type="NO_SPEECH")
-                session.last_voice_error = VoiceErrorCode.NO_SPEECH_DETECTED.value
+                if client_transcript and client_transcript.strip():
+                    logger.info(f"VAD detected no speech but client provided transcript: '{client_transcript}'")
+                    raw_transcript = client_transcript.strip()
+                else:
+                    logger.info(f"VAD detected no speech in voice turn '{voice_turn_id}' for session '{session_id}'")
+                    self.metrics.record_turn(vad_ms=timings.vad_ms, error_type="NO_SPEECH")
+                    session.last_voice_error = VoiceErrorCode.NO_SPEECH_DETECTED.value
 
-                # Conversation state is strictly PRESERVED (turn not consumed)
-                curr_resp = self.conversation_mgr.get_current_state(session_id, db_session=db_session)
-                return VoiceTurnResult(
-                    session_id=session_id,
-                    voice_turn_id=voice_turn_id,
-                    voice_state=VoiceTransportState.READY,
-                    conversation=curr_resp,
-                    error_code=VoiceErrorCode.NO_SPEECH_DETECTED,
-                    recovery_action=VoiceRecoveryAction.RETRY_SAME_TURN,
-                    warning="मुझे आपकी आवाज़ सुनाई नहीं दी। कृपया दोबारा बोलें।",
-                    timings_ms=timings,
-                )
+                    # Conversation state is strictly PRESERVED (turn not consumed)
+                    curr_resp = self.conversation_mgr.get_current_state(session_id, db_session=db_session)
+                    return VoiceTurnResult(
+                        session_id=session_id,
+                        voice_turn_id=voice_turn_id,
+                        voice_state=VoiceTransportState.READY,
+                        conversation=curr_resp,
+                        error_code=VoiceErrorCode.NO_SPEECH_DETECTED,
+                        recovery_action=VoiceRecoveryAction.RETRY_SAME_TURN,
+                        warning="मुझे आपकी आवाज़ सुनाई नहीं दी। कृपया दोबारा बोलें।",
+                        timings_ms=timings,
+                    )
+            else:
+                # 6. Speech-to-Text Transcription via Selected Provider
+                t_stt_start = time.perf_counter()
+                transcript_parts = []
+                for seg in processed_audio.segments:
+                    if seg.audio_path:
+                        seg_res = self.stt.transcribe(Path(seg.audio_path), language_hint="hi")
+                        if seg_res.text and seg_res.text.strip():
+                            transcript_parts.append(seg_res.text.strip())
 
-            # 6. Speech-to-Text Transcription via Selected Provider
-            t_stt_start = time.perf_counter()
-            transcript_parts = []
-            for seg in processed_audio.segments:
-                if seg.audio_path:
-                    seg_res = self.stt.transcribe(Path(seg.audio_path), language_hint="hi")
-                    if seg_res.text and seg_res.text.strip():
-                        transcript_parts.append(seg_res.text.strip())
+                raw_transcript = " ".join(transcript_parts).strip()
+                timings.stt_ms = round((time.perf_counter() - t_stt_start) * 1000, 2)
 
-            raw_transcript = " ".join(transcript_parts).strip()
-            timings.stt_ms = round((time.perf_counter() - t_stt_start) * 1000, 2)
+                # Fallback to client transcript if STT was empty
+                if not raw_transcript and client_transcript and client_transcript.strip():
+                    logger.info(f"STT produced empty transcript, using client transcript fallback: '{client_transcript}'")
+                    raw_transcript = client_transcript.strip()
 
             # Handle Empty STT Result
             if not raw_transcript:

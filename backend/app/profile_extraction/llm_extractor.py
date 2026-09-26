@@ -73,6 +73,8 @@ class LocalLLMProfileExtractor:
     Executes controlled LLM extraction on local Ollama runtime.
     Validates output grounding against input text before admitting candidates.
     """
+    _last_check_time: float = 0.0
+    _cached_available: bool = True
 
     def __init__(self):
         self.settings = get_settings()
@@ -83,23 +85,27 @@ class LocalLLMProfileExtractor:
         self.base_url = raw_url
         self.model = self.settings.ollama_model
         self.timeout = 5.0  # bounded timeout for conversational responsiveness
-        self._last_check_time: float = 0.0
-        self._cached_available: bool = True
 
     def is_available(self) -> bool:
-        """Checks if local Ollama daemon is reachable with 15s caching."""
+        """Checks if local Ollama daemon is reachable and model is available."""
         now = time.time()
-        if now - self._last_check_time < 15.0:
-            return self._cached_available
+        if now - LocalLLMProfileExtractor._last_check_time < 300.0:
+            return LocalLLMProfileExtractor._cached_available
 
-        self._last_check_time = now
+        LocalLLMProfileExtractor._last_check_time = now
         try:
             with httpx.Client(timeout=1.0) as client:
                 res = client.get(f"{self.base_url}/api/tags")
-                self._cached_available = (res.status_code == 200)
-                return self._cached_available
+                if res.status_code != 200:
+                    LocalLLMProfileExtractor._cached_available = False
+                    return False
+                tags_data = res.json()
+                models = [m.get("name", "") for m in tags_data.get("models", [])]
+                has_model = any(self.model in m or m.startswith(self.model.split(":")[0]) for m in models)
+                LocalLLMProfileExtractor._cached_available = has_model
+                return LocalLLMProfileExtractor._cached_available
         except Exception:
-            self._cached_available = False
+            LocalLLMProfileExtractor._cached_available = False
             return False
 
     def extract_candidates(
@@ -144,6 +150,8 @@ class LocalLLMProfileExtractor:
                 )
                 if response.status_code != 200:
                     logger.warning(f"Ollama returned HTTP {response.status_code}")
+                    LocalLLMProfileExtractor._cached_available = False
+                    LocalLLMProfileExtractor._last_check_time = time.time()
                     return []
 
                 data = response.json()
@@ -152,13 +160,13 @@ class LocalLLMProfileExtractor:
 
         except (httpx.ConnectError, httpx.TimeoutException) as e:
             logger.warning(f"Ollama unreachable or timed out: {e}")
-            self._cached_available = False
-            self._last_check_time = time.time()
+            LocalLLMProfileExtractor._cached_available = False
+            LocalLLMProfileExtractor._last_check_time = time.time()
             return []
         except Exception as e:
             logger.error(f"Unexpected error in LLM extraction: {e}")
-            self._cached_available = False
-            self._last_check_time = time.time()
+            LocalLLMProfileExtractor._cached_available = False
+            LocalLLMProfileExtractor._last_check_time = time.time()
             return []
 
     def _parse_and_validate_llm_response(

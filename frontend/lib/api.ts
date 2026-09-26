@@ -1556,6 +1556,9 @@ export async function sendVoiceTurn(
       if (conversationVersion !== undefined) {
         formData.append("conversation_version", conversationVersion.toString());
       }
+      if (text) {
+        formData.append("client_transcript", text);
+      }
 
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 12000);

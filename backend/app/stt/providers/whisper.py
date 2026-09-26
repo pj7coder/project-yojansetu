@@ -68,7 +68,7 @@ class WhisperSTTProvider(SpeechToTextProvider):
         try:
             import faster_whisper
             return True
-        except ImportError:
+        except (ImportError, OSError, Exception):
             return False
 
     def load(self) -> None:

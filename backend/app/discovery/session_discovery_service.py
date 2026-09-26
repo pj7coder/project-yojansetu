@@ -174,6 +174,8 @@ class SessionDiscoveryService:
             known_profile_fields=set(citizen_session.get_known_field_names()),
             declined_fields=set(citizen_session.get_declined_field_names()),
             field_ask_counts=citizen_session.field_ask_counts,
+            profile_context=citizen_session.profile,
+            need_text=active_need,
         )
 
         # If a question field was selected, track that it has been presented

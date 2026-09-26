@@ -286,8 +286,21 @@ export function VoiceMode({
           dialogueProfile
         );
 
+        // Check if backend STT returned a recognized transcript that overrides audio placeholder
+        let effectiveInput = cleanInput;
+        if (
+          (cleanInput === 'मेरी बात सुनें' || cleanInput === 'Audio input') &&
+          turnResult.transcription?.text &&
+          turnResult.transcription.text.trim()
+        ) {
+          effectiveInput = turnResult.transcription.text.trim();
+          setMessages((prev) =>
+            prev.map((m) => (m.id === userMessage.id ? { ...m, text: effectiveInput } : m))
+          );
+        }
+
         // Update accumulated profile facts locally
-        const dialogueRun = processDialogueTurn(cleanInput, dialogueProfile, lang);
+        const dialogueRun = processDialogueTurn(effectiveInput, dialogueProfile, lang);
         setDialogueProfile(dialogueRun.updatedProfile);
 
         // Update dynamic suggestion chips for the next turn
@@ -300,15 +313,15 @@ export function VoiceMode({
           );
         }
 
-        const eligibleCards = turnResult.conversation?.results?.eligible || [];
+        const eligibleCards = (dialogueRun.eligibleSchemes && dialogueRun.eligibleSchemes.length > 0)
+          ? dialogueRun.eligibleSchemes.map((s) => toCitizenSchemeCard(s, lang))
+          : (turnResult.conversation?.results?.eligible || []);
         if (eligibleCards.length > 0) {
           setActiveSchemes(eligibleCards);
         }
 
         // Add assistant reply to dialogue thread
-        const replyText = isHi
-          ? turnResult.conversation?.message?.text_hi || dialogueRun.displayReply
-          : turnResult.conversation?.message?.text_en || dialogueRun.displayReply;
+        const replyText = dialogueRun.displayReply;
 
         const assistantMsg: ChatMessage = {
           id: `asst_${Date.now()}`,
@@ -319,19 +332,30 @@ export function VoiceMode({
         };
         setMessages((prev) => [...prev, assistantMsg]);
 
-        // Forward to parent page
+        // Forward synchronized response to parent page
         if (turnResult.conversation) {
-          onConversationResponse(turnResult.conversation);
+          const syncedConv: ConversationTurnResponse = {
+            ...turnResult.conversation,
+            state: dialogueRun.isComplete ? 'SHOWING_RESULTS' : 'WAITING_FOR_PROFILE_VALUE',
+            action: dialogueRun.isComplete ? 'SHOW_RESULTS' : 'ASK_PROFILE_FIELD',
+            message: {
+              key: dialogueRun.isComplete ? 'showing_results' : 'ask_profile_field',
+              text_hi: dialogueRun.displayReply,
+              text_en: dialogueRun.displayReply,
+            },
+            results: {
+              eligible: eligibleCards,
+              more_information_required: (dialogueRun.moreInfoSchemes || []).map((s) => toCitizenSchemeCard(s, lang)),
+              total_eligible_count: eligibleCards.length,
+              total_more_info_count: (dialogueRun.moreInfoSchemes || []).length,
+            },
+          };
+          onConversationResponse(syncedConv);
         }
 
-        // Vocal audio playback: prefer clean spoken text
+        // Vocal audio playback: clean spoken text for voice mode
         const speechToSay = dialogueRun.spokenReply || replyText;
-        if (turnResult.audio?.audio_url) {
-          const streamUrl = resolveAudioUrl(turnResult.audio.audio_url, turnResult.audio.response_id);
-          playAudioStream(streamUrl, speechToSay);
-        } else {
-          speakBrowserSynthesis(speechToSay);
-        }
+        speakBrowserSynthesis(speechToSay);
       } catch (err: any) {
         console.error('Dialogue turn error:', err);
         setTransportState('READY');
@@ -360,9 +384,13 @@ export function VoiceMode({
   const handleRecordingComplete = useCallback(
     (audioBlob: Blob, liveTranscript?: string) => {
       const text = (liveTranscript || '').trim();
-      handleTurnSubmission(text, audioBlob);
+      if (!text && audioBlob && audioBlob.size > 1000) {
+        handleTurnSubmission(isHi ? 'मेरी बात सुनें' : 'Audio input', audioBlob);
+      } else if (text) {
+        handleTurnSubmission(text, audioBlob);
+      }
     },
-    [handleTurnSubmission]
+    [handleTurnSubmission, isHi]
   );
 
   // MediaRecorder Hook

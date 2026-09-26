@@ -759,6 +759,14 @@ def test_session_discovery_api_flow(test_db):
         SchemeSearchMetadata.scheme_id.in_(["SCHEME-DISC-01", "SCHEME-DISC-02", "SCHEME-DISC-03"])
     ).delete(synchronize_session=False)
     test_db.add_all([s1, s2, s3])
+
+    # Deactivate existing schemes temporarily so test isolation holds
+    other_schemes = test_db.query(SchemeSearchMetadata).filter(
+        ~SchemeSearchMetadata.scheme_id.in_(["SCHEME-DISC-01", "SCHEME-DISC-02", "SCHEME-DISC-03"])
+    ).all()
+    original_active = {s.scheme_id: s.is_active for s in other_schemes}
+    for s in other_schemes:
+        s.is_active = False
     test_db.commit()
 
     # 2. Populate compiled rule cache
@@ -863,5 +871,7 @@ def test_session_discovery_api_flow(test_db):
         test_db.query(SchemeSearchMetadata).filter(
             SchemeSearchMetadata.scheme_id.in_(["SCHEME-DISC-01", "SCHEME-DISC-02", "SCHEME-DISC-03"])
         ).delete(synchronize_session=False)
+        for s in other_schemes:
+            s.is_active = original_active.get(s.scheme_id, True)
         test_db.commit()
 

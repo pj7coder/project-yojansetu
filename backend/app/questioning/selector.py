@@ -43,6 +43,8 @@ class NextQuestionSelector:
         known_profile_fields: Optional[Set[str]] = None,
         declined_fields: Optional[Set[str]] = None,
         field_ask_counts: Optional[Dict[str, int]] = None,
+        profile_context: Optional[Dict[str, Any]] = None,
+        need_text: Optional[str] = None,
     ) -> NextQuestionResult:
         """
         Evaluates current discovery candidate state and selects the best next question.
@@ -118,6 +120,8 @@ class NextQuestionSelector:
                 field_name=f,
                 schemes_needing_field=schemes,
                 ask_count=ask_count,
+                profile_context=profile_context,
+                need_text=need_text,
             )
             scored_fields.append(breakdown)
 

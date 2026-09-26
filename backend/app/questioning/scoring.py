@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import logging
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from app.core.config import get_settings
 from app.questioning.field_metadata import get_field_metadata
@@ -50,9 +50,13 @@ class QuestionScorer:
         field_name: str,
         schemes_needing_field: List[CandidateSchemeMissingInfo],
         ask_count: int = 0,
+        profile_context: Optional[Dict[str, Any]] = None,
+        need_text: Optional[str] = None,
     ) -> FieldScoreBreakdown:
         raw_utility = 0.0
         has_one_field_away = False
+        profile = profile_context or {}
+        need_lower = (need_text or "").lower()
 
         for scheme in schemes_needing_field:
             # Semantic relevance weight (default 1.0 if not ranked, or normalized 0.0-1.0)
@@ -67,6 +71,39 @@ class QuestionScorer:
 
             scheme_contribution = weighted_relevance + one_away_bonus
             raw_utility += scheme_contribution
+
+        # Context-aware domain alignment boosts:
+        # 1. Farmer context -> prioritize land holding
+        if profile.get("occupation") == "FARMER" or any(w in need_lower for w in ["मैं किसान", "किसान हूँ", "खेती करता"]):
+            if field_name in ("land_area_bigha", "land_holding"):
+                raw_utility += 15.0
+            elif field_name in ("annual_income", "family_income") and "land_area_bigha" not in profile:
+                raw_utility -= 8.0
+
+        # 2. Pension intent -> prioritize age over income
+        if any(w in need_lower for w in ["पेंशन", "pension", "वृद्ध", "बुजुर्ग", "senior"]):
+            if field_name == "age":
+                raw_utility += 15.0
+            elif field_name in ("annual_income", "family_income") and "age" not in profile:
+                raw_utility -= 8.0
+
+        # 3. Student / Coaching context -> prioritize student status / category
+        if any(w in need_lower for w in ["छात्र", "विद्यार्थी", "student", "coaching", "कोचिंग", "neet", "reet", "upsc"]):
+            if field_name in ("is_student", "caste_category"):
+                raw_utility += 15.0
+
+        # 4. Senior Citizen Age known (>= 55) -> prioritize annual income to confirm pension (unless farmer need)
+        is_farmer_need = any(w in need_lower for w in ["किसान", "farmer", "खेती", "कृषि", "फसल"])
+        if profile.get("age") and int(profile.get("age", 0)) >= 55 and not is_farmer_need:
+            if field_name in ("annual_income", "family_income"):
+                raw_utility += 12.0
+
+        # 5. General Demographic Priority: Ask WHO the citizen is before means testing
+        if not profile.get("age") and not profile.get("occupation"):
+            if field_name in ("age", "occupation"):
+                raw_utility += 5.0
+            elif field_name in ("annual_income", "family_income"):
+                raw_utility -= 3.0
 
         # Repetition penalty
         repeat_cost = ask_count * self.repeat_penalty_factor

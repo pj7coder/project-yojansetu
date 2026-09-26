@@ -91,6 +91,43 @@ class DeterministicProfileExtractor:
 
         # Field: FAMILY_INCOME / ANNUAL_INCOME
         if expected_field in ("family_income", "annual_income"):
+            clean_lower = clean.lower()
+            # Direct natural affirmations to income cap questions (e.g. "क्या आपकी आय ₹48,000 से कम है?" -> "हाँ")
+            if any(term in clean_lower for term in ["हाँ", "हां", "हाँजी", "जी हाँ", "कम है", "कम", "गरीब", "yes", "haan", "ha", "sahi", "below", "under"]):
+                candidates.append(
+                    CandidateProfileUpdate(
+                        field=expected_field,
+                        value=40000,
+                        raw_value=clean,
+                        source_text=clean,
+                        input_source=input_source,
+                        extraction_method=ExtractionMethod.EXPECTED_FIELD_PARSER,
+                        status=CandidateStatus.EXTRACTED,
+                        unit="INR",
+                        frequency="ANNUAL",
+                        normalization_steps=["AFFIRMATION_TO_INCOME_CAP"],
+                    )
+                )
+                return candidates
+
+            # Direct natural negations to income cap questions (e.g. "नहीं", "ज्यादा है")
+            if any(term in clean_lower for term in ["नहीं", "ना", "ज्यादा", "अधिक", "no", "nahin", "nahi", "above", "more"]):
+                candidates.append(
+                    CandidateProfileUpdate(
+                        field=expected_field,
+                        value=100000,
+                        raw_value=clean,
+                        source_text=clean,
+                        input_source=input_source,
+                        extraction_method=ExtractionMethod.EXPECTED_FIELD_PARSER,
+                        status=CandidateStatus.EXTRACTED,
+                        unit="INR",
+                        frequency="ANNUAL",
+                        normalization_steps=["NEGATION_TO_EXCEED_INCOME_CAP"],
+                    )
+                )
+                return candidates
+
             is_approx = HindiNumberParser.is_approximate(clean)
             # Check range
             rng = HindiNumberParser.parse_range(clean)
@@ -136,8 +173,44 @@ class DeterministicProfileExtractor:
                 )
             return candidates
 
-        # Field: BPL_STATUS / DISABILITY_STATUS / STUDENT_STATUS / WIDOW_STATUS
-        if expected_field in ("bpl_status", "disability_status", "student_status", "widow_status", "farmer_status"):
+        # Field: LAND_AREA_BIGHA / LAND_HOLDING
+        if expected_field in ("land_area_bigha", "land_holding", "land_holding_acres"):
+            bigha_match = re.search(r"(\d+(?:\.\d+)?)\s*(?:बीघा|bigha|एकड़|acre|हेक्टेयर|hectare)?", clean, re.IGNORECASE)
+            if bigha_match:
+                val = float(bigha_match.group(1))
+                candidates.append(
+                    CandidateProfileUpdate(
+                        field=expected_field,
+                        value=val,
+                        raw_value=clean,
+                        source_text=clean,
+                        input_source=input_source,
+                        extraction_method=ExtractionMethod.EXPECTED_FIELD_PARSER,
+                        status=CandidateStatus.EXTRACTED,
+                        normalization_steps=["LAND_MEASURE_PARSER"],
+                    )
+                )
+                return candidates
+            if any(term in clean.lower() for term in ["हाँ", "हां", "है", "जमीन है", "yes", "ha", "farmer"]):
+                candidates.append(
+                    CandidateProfileUpdate(
+                        field=expected_field,
+                        value=3.0,
+                        raw_value=clean,
+                        source_text=clean,
+                        input_source=input_source,
+                        extraction_method=ExtractionMethod.EXPECTED_FIELD_PARSER,
+                        status=CandidateStatus.EXTRACTED,
+                        normalization_steps=["DEFAULT_LAND_ALLOCATION"],
+                    )
+                )
+                return candidates
+
+        # Field: BPL_STATUS / DISABILITY_STATUS / STUDENT_STATUS / WIDOW_STATUS / BOOLEANS
+        if expected_field in (
+            "bpl_status", "disability_status", "student_status", "widow_status", "farmer_status",
+            "is_widow", "is_disabled", "is_student", "has_school_child", "has_orphan_child", "is_bpl"
+        ):
             # Check negation
             if BooleanAndStatusParser.detect_negation(clean):
                 candidates.append(

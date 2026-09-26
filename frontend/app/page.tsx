@@ -76,9 +76,6 @@ export default function HomePage() {
               <div className="font-black text-lg tracking-tight text-slate-900 leading-tight">
                 YOJANSETU
               </div>
-              <div className="text-xs text-orange-700 font-semibold leading-tight">
-                {isHi ? "योजनसेतु • राजस्थान सरकार" : "Government of Rajasthan"}
-              </div>
             </div>
           </div>
 
@@ -147,14 +144,7 @@ export default function HomePage() {
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
         {/* Hero Section */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-orange-100 text-orange-800 border border-orange-200 shadow-xs">
-            <span>🏛️</span>
-            <span>
-              {isHi
-                ? "राजस्थान सरकारी जन-कल्याण योजना पोर्टल"
-                : "Rajasthan Welfare Scheme Discovery Platform"}
-            </span>
-          </div>
+
 
           <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
             {isHi ? (
@@ -311,34 +301,7 @@ export default function HomePage() {
         </div>
       </main>
 
-      {/* Accessible Footer */}
-      <footer className="w-full bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-700">YojanSetu (योजनसेतु)</span>
-            <span>•</span>
-            <span>{isHi ? "राजस्थान सरकार कल्याण पोर्टल" : "Rajasthan Welfare Discovery"}</span>
-          </div>
-          <div className="flex items-center gap-4 text-slate-500">
-            <Link href="/citizen" className="hover:text-orange-600 transition">
-              {isHi ? "नागरिक पोर्टल" : "Citizen Portal"}
-            </Link>
-            <span>•</span>
-            <Link href="/admin" className="hover:text-orange-600 transition">
-              {isHi ? "एडमिन डैशबोर्ड" : "Admin Dashboard"}
-            </Link>
-            <span>•</span>
-            <a
-              href="http://localhost:8000/docs"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-orange-600 transition"
-            >
-              API Docs
-            </a>
-          </div>
-        </div>
-      </footer>
+
     </div>
   );
 }
