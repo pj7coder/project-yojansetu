@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { VoiceTransportState, VoiceTurnResponse } from '@/types/voice';
-import { ConversationTurnResponse } from '@/types/citizen';
+import { CitizenSchemeCard, ConversationTurnResponse } from '@/types/citizen';
 import {
   sendVoiceTurn,
   getVoiceResponseAudioUrl,
@@ -11,9 +11,14 @@ import {
 import { config } from '@/lib/config';
 import { useVoiceRecorder } from './useVoiceRecorder';
 import { VoiceStatus } from './VoiceStatus';
-import { VoiceControls } from './VoiceControls';
 import { AudioWaveform } from './AudioWaveform';
 import { cleanTextForSpeech, findBestVoice } from '@/lib/speechHelpers';
+import {
+  DialogueProfile,
+  processDialogueTurn,
+  toCitizenSchemeCard,
+} from '@/lib/voiceConversationEngine';
+import { RAJASTHAN_FLAGSHIP_SCHEMES } from '@/lib/rajasthanSchemesData';
 
 interface VoiceModeProps {
   sessionId: string;
@@ -26,7 +31,14 @@ interface VoiceModeProps {
   onEndConversation?: () => void;
 }
 
-// Gentle pleasant Web Audio chime for microphone start/stop
+interface ChatMessage {
+  id: string;
+  sender: 'user' | 'assistant';
+  text: string;
+  timestamp: string;
+  schemes?: CitizenSchemeCard[];
+}
+
 function playChime(type: 'start' | 'stop') {
   if (typeof window === 'undefined') return;
   try {
@@ -69,25 +81,50 @@ export function VoiceMode({
 }: VoiceModeProps) {
   const isHi = lang === 'hi';
   const [transportState, setTransportState] = useState<VoiceTransportState>('READY');
-  const [lastTranscript, setLastTranscript] = useState<string | null>(null);
-  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [hasUserInteracted, setHasUserInteracted] = useState<boolean>(false);
+  const [typedInput, setTypedInput] = useState<string>('');
 
-  const [activeConversation, setActiveConversation] = useState<ConversationTurnResponse | null>(
-    currentConversation || null
-  );
+  // Multi-Turn Conversational Memory
+  const [dialogueProfile, setDialogueProfile] = useState<DialogueProfile>({});
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [activeSchemes, setActiveSchemes] = useState<CitizenSchemeCard[]>([]);
+
+  // Dynamic Suggestion Chips
+  const [suggestedChips, setSuggestedChips] = useState<Array<{ label: string; text: string }>>([
+    { label: isHi ? '👴 65+ वृद्धजन पेंशन' : 'Senior Pension', text: isHi ? 'मेरी उम्र 65 वर्ष है, मुझे वृद्धजन पेंशन योजना की जानकारी चाहिए।' : 'I am 65 years old. What senior pension schemes am I eligible for?' },
+    { label: isHi ? '🌾 3 बीघा ज़मीन, किसान सहायता' : 'Farmer Support', text: isHi ? 'मेरे पास 3 बीघा कृषि भूमि है, मुझे किसान सम्मान निधि सहायता चाहिए।' : 'I have 3 bighas of land. What farmer benefits can I receive?' },
+    { label: isHi ? '👩 एकल नारी (विधवा) पेंशन' : 'Widow Pension', text: isHi ? 'मैं विधवा महिला हूँ, मुझे एकल नारी पेंशन योजना का लाभ चाहिए।' : 'I am a widow in Rajasthan. How can I apply for Ekal Nari pension?' },
+    { label: isHi ? '🎓 छात्र निःशुल्क कोचिंग' : 'Free Coaching', text: isHi ? 'मैं 12वीं पास छात्र हूँ, अनुप्रति कोचिंग योजना की पात्रता क्या है?' : 'What are the eligibility criteria for Anuprati Free Coaching Scheme?' },
+    { label: isHi ? '🏥 ₹25 लाख मुफ्त स्वास्थ्य उपचार' : 'Free Healthcare', text: isHi ? 'आयुष्मान आरोग्य योजना में ₹25 लाख कैशलेस इलाज कैसे मिलेगा?' : 'How does the 25 lakh cashless healthcare coverage work?' },
+  ]);
 
   const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
   const audioBlobUrlRef = useRef<string | null>(null);
+  const chatEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Sync prop changes into state
+  // Initialize initial welcome message
   useEffect(() => {
-    if (currentConversation) {
-      setActiveConversation(currentConversation);
+    if (messages.length === 0) {
+      const welcomeText = isHi
+        ? 'नमस्ते! मैं योजनसेतु आवाज़ सहायक हूँ। राजस्थान की 9 प्रमुख जनकल्याणकारी योजनाओं की पात्रता जानने के लिए अपनी उम्र, पेशा, या आवश्यकता बोलकर बताइए।'
+        : 'Hello! I am YojanSetu Voice Assistant. Speak about your age, occupation, or welfare needs to find eligible Rajasthan government schemes.';
+
+      setMessages([
+        {
+          id: 'msg_welcome',
+          sender: 'assistant',
+          text: welcomeText,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
     }
-  }, [currentConversation]);
+  }, [isHi, messages.length]);
+
+  // Scroll to bottom of dialogue on new message
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, transportState]);
 
   // Resolves backend relative or absolute audio URLs to full fetchable backend URLs
   const resolveAudioUrl = useCallback(
@@ -147,10 +184,9 @@ export function VoiceMode({
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(spokenText);
       utterance.lang = isHi ? 'hi-IN' : 'en-IN';
-      utterance.rate = 0.95; // Crisp cadence
+      utterance.rate = 0.95;
       utterance.pitch = 1.0;
 
-      // Assign highest quality available voice
       const bestVoice = findBestVoice(lang);
       if (bestVoice) {
         utterance.voice = bestVoice;
@@ -164,8 +200,7 @@ export function VoiceMode({
         setTransportState('READY');
       };
 
-      utterance.onerror = (e) => {
-        console.warn('SpeechSynthesis event notice:', e);
+      utterance.onerror = () => {
         setIsPlaying(false);
         setTransportState('READY');
       };
@@ -198,126 +233,122 @@ export function VoiceMode({
         stopPlayback();
       };
 
-      audio.onerror = (err) => {
-        console.warn('Audio stream error, falling back to speech synthesis:', err);
+      audio.onerror = () => {
         stopPlayback();
         if (fallbackText) {
           speakBrowserSynthesis(fallbackText);
-        } else {
-          setFeedbackMessage(
-            isHi
-              ? 'ऑडियो प्लेबैक में समस्या आई। उत्तर नीचे स्क्रीन पर पढ़ सकते हैं।'
-              : 'Audio playback encountered an issue. You can read the response on screen.'
-          );
         }
       };
 
-      audio.play().catch((playErr) => {
-        console.warn('Browser prevented audio autoplay:', playErr);
+      audio.play().catch(() => {
         stopPlayback();
         if (fallbackText) {
           speakBrowserSynthesis(fallbackText);
-        } else {
-          setFeedbackMessage(
-            isHi
-              ? 'ब्राउज़र ने आवाज़ को स्वतः चलने से रोक दिया। सुनने के लिए "दोबारा सुनें" बटन दबाएँ।'
-              : 'Browser blocked audio autoplay. Click "Replay" to listen.'
-          );
         }
       });
     },
-    [isHi, stopPlayback, speakBrowserSynthesis]
+    [stopPlayback, speakBrowserSynthesis]
   );
 
-  // Core Voice Turn Submission Handler
-  const handleRecordingComplete = useCallback(
-    async (audioBlob: Blob, liveTranscript?: string) => {
+  // Core Dialogue Handler: Processes Citizen Turn & Executes Reasoning
+  const handleTurnSubmission = useCallback(
+    async (text: string, audioBlob?: Blob) => {
+      const cleanInput = text.trim();
+      if (!cleanInput) return;
+
       playChime('stop');
       setTransportState('PROCESSING_AUDIO');
       setErrorMessage(null);
-      setFeedbackMessage(null);
-      setHasUserInteracted(true);
 
-      const capturedText = (liveTranscript || '').trim();
-      if (capturedText) {
-        setLastTranscript(capturedText);
-      }
+      // Add user utterance to dialogue history
+      const userMessage: ChatMessage = {
+        id: `user_${Date.now()}`,
+        sender: 'user',
+        text: cleanInput,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMessages((prev) => [...prev, userMessage]);
 
-      // Generate client-side turn UUID
+      const blobToSend = audioBlob || new Blob([new Uint8Array(44)], { type: 'audio/wav' });
       const voiceTurnId = `vturn_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
       try {
         setTransportState('TRANSCRIBING');
-        const turnResult: VoiceTurnResponse = await sendVoiceTurn(
+
+        // Execute conversational reasoning with authentic schemes
+        const turnResult = await sendVoiceTurn(
           sessionId,
-          audioBlob,
+          blobToSend,
           voiceTurnId,
-          activeConversation?.meta?.version ?? conversationVersion,
-          capturedText,
-          lang
+          conversationVersion,
+          cleanInput,
+          lang,
+          dialogueProfile
         );
 
-        // Update transcript if returned from backend STT
-        if (turnResult.transcription?.text) {
-          setLastTranscript(turnResult.transcription.text);
+        // Update accumulated profile facts locally
+        const dialogueRun = processDialogueTurn(cleanInput, dialogueProfile, lang);
+        setDialogueProfile(dialogueRun.updatedProfile);
+
+        // Update dynamic suggestion chips for the next turn
+        if (dialogueRun.suggestedChips && dialogueRun.suggestedChips.length > 0) {
+          setSuggestedChips(
+            dialogueRun.suggestedChips.map((c) => ({
+              label: isHi ? c.label_hi : c.label_en,
+              text: c.text,
+            }))
+          );
         }
 
-        // Forward structured conversation response to parent page
+        const eligibleCards = turnResult.conversation?.results?.eligible || [];
+        if (eligibleCards.length > 0) {
+          setActiveSchemes(eligibleCards);
+        }
+
+        // Add assistant reply to dialogue thread
+        const replyText = isHi
+          ? turnResult.conversation?.message?.text_hi || dialogueRun.displayReply
+          : turnResult.conversation?.message?.text_en || dialogueRun.displayReply;
+
+        const assistantMsg: ChatMessage = {
+          id: `asst_${Date.now()}`,
+          sender: 'assistant',
+          text: replyText,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          schemes: eligibleCards.length > 0 ? eligibleCards : undefined,
+        };
+        setMessages((prev) => [...prev, assistantMsg]);
+
+        // Forward to parent page
         if (turnResult.conversation) {
-          setActiveConversation(turnResult.conversation);
           onConversationResponse(turnResult.conversation);
         }
 
-        // Handle retry warnings
-        if (turnResult.warning) {
-          setFeedbackMessage(turnResult.warning);
-        }
-
-        const replySpeech = isHi
-          ? turnResult.conversation?.message?.text_hi
-          : turnResult.conversation?.message?.text_en;
-
-        // Play synthesized TTS audio if provided, or speak via browser SpeechSynthesis
+        // Vocal audio playback: prefer clean spoken text
+        const speechToSay = dialogueRun.spokenReply || replyText;
         if (turnResult.audio?.audio_url) {
           const streamUrl = resolveAudioUrl(turnResult.audio.audio_url, turnResult.audio.response_id);
-          playAudioStream(streamUrl, replySpeech);
-        } else if (replySpeech) {
-          speakBrowserSynthesis(replySpeech);
+          playAudioStream(streamUrl, speechToSay);
         } else {
-          setTransportState('READY');
+          speakBrowserSynthesis(speechToSay);
         }
       } catch (err: any) {
-        console.error('Voice turn processing error:', err);
+        console.error('Dialogue turn error:', err);
         setTransportState('READY');
-
-        if (err.code === 'CONVERSATION_STATE_CONFLICT') {
-          setErrorMessage(
-            isHi
-              ? 'बातचीत की स्थिति बदल गई है। कृपया उत्तर दोबारा दें।'
-              : 'Conversation state changed. Please repeat your response.'
-          );
-        } else if (err.code === 'VOICE_TURN_ALREADY_ACTIVE') {
-          setErrorMessage(
-            isHi
-              ? 'पिछला उत्तर अभी प्रोसेस हो रहा है। कृपया प्रतीक्षा करें।'
-              : 'Previous turn is still processing. Please wait.'
-          );
-        } else {
-          setErrorMessage(
-            err.message ||
-              (isHi
-                ? 'आवाज़ प्रोसेस करने में त्रुटि हुई। कृपया दोबारा बोलें या नीचे टेक्स्ट में लिखें।'
-                : 'Error processing voice. Please speak again or type in text below.')
-          );
-        }
+        setErrorMessage(
+          err.message ||
+            (isHi
+              ? 'बातचीत प्रोसेस करने में त्रुटि हुई। कृपया दोबारा बोलें।'
+              : 'Error processing dialogue. Please speak again.')
+        );
       }
     },
     [
       sessionId,
-      activeConversation,
       conversationVersion,
-      isHi,
       lang,
+      dialogueProfile,
+      isHi,
       onConversationResponse,
       playAudioStream,
       resolveAudioUrl,
@@ -325,18 +356,16 @@ export function VoiceMode({
     ]
   );
 
-  // Quick query handler (e.g. from suggestion chips or typed text bar)
-  const handleQuickQuery = useCallback(
-    (text: string) => {
-      setLastTranscript(text);
-      // Create lightweight dummy audio blob to accompany recognized text
-      const dummyBlob = new Blob([new Uint8Array(44)], { type: 'audio/wav' });
-      handleRecordingComplete(dummyBlob, text);
+  // Recorder Callback
+  const handleRecordingComplete = useCallback(
+    (audioBlob: Blob, liveTranscript?: string) => {
+      const text = (liveTranscript || '').trim();
+      handleTurnSubmission(text, audioBlob);
     },
-    [handleRecordingComplete]
+    [handleTurnSubmission]
   );
 
-  // MediaRecorder + Web Audio API level meter + SpeechRecognition hook
+  // MediaRecorder Hook
   const {
     isRecording,
     permissionState,
@@ -353,71 +382,37 @@ export function VoiceMode({
     onRecordingComplete: handleRecordingComplete,
     onError: (err) => {
       setTransportState('READY');
-      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        setErrorMessage(
-          isHi
-            ? 'माइक्रोफ़ोन की अनुमति अस्वीकृत है। आप नीचे टेक्स्ट में लिखकर पूछ सकते हैं।'
-            : 'Microphone permission denied. You can type below to ask questions.'
-        );
-      } else {
-        setErrorMessage(err.message);
-      }
+      setErrorMessage(
+        err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError'
+          ? (isHi ? 'माइक्रोफ़ोन अनुमति नहीं मिली। आप नीचे टाइप कर सकते हैं।' : 'Microphone access denied. You can type below.')
+          : err.message
+      );
     },
   });
 
-  // Half-duplex guard: Prevent starting microphone while assistant is speaking
   const startRecordingSafe = useCallback(() => {
     if (isPlaying) {
       stopPlayback();
     }
     playChime('start');
     setTransportState('LISTENING');
-    setHasUserInteracted(true);
     triggerStartRecording();
   }, [isPlaying, stopPlayback, triggerStartRecording]);
 
-  // Replay last response
-  const handleReplay = useCallback(async () => {
-    if (isPlaying) {
-      stopPlayback();
+  const handleManualSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!typedInput.trim() || isRecording || transportState === 'PROCESSING_AUDIO') return;
+    const text = typedInput.trim();
+    setTypedInput('');
+    handleTurnSubmission(text);
+  };
+
+  const handleReplayLast = useCallback(() => {
+    const lastAsst = [...messages].reverse().find((m) => m.sender === 'assistant');
+    if (lastAsst) {
+      speakBrowserSynthesis(lastAsst.text);
     }
-    try {
-      setFeedbackMessage(null);
-      const replay = await replayVoiceResponse(sessionId);
-      const fallbackText = isHi
-        ? replay.speech_text || activeConversation?.message?.text_hi
-        : replay.speech_text || activeConversation?.message?.text_en;
-
-      if (replay.audio?.audio_url) {
-        const streamUrl = resolveAudioUrl(replay.audio.audio_url, replay.audio.response_id);
-        if (streamUrl) {
-          playAudioStream(streamUrl, fallbackText);
-          return;
-        }
-      }
-
-      if (fallbackText) {
-        speakBrowserSynthesis(fallbackText);
-      }
-    } catch (err: any) {
-      console.warn('Voice replay notice:', err);
-      const fallbackText = isHi
-        ? activeConversation?.message?.text_hi
-        : activeConversation?.message?.text_en;
-      if (fallbackText) {
-        speakBrowserSynthesis(fallbackText);
-      }
-    }
-  }, [sessionId, isPlaying, stopPlayback, playAudioStream, resolveAudioUrl, speakBrowserSynthesis, activeConversation, isHi]);
-
-  // Welcome greeting speech trigger
-  const handleWelcomeSpeech = useCallback(() => {
-    setHasUserInteracted(true);
-    const welcome = isHi
-      ? 'नमस्ते! मैं योजनसेतु आवाज़ सहायक हूँ। आप अपनी उम्र, कृषि भूमि, सामाजिक श्रेणी या पेंशन योजना के बारे में बोलकर पूछ सकते हैं।'
-      : 'Hello! I am YojanSetu Voice Assistant. You can speak about your age, land, pension or government schemes to find your benefits.';
-    speakBrowserSynthesis(welcome);
-  }, [isHi, speakBrowserSynthesis]);
+  }, [messages, speakBrowserSynthesis]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -426,221 +421,309 @@ export function VoiceMode({
     };
   }, [stopPlayback]);
 
+  const isProcessing =
+    transportState === 'PROCESSING_AUDIO' ||
+    transportState === 'TRANSCRIBING' ||
+    transportState === 'PROCESSING_TURN' ||
+    transportState === 'SYNTHESIZING';
+
   return (
-    <div className="w-full bg-linear-to-b from-indigo-50/80 via-white to-indigo-50/40 dark:from-slate-900 dark:via-slate-800/90 dark:to-slate-900 rounded-3xl border border-indigo-200/80 dark:border-slate-700/80 p-5 sm:p-8 shadow-2xl shadow-indigo-500/10 mb-6 transition-all">
-      {/* Voice Mode Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-indigo-100 dark:border-slate-700/50">
+    <div className="w-full max-w-4xl mx-auto flex flex-col bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-xl overflow-hidden mb-8 transition-all">
+      {/* Sleek Minimal Header */}
+      <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-4 bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-xs">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-indigo-600 text-white font-bold text-2xl shadow-md shadow-indigo-600/30">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-500/20">
             🎙️
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-extrabold text-slate-900 dark:text-slate-100 text-lg sm:text-xl">
-                {isHi ? 'योजनसेतु — स्मार्ट आवाज़ सहायक' : 'YojanSetu — Smart Voice Assistant'}
-              </h3>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold text-[10px] uppercase tracking-wider">
-                Live
-              </span>
-            </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              {isHi
-                ? 'राजस्थानी व हिंदी वाणी पहचान, नियम-आधारित पात्रता एवं त्वरित मौखिक उत्तर'
-                : 'Vernacular Speech Recognition, Rule-Based Eligibility & Instant Vocal Reply'}
-            </p>
+            <h3 className="font-extrabold text-slate-900 dark:text-slate-100 text-base leading-tight">
+              {isHi ? 'योजनसेतु आवाज़ सहायक' : 'YojanSetu Voice Assistant'}
+            </h3>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+              {isHi ? 'सत्यापित सरकारी नियम एवं बहु-चरणीय संवाद' : 'Verified Rajasthan Rules & Dialogue'}
+            </span>
           </div>
         </div>
 
-        {/* Transport State Badge */}
-        <VoiceStatus
-          state={transportState}
-          lang={lang}
-          recordingDuration={recordingDuration}
-        />
+        <div className="flex items-center gap-2">
+          <VoiceStatus
+            state={transportState}
+            lang={lang}
+            recordingDuration={recordingDuration}
+          />
+          {onStartOver && (
+            <button
+              type="button"
+              onClick={() => {
+                setDialogueProfile({});
+                setMessages([]);
+                setActiveSchemes([]);
+                onStartOver();
+              }}
+              title={isHi ? 'नया सत्र शुरू करें' : 'Start new session'}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer text-xs"
+            >
+              🔄
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Welcome Greeting Prompt for first-time entry */}
-      {!hasUserInteracted && !isPlaying && !isRecording && (
-        <div className="mb-5 p-4 rounded-2xl bg-indigo-500/10 dark:bg-indigo-500/15 border border-indigo-200 dark:border-indigo-800/50 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="text-2xl">👋</span>
-            <span className="text-xs sm:text-sm font-semibold text-indigo-950 dark:text-indigo-200">
-              {isHi
-                ? 'नमस्ते! योजनसेतु से बातचीत शुरू करने के लिए स्वागत संदेश सुनें या सीधे बोलें।'
-                : 'Welcome! Listen to the welcome audio or tap the mic to speak.'}
-            </span>
-          </div>
+      {/* Central Interactive Voice Orb Section */}
+      <div className="py-6 px-4 bg-gradient-to-b from-indigo-50/40 via-transparent to-transparent dark:from-indigo-950/20 flex flex-col items-center justify-center relative">
+        {/* Pulsating Voice Orb / Avatar */}
+        <div className="relative flex items-center justify-center mb-2">
+          {/* Animated Halo Rings */}
+          <div
+            className={`w-28 h-28 sm:w-32 sm:h-32 rounded-full absolute transition-all duration-300 ${
+              isRecording
+                ? 'bg-rose-500/20 dark:bg-rose-500/30 scale-125 animate-ping'
+                : isPlaying
+                ? 'bg-emerald-500/20 dark:bg-emerald-500/30 scale-115 animate-pulse'
+                : isProcessing
+                ? 'bg-amber-500/20 dark:bg-amber-500/30 scale-110 animate-spin'
+                : 'bg-indigo-500/10 dark:bg-indigo-500/20 scale-100'
+            }`}
+          />
+
+          {/* Main Action Button in Orb */}
           <button
             type="button"
-            onClick={handleWelcomeSpeech}
-            className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs transition-transform hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+            onClick={
+              isPlaying
+                ? stopPlayback
+                : isRecording
+                ? stopRecording
+                : startRecordingSafe
+            }
+            disabled={isProcessing}
+            aria-label={
+              isPlaying
+                ? isHi ? 'आवाज़ रोकें' : 'Stop voice'
+                : isRecording
+                ? isHi ? 'भेजें' : 'Send voice'
+                : isHi ? 'बोलने के लिए दबाएँ' : 'Tap to speak'
+            }
+            className={`w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center text-white font-bold shadow-2xl transition-all duration-200 relative z-10 cursor-pointer ${
+              isPlaying
+                ? 'bg-gradient-to-tr from-amber-500 to-orange-500 shadow-amber-500/30 hover:scale-105 active:scale-95 ring-4 ring-amber-200 dark:ring-amber-900/50'
+                : isRecording
+                ? 'bg-gradient-to-tr from-rose-600 to-red-600 shadow-rose-600/40 hover:scale-105 active:scale-95 ring-4 ring-rose-200 dark:ring-rose-900/50 animate-pulse'
+                : isProcessing
+                ? 'bg-slate-400 cursor-not-allowed shadow-none'
+                : 'bg-gradient-to-tr from-indigo-600 via-indigo-700 to-violet-700 shadow-indigo-600/40 hover:scale-105 active:scale-95 ring-4 ring-indigo-200 dark:ring-indigo-900/60'
+            }`}
           >
-            <span>🔊</span>
-            <span>{isHi ? 'स्वागत संदेश सुनें' : 'Listen Welcome'}</span>
+            {isPlaying ? (
+              <>
+                <span className="text-2xl">⏹️</span>
+                <span className="text-[10px] mt-0.5 font-bold uppercase tracking-wider">{isHi ? 'रोकें' : 'Stop'}</span>
+              </>
+            ) : isRecording ? (
+              <>
+                <span className="text-2xl">⏹️</span>
+                <span className="text-[10px] mt-0.5 font-bold uppercase tracking-wider">{isHi ? 'भेजें' : 'Send'}</span>
+              </>
+            ) : isProcessing ? (
+              <span className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <>
+                <span className="text-2xl animate-bounce">🎙️</span>
+                <span className="text-[10px] mt-0.5 font-bold uppercase tracking-wider">{isHi ? 'बोलें' : 'Speak'}</span>
+              </>
+            )}
           </button>
         </div>
-      )}
 
-      {/* Permission Denied Alert */}
-      {permissionState === 'denied' && (
-        <div className="mb-6 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-800 dark:text-rose-200 text-sm flex items-start gap-3">
-          <span className="text-xl">⚠️</span>
-          <div className="flex-1">
-            <p className="font-semibold mb-1">
-              {isHi ? 'माइक्रोफ़ोन अनुमति नहीं मिली' : 'Microphone Permission Denied'}
-            </p>
-            <p className="text-xs opacity-90 mb-3">
-              {isHi
-                ? 'आवाज़ में बात करने के लिए ब्राउज़र के एड्रेस बार में माइक्रोफ़ोन की अनुमति दें, या नीचे दिए गए टेक्स्ट बॉक्स में लिखें।'
-                : 'Enable microphone access in browser settings, or type your question below.'}
-            </p>
-          </div>
+        {/* Real-time Frequency Waveform */}
+        <div className="w-full max-w-xs -mt-1">
+          <AudioWaveform
+            isRecording={isRecording}
+            isPlaying={isPlaying}
+            audioLevel={audioLevel}
+            lang={lang}
+          />
         </div>
-      )}
 
-      {/* Error / Warning Banners */}
+        {/* Live speech transcription bubble */}
+        {isRecording && (
+          <div className="mt-2 px-4 py-2 rounded-full bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-xs font-medium animate-pulse flex items-center gap-2 max-w-md text-center">
+            <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0" />
+            <span className="truncate">
+              {liveTranscript ? `“${liveTranscript}”` : isHi ? 'आपकी बात सुन रहा हूँ, बोलिए…' : 'Listening, speak now…'}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Error Banner */}
       {errorMessage && (
-        <div className="mb-4 p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
-          <span>⚠️</span>
-          <span className="flex-1 font-medium">{errorMessage}</span>
-          <button
-            type="button"
-            onClick={() => setErrorMessage(null)}
-            className="text-rose-400 hover:text-rose-700 text-xs font-bold cursor-pointer"
+        <div className="mx-6 mb-4 p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs flex items-center justify-between">
+          <span>⚠️ {errorMessage}</span>
+          <button type="button" onClick={() => setErrorMessage(null)} className="text-rose-400 hover:text-rose-700 font-bold ml-2">✕</button>
+        </div>
+      )}
+
+      {/* Conversational Chat Dialogue Stream */}
+      <div className="flex-1 max-h-[380px] overflow-y-auto px-6 py-4 space-y-4 border-t border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/30 dark:bg-slate-900/30">
+        {messages.map((msg) => (
+          <div
+            key={msg.id}
+            className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
           >
-            ✕
-          </button>
-        </div>
-      )}
+            {/* Message Bubble */}
+            <div
+              className={`max-w-[85%] sm:max-w-[78%] rounded-2xl p-4 text-xs sm:text-sm leading-relaxed shadow-xs ${
+                msg.sender === 'user'
+                  ? 'bg-indigo-600 text-white rounded-br-xs'
+                  : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700/80 rounded-bl-xs'
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2 mb-1.5 opacity-75 text-[10px] font-semibold">
+                <span>{msg.sender === 'user' ? (isHi ? 'आप' : 'You') : '🏛️ YojanSetu'}</span>
+                <span>{msg.timestamp}</span>
+              </div>
 
-      {feedbackMessage && (
-        <div className="mb-4 p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 text-amber-800 dark:text-amber-200 text-xs flex items-center gap-2">
-          <span>ℹ️</span>
-          <span className="flex-1 font-medium">{feedbackMessage}</span>
-          <button
-            type="button"
-            onClick={() => setFeedbackMessage(null)}
-            className="text-amber-500 hover:text-amber-800 text-xs font-bold cursor-pointer"
-          >
-            ✕
-          </button>
-        </div>
-      )}
+              <div className="whitespace-pre-wrap font-sans">
+                {msg.text}
+              </div>
 
-      {/* Real-Time Reactive Audio Waveform Visualizer */}
-      <AudioWaveform
-        isRecording={isRecording}
-        isPlaying={isPlaying}
-        audioLevel={audioLevel}
-        lang={lang}
-      />
-
-      {/* Live In-Progress Speech Recognition Feedback Bubble */}
-      {isRecording && (
-        <div className="mb-4 px-4 py-3 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/50 text-rose-900 dark:text-rose-200 text-xs sm:text-sm flex items-start gap-2.5 animate-pulse">
-          <span className="text-base shrink-0">🎙️</span>
-          <div>
-            <span className="font-bold block text-[11px] uppercase tracking-wider text-rose-600 dark:text-rose-400">
-              {isHi ? 'लाइव आवाज़ पहचान:' : 'Live Speech Recognized:'}
-            </span>
-            <span className="font-medium italic">
-              {liveTranscript
-                ? `“${liveTranscript}”`
-                : isHi
-                ? 'बोलिए, आपकी आवाज़ रिकॉर्ड हो रही है…'
-                : 'Listening, speak your query now…'}
-            </span>
-          </div>
-        </div>
-      )}
-
-      {/* Last Recognized Transcript (After Recording) */}
-      {!isRecording && lastTranscript && (
-        <div className="mb-4 px-4 py-3 rounded-2xl bg-indigo-500/5 dark:bg-indigo-500/10 border border-indigo-200/60 dark:border-indigo-800/40 text-xs text-indigo-950 dark:text-indigo-200 flex items-center gap-2">
-          <span className="font-bold shrink-0">{isHi ? 'आपने कहा:' : 'You said:'}</span>
-          <span className="italic font-medium">“{lastTranscript}”</span>
-        </div>
-      )}
-
-      {/* Assistant Voice Response Card */}
-      {activeConversation?.message && (
-        <div
-          className={`mb-6 p-5 sm:p-6 rounded-2xl transition-all border ${
-            isPlaying
-              ? 'bg-emerald-50/90 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700/60 shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/30'
-              : 'bg-white dark:bg-slate-800/90 border-slate-200/80 dark:border-slate-700/60 shadow-sm'
-          }`}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">{isPlaying ? '🔊' : '🏛️'}</span>
-              <span className="text-xs font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300">
-                {isHi ? 'योजनसेतु का उत्तर' : "YojanSetu's Response"}
-              </span>
-              {isPlaying && (
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/60 px-2.5 py-0.5 rounded-full animate-pulse">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  {isHi ? 'बोल रहा है…' : 'Speaking…'}
-                </span>
+              {/* Speaker Replay Icon on Assistant message */}
+              {msg.sender === 'assistant' && (
+                <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-end">
+                  <button
+                    type="button"
+                    onClick={() => speakBrowserSynthesis(msg.text)}
+                    disabled={isPlaying || isRecording}
+                    className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-40"
+                  >
+                    <span>🔊</span>
+                    <span>{isHi ? 'दोबारा सुनें' : 'Listen'}</span>
+                  </button>
+                </div>
               )}
             </div>
 
-            {/* Replay mini button */}
-            <button
-              type="button"
-              onClick={handleReplay}
-              disabled={isPlaying || isRecording}
-              className="text-xs font-bold text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 flex items-center gap-1 cursor-pointer disabled:opacity-40"
-              title={isHi ? 'दोबारा सुनें' : 'Listen again'}
-            >
-              <span>🔊</span>
-              <span>{isHi ? 'दोबारा सुनें' : 'Listen'}</span>
-            </button>
+            {/* If schemes attached to assistant message, render compact showcase pills */}
+            {msg.schemes && msg.schemes.length > 0 && (
+              <div className="w-full max-w-xl mt-3 space-y-2.5">
+                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <span>✨</span>
+                  <span>{isHi ? `पात्र योजनाएँ (${msg.schemes.length}):` : `Eligible Schemes (${msg.schemes.length}):`}</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {msg.schemes.map((scheme, sIdx) => (
+                    <div
+                      key={sIdx}
+                      className="p-3.5 rounded-2xl bg-white dark:bg-slate-800/90 border border-emerald-300 dark:border-emerald-800 shadow-xs hover:border-emerald-400 transition-colors flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <span className="text-xs font-extrabold text-slate-900 dark:text-slate-100 leading-snug line-clamp-1">
+                            {isHi ? scheme.name_hi || scheme.name_en : scheme.name_en}
+                          </span>
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 shrink-0">
+                            पात्र
+                          </span>
+                        </div>
+                        <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 mb-1">
+                          💰 {isHi ? scheme.primary_benefit_hi : scheme.primary_benefit_en}
+                        </p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-2">
+                          {isHi ? scheme.purpose_hi : scheme.purpose_en}
+                        </p>
+                      </div>
+
+                      <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-[10px]">
+                        <span className="text-slate-400 font-mono">{scheme.scheme_code}</span>
+                        <button
+                          type="button"
+                          onClick={onSwitchToText}
+                          className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                        >
+                          {isHi ? 'विस्तृत पर्ची ➔' : 'View Slip ➔'}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
+        ))}
+        <div ref={chatEndRef} />
+      </div>
 
-          <p className="text-sm sm:text-base font-medium text-slate-800 dark:text-slate-100 leading-relaxed whitespace-pre-wrap">
-            {isHi ? activeConversation.message.text_hi : activeConversation.message.text_en}
-          </p>
-
-          {/* If Eligible Schemes Discovered */}
-          {activeConversation.results?.eligible && activeConversation.results.eligible.length > 0 && (
-            <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap items-center justify-between gap-3">
-              <span className="text-xs sm:text-sm font-extrabold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
-                <span>🎉</span>
-                <span>
-                  {isHi
-                    ? `${activeConversation.results.eligible.length} सरकारी योजनाएँ आपके लिए पात्र पाई गईं!`
-                    : `${activeConversation.results.eligible.length} Eligible welfare schemes found!`}
-                </span>
-              </span>
+      {/* Dynamic Conversational Suggestion Chips */}
+      {!isRecording && !isProcessing && (
+        <div className="px-6 py-3 bg-slate-50/70 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2">
+          <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0">
+            {isHi ? 'त्वरित उत्तर:' : 'Quick Reply:'}
+          </span>
+          <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto">
+            {suggestedChips.map((chip, idx) => (
               <button
+                key={idx}
                 type="button"
-                onClick={onSwitchToText}
-                className="text-xs font-bold px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-xs transition-colors cursor-pointer"
+                onClick={() => handleTurnSubmission(chip.text)}
+                className="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-indigo-600 text-xs font-semibold shadow-2xs transition-all hover:scale-102 active:scale-98 cursor-pointer"
               >
-                {isHi ? 'विस्तृत विवरण व पर्ची देखें ➔' : 'View Full Details & Slip ➔'}
+                {chip.label}
               </button>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Voice Controls with Push-to-Talk, Quick Suggestions & In-Voice Text Bar */}
-      <VoiceControls
-        state={transportState}
-        isRecording={isRecording}
-        isPlaying={isPlaying}
-        onStartRecord={startRecordingSafe}
-        onStopRecord={stopRecording}
-        onStopSpeaking={stopPlayback}
-        onReplay={handleReplay}
-        onQuickQuery={handleQuickQuery}
-        onSwitchToText={onSwitchToText}
-        onStartOver={onStartOver}
-        onEndConversation={onEndConversation}
-        disabled={permissionState === 'denied'}
-        lang={lang}
-      />
+      {/* Bottom Minimal Input Bar */}
+      <div className="px-6 py-4 bg-white dark:bg-slate-900 flex flex-col sm:flex-row items-center justify-between gap-3">
+        {/* Quick In-Voice Text Input Form */}
+        <form onSubmit={handleManualSubmit} className="w-full sm:flex-1 flex items-center gap-2">
+          <input
+            type="text"
+            value={typedInput}
+            onChange={(e) => setTypedInput(e.target.value)}
+            disabled={isProcessing || isRecording}
+            placeholder={
+              isHi
+                ? 'माइक के अलावा यहाँ लिखकर भी पूछ सकते हैं (उदा: मेरी उम्र 65 साल है)…'
+                : 'Or type here (e.g. I am 65 years old farmer)...'
+            }
+            className="flex-1 px-4 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 transition-all"
+          />
+          <button
+            type="submit"
+            disabled={!typedInput.trim() || isProcessing}
+            className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm shadow-xs transition-colors disabled:opacity-40 cursor-pointer"
+          >
+            {isHi ? 'भेजें' : 'Send'}
+          </button>
+        </form>
+
+        {/* Action Controls */}
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-end text-xs">
+          <button
+            type="button"
+            onClick={handleReplayLast}
+            disabled={isPlaying || isRecording || messages.length <= 1}
+            className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold transition-colors disabled:opacity-40 cursor-pointer flex items-center gap-1.5"
+            title={isHi ? 'पिछला उत्तर दोबारा सुनें' : 'Listen last response again'}
+          >
+            <span>🔊</span>
+            <span>{isHi ? 'दोबारा सुनें' : 'Replay'}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onSwitchToText}
+            className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
+          >
+            <span>📋</span>
+            <span>{isHi ? 'पूरी योजना सूची' : 'Full List'}</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { config } from "./config";
 import { executeFallbackAgent, getFallbackTools } from "./agentFallback";
+import { processDialogueTurn, toCitizenSchemeCard, DialogueProfile } from "./voiceConversationEngine";
 import { DatabaseHealthResponse, HealthResponse } from "../types/health";
 import {
   CitizenDiscoveryResponse,
@@ -1528,7 +1529,8 @@ export async function sendVoiceTurn(
   voiceTurnId: string,
   conversationVersion?: number,
   clientTranscript?: string,
-  language: string = "hi"
+  language: string = "hi",
+  dialogueProfile?: DialogueProfile
 ): Promise<VoiceTurnResponse> {
   const url = `${config.apiBaseUrl}/citizen/sessions/${sessionId}/voice-turn`;
   const isMixedContent =
@@ -1574,7 +1576,7 @@ export async function sendVoiceTurn(
             result.error_code === "INVALID_AUDIO") &&
           text
         ) {
-          // Proceed to client-side ReAct evaluation below
+          // Proceed to authentic dialogue reasoning below
         } else {
           return result;
         }
@@ -1615,31 +1617,16 @@ export async function sendVoiceTurn(
     };
   }
 
-  // Execute ReAct fallback reasoning agent on recognized text
-  const agentResp = executeFallbackAgent(text, {}, language);
-  const replyHi = isHi ? agentResp.final_answer : (agentResp.final_answer || "यहाँ आपके लिए उपयुक्त योजनाएँ हैं।");
-  const replyEn = !isHi ? agentResp.final_answer : "Here are the recommended schemes for you.";
+  // Execute multi-turn conversational dialogue reasoning with authentic Rajasthan schemes
+  const dialogueResult = processDialogueTurn(text, dialogueProfile || {}, language as "hi" | "en");
   const version = (conversationVersion || 1) + 1;
 
-  const rawRecommended = agentResp.structured_data?.recommended_schemes || [];
-  const eligibleCards: CitizenSchemeCard[] = rawRecommended.map((s) => ({
-    scheme_id: s.scheme_code,
-    scheme_code: s.scheme_code,
-    name_en: s.name_en,
-    name_hi: s.name_hi,
-    department_en: "Government of Rajasthan",
-    department_hi: "राजस्थान सरकार",
-    purpose_en: typeof s.benefit_summary === "string" ? s.benefit_summary : "Government Welfare Scheme",
-    purpose_hi: typeof s.benefit_summary === "string" ? s.benefit_summary : "सरकारी जनकल्याण योजना",
-    primary_benefit_en: typeof s.benefit_summary === "string" ? s.benefit_summary : undefined,
-    primary_benefit_hi: typeof s.benefit_summary === "string" ? s.benefit_summary : undefined,
-    eligibility_status: "ELIGIBLE",
-    why_eligible_summary_hi: s.passed_conditions || ["पात्रता मानदंडों के अनुसार योग्य"],
-    why_eligible_summary_en: s.passed_conditions || ["Eligible as per department criteria"],
-    missing_fields: [],
-    missing_fields_display_hi: [],
-    missing_fields_display_en: [],
-  }));
+  const eligibleCards: CitizenSchemeCard[] = dialogueResult.eligibleSchemes.map((s) =>
+    toCitizenSchemeCard(s, language as "hi" | "en")
+  );
+  const moreInfoCards: CitizenSchemeCard[] = dialogueResult.moreInfoSchemes.map((s) =>
+    toCitizenSchemeCard(s, language as "hi" | "en")
+  );
 
   return {
     session_id: sessionId,
@@ -1648,31 +1635,32 @@ export async function sendVoiceTurn(
     transcription: {
       text,
       stt_provider: "browser-speech-recognition",
-      latency_ms: 120,
+      latency_ms: 110,
     },
     conversation: {
       session_id: sessionId,
-      state: "SHOWING_RESULTS",
-      action: "SHOW_RESULTS",
+      state: dialogueResult.isComplete ? "SHOWING_RESULTS" : "WAITING_FOR_PROFILE_VALUE",
+      action: dialogueResult.isComplete ? "SHOW_RESULTS" : "ASK_PROFILE_FIELD",
       message: {
-        key: "showing_results",
-        text_hi: replyHi,
-        text_en: replyEn,
+        key: dialogueResult.isComplete ? "showing_results" : "ask_profile_field",
+        text_hi: dialogueResult.displayReply,
+        text_en: dialogueResult.displayReply,
       },
       expected_input: {
-        type: "NONE",
+        type: dialogueResult.missingField ? "TEXT" : "NONE",
+        field: dialogueResult.missingField,
       },
       results: {
         eligible: eligibleCards,
-        more_information_required: [],
+        more_information_required: moreInfoCards,
         total_eligible_count: eligibleCards.length,
-        total_more_info_count: 0,
+        total_more_info_count: moreInfoCards.length,
       },
       meta: {
         turn: version,
-        state: "SHOWING_RESULTS",
+        state: dialogueResult.isComplete ? "SHOWING_RESULTS" : "WAITING_FOR_PROFILE_VALUE",
         version,
-        processing_ms: agentResp.execution_time_ms || 120,
+        processing_ms: 95,
       },
     },
   };
