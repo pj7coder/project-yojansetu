@@ -9,6 +9,7 @@ import {
   replayVoiceResponse,
   ApiError,
 } from '@/lib/api';
+import { config } from '@/lib/config';
 import { useVoiceRecorder } from './useVoiceRecorder';
 import { VoiceStatus } from './VoiceStatus';
 import { VoiceControls } from './VoiceControls';
@@ -16,6 +17,7 @@ import { VoiceControls } from './VoiceControls';
 interface VoiceModeProps {
   sessionId: string;
   conversationVersion?: number;
+  currentConversation?: ConversationTurnResponse | null;
   lang?: 'hi' | 'en';
   onConversationResponse: (response: ConversationTurnResponse) => void;
   onSwitchToText: () => void;
@@ -26,6 +28,7 @@ interface VoiceModeProps {
 export function VoiceMode({
   sessionId,
   conversationVersion,
+  currentConversation,
   lang = 'hi',
   onConversationResponse,
   onSwitchToText,
@@ -38,9 +41,41 @@ export function VoiceMode({
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [activeConversation, setActiveConversation] = useState<ConversationTurnResponse | null>(
+    currentConversation || null
+  );
 
   const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
   const audioBlobUrlRef = useRef<string | null>(null);
+
+  // Sync prop changes into state
+  useEffect(() => {
+    if (currentConversation) {
+      setActiveConversation(currentConversation);
+    }
+  }, [currentConversation]);
+
+  // Resolves backend relative or absolute audio URLs to full fetchable backend URLs
+  const resolveAudioUrl = useCallback(
+    (rawUrl?: string, responseId?: string): string => {
+      if (sessionId && responseId) {
+        return getVoiceResponseAudioUrl(sessionId, responseId);
+      }
+      if (!rawUrl) return '';
+      if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://') || rawUrl.startsWith('blob:')) {
+        return rawUrl;
+      }
+      const baseUrl = config.apiBaseUrl.replace(/\/+$/, '');
+      if (rawUrl.startsWith('/api/v1/')) {
+        return `${baseUrl}${rawUrl.slice('/api/v1'.length)}`;
+      }
+      if (rawUrl.startsWith('/')) {
+        return `${baseUrl}${rawUrl}`;
+      }
+      return `${baseUrl}/${rawUrl}`;
+    },
+    [sessionId]
+  );
 
   // Stop audio playback cleanly
   const stopPlayback = useCallback(() => {
@@ -58,33 +93,46 @@ export function VoiceMode({
   }, []);
 
   // Play synthesized audio stream enforcing half-duplex rules
-  const playAudioStream = useCallback((audioUrl: string) => {
-    stopPlayback();
-
-    const audio = new Audio(audioUrl);
-    audioPlayerRef.current = audio;
-    setIsPlaying(true);
-    setTransportState('SPEAKING');
-
-    audio.onended = () => {
+  const playAudioStream = useCallback(
+    (audioUrl: string) => {
       stopPlayback();
-    };
 
-    audio.onerror = (err) => {
-      console.warn('Audio playback error:', err);
-      stopPlayback();
-      setFeedbackMessage(
-        isHi
-          ? 'ऑडियो प्लेबैक में समस्या आई। आप उत्तर स्क्रीन पर पढ़ सकते हैं।'
-          : 'Audio playback encountered an issue. You can read the response on screen.'
-      );
-    };
+      if (!audioUrl) {
+        setTransportState('READY');
+        return;
+      }
 
-    audio.play().catch((playErr) => {
-      console.warn('Browser prevented audio autoplay:', playErr);
-      stopPlayback();
-    });
-  }, [isHi, stopPlayback]);
+      const audio = new Audio(audioUrl);
+      audioPlayerRef.current = audio;
+      setIsPlaying(true);
+      setTransportState('SPEAKING');
+
+      audio.onended = () => {
+        stopPlayback();
+      };
+
+      audio.onerror = (err) => {
+        console.warn('Audio playback error:', err, 'URL:', audioUrl);
+        stopPlayback();
+        setFeedbackMessage(
+          isHi
+            ? 'ऑडियो प्लेबैक में समस्या आई। उत्तर नीचे स्क्रीन पर पढ़ सकते हैं।'
+            : 'Audio playback encountered an issue. You can read the response on screen.'
+        );
+      };
+
+      audio.play().catch((playErr) => {
+        console.warn('Browser prevented audio autoplay:', playErr);
+        stopPlayback();
+        setFeedbackMessage(
+          isHi
+            ? 'ब्राउज़र ने आवाज़ को स्वतः चलने से रोक दिया। सुनने के लिए "दोबारा सुनें" बटन दबाएँ।'
+            : 'Browser blocked audio autoplay. Click "Replay" to listen.'
+        );
+      });
+    },
+    [isHi, stopPlayback]
+  );
 
   // Voice Turn Submission Handler
   const handleRecordingComplete = useCallback(
@@ -102,7 +150,7 @@ export function VoiceMode({
           sessionId,
           audioBlob,
           voiceTurnId,
-          conversationVersion
+          activeConversation?.meta?.version ?? conversationVersion
         );
 
         // Update transcript if available
@@ -112,6 +160,7 @@ export function VoiceMode({
 
         // Forward structured conversation response to parent CitizenPage
         if (turnResult.conversation) {
+          setActiveConversation(turnResult.conversation);
           onConversationResponse(turnResult.conversation);
         }
 
@@ -121,8 +170,13 @@ export function VoiceMode({
         }
 
         // Play synthesized TTS audio if provided
-        if (turnResult.audio?.audio_url) {
-          playAudioStream(turnResult.audio.audio_url);
+        if (turnResult.audio) {
+          const streamUrl = resolveAudioUrl(turnResult.audio.audio_url, turnResult.audio.response_id);
+          if (streamUrl) {
+            playAudioStream(streamUrl);
+          } else {
+            setTransportState('READY');
+          }
         } else {
           setTransportState('READY');
         }
@@ -152,7 +206,15 @@ export function VoiceMode({
         }
       }
     },
-    [sessionId, conversationVersion, isHi, onConversationResponse, playAudioStream]
+    [
+      sessionId,
+      activeConversation,
+      conversationVersion,
+      isHi,
+      onConversationResponse,
+      playAudioStream,
+      resolveAudioUrl,
+    ]
   );
 
   // MediaRecorder hook
@@ -196,8 +258,11 @@ export function VoiceMode({
     try {
       setFeedbackMessage(null);
       const replay = await replayVoiceResponse(sessionId);
-      if (replay.audio?.audio_url) {
-        playAudioStream(replay.audio.audio_url);
+      if (replay.audio) {
+        const streamUrl = resolveAudioUrl(replay.audio.audio_url, replay.audio.response_id);
+        if (streamUrl) {
+          playAudioStream(streamUrl);
+        }
       }
     } catch (err: any) {
       console.warn('Voice replay failed:', err);
@@ -205,7 +270,7 @@ export function VoiceMode({
         isHi ? 'पुनः आवाज़ चलाने में असमर्थ।' : 'Unable to replay audio response.'
       );
     }
-  }, [sessionId, isPlaying, stopPlayback, playAudioStream, isHi]);
+  }, [sessionId, isPlaying, stopPlayback, playAudioStream, resolveAudioUrl, isHi]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -224,12 +289,12 @@ export function VoiceMode({
           </div>
           <div>
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">
-              {isHi ? 'योजनसेतु — आवाज़ मोड' : 'YojanSetu — Voice Mode'}
+              {isHi ? 'योजनसेतु — आवाज़ सहायक' : 'YojanSetu — Voice Assistant'}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               {isHi
-                ? 'ऑफ़लाइन हिंदी वाणी पहचान एवं उत्तर'
-                : 'Offline Hindi Speech Recognition & Synthesis'}
+                ? 'ऑफ़लाइन हिंदी वाणी पहचान एवं सुरक्षित उत्तर'
+                : 'Offline Vernacular Speech Recognition & Synthesis'}
             </p>
           </div>
         </div>
@@ -258,7 +323,7 @@ export function VoiceMode({
             <button
               type="button"
               onClick={onSwitchToText}
-              className="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow-sm transition-colors"
+              className="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer"
             >
               {isHi ? 'टेक्स्ट मोड में जाएँ' : 'Switch to Text'}
             </button>
@@ -270,22 +335,96 @@ export function VoiceMode({
       {errorMessage && (
         <div className="mb-4 p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
           <span>⚠️</span>
-          <span className="flex-1">{errorMessage}</span>
+          <span className="flex-1 font-medium">{errorMessage}</span>
+          <button
+            type="button"
+            onClick={() => setErrorMessage(null)}
+            className="text-rose-400 hover:text-rose-700 text-xs font-bold"
+          >
+            ✕
+          </button>
         </div>
       )}
 
       {feedbackMessage && (
         <div className="mb-4 p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 text-amber-800 dark:text-amber-200 text-xs flex items-center gap-2">
           <span>ℹ️</span>
-          <span className="flex-1">{feedbackMessage}</span>
+          <span className="flex-1 font-medium">{feedbackMessage}</span>
+          <button
+            type="button"
+            onClick={() => setFeedbackMessage(null)}
+            className="text-amber-500 hover:text-amber-800 text-xs font-bold"
+          >
+            ✕
+          </button>
         </div>
       )}
 
       {/* Transcript feedback if available */}
       {lastTranscript && (
-        <div className="mb-6 px-4 py-3 rounded-2xl bg-indigo-500/5 dark:bg-indigo-500/10 border border-indigo-200/50 dark:border-indigo-800/40 text-xs text-indigo-900 dark:text-indigo-200 flex items-center gap-2">
+        <div className="mb-4 px-4 py-3 rounded-2xl bg-indigo-500/5 dark:bg-indigo-500/10 border border-indigo-200/50 dark:border-indigo-800/40 text-xs text-indigo-900 dark:text-indigo-200 flex items-center gap-2">
           <span className="font-semibold">{isHi ? 'मैंने सुना:' : 'Heard:'}</span>
-          <span className="italic">“{lastTranscript}”</span>
+          <span className="italic font-medium">“{lastTranscript}”</span>
+        </div>
+      )}
+
+      {/* Assistant Voice Response Card */}
+      {activeConversation?.message && (
+        <div
+          className={`mb-6 p-5 rounded-2xl transition-all border ${
+            isPlaying
+              ? 'bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700/60 shadow-md shadow-emerald-500/10 ring-2 ring-emerald-500/20'
+              : 'bg-white dark:bg-slate-800/90 border-slate-200/80 dark:border-slate-700/60 shadow-sm'
+          }`}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <span className="text-base">{isPlaying ? '🔊' : '🏛️'}</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                {isHi ? 'योजनसेतु का उत्तर' : "YojanSetu's Response"}
+              </span>
+              {isPlaying && (
+                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/60 px-2 py-0.5 rounded-full animate-pulse">
+                  <span>●</span> {isHi ? 'बोल रहा है…' : 'Speaking…'}
+                </span>
+              )}
+            </div>
+
+            {/* Replay mini button */}
+            <button
+              type="button"
+              onClick={handleReplay}
+              disabled={isPlaying || isRecording}
+              className="text-xs font-medium text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 flex items-center gap-1 cursor-pointer disabled:opacity-40"
+              title={isHi ? 'दोबारा सुनें' : 'Listen again'}
+            >
+              <span>🔊</span>
+              <span>{isHi ? 'सुनें' : 'Listen'}</span>
+            </button>
+          </div>
+
+          <p className="text-sm font-medium text-slate-800 dark:text-slate-100 leading-relaxed">
+            {isHi ? activeConversation.message.text_hi : activeConversation.message.text_en}
+          </p>
+
+          {/* If Eligible Schemes Discovered */}
+          {activeConversation.results?.eligible && activeConversation.results.eligible.length > 0 && (
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap items-center justify-between gap-2">
+              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                🎉{' '}
+                {isHi
+                  ? `${activeConversation.results.eligible.length} योजनाएँ पात्र पाई गईं!`
+                  : `${activeConversation.results.eligible.length} Eligible schemes found!`}
+              </span>
+              <button
+                type="button"
+                onClick={onSwitchToText}
+                className="text-xs font-semibold px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors cursor-pointer"
+              >
+                {isHi ? 'योजनाएँ देखें' : 'View Schemes'}
+              </button>
+            </div>
+          )}
         </div>
       )}
 

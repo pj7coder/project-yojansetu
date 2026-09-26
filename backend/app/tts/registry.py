@@ -7,6 +7,7 @@ bounded concurrency guards for inference safety.
 
 import asyncio
 import logging
+from pathlib import Path
 from typing import Dict, List, Optional
 
 from app.config.tts import get_tts_settings
@@ -18,16 +19,28 @@ from app.tts.schemas import TTSErrorCode
 
 logger = logging.getLogger(__name__)
 
+
+def _get_default_mms_path() -> str:
+    candidate_roots = [
+        Path.cwd(),
+        Path.cwd() / "backend",
+        Path(__file__).resolve().parents[1],
+        Path(__file__).resolve().parents[2],
+        Path(__file__).resolve().parents[3],
+    ]
+    for root in candidate_roots:
+        cand = root / "storage" / "models" / "mms_tts_hin"
+        if (cand / "config.json").is_file():
+            return str(cand.resolve())
+    return "facebook/mms-tts-hin"
+
+
 # Strict allowlist mapping of provider names to factory constructors
 ALLOWLISTED_PROVIDERS = {
-    "mms": lambda: MMSHindiTTSProvider(
-        model_name="storage/models/mms_tts_hin" if Path("storage/models/mms_tts_hin").exists() else "facebook/mms-tts-hin"
-    ),
+    "mms": lambda: MMSHindiTTSProvider(model_name=_get_default_mms_path()),
     "piper": lambda: PiperTTSProvider(),
     "mock": lambda: MockTTSProvider(),
 }
-
-from pathlib import Path
 
 
 class TTSRegistry:

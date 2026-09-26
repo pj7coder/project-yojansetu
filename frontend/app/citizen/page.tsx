@@ -197,6 +197,30 @@ export default function CitizenPage() {
     restoreSession();
   }, [applyConversationResponse]);
 
+  // Ensure active session when voice mode is selected
+  useEffect(() => {
+    if (activeMode === 'VOICE' && !sessionId && !isProcessing) {
+      const initVoiceSession = async () => {
+        try {
+          setIsProcessing(true);
+          const s = await createCitizenSession();
+          setSessionId(s.session_id);
+          sessionStorage.setItem(STORAGE_SESSION_KEY, s.session_id);
+        } catch (err: any) {
+          console.error('Auto voice session creation failed:', err);
+          setErrorMessage(
+            isHi
+              ? 'आवाज़ सत्र प्रारंभ करने में समस्या आई। कृपया पुनः प्रयास करें।'
+              : 'Failed to initialize voice session. Please try again.'
+          );
+        } finally {
+          setIsProcessing(false);
+        }
+      };
+      initVoiceSession();
+    }
+  }, [activeMode, sessionId, isProcessing, isHi]);
+
   // Execute ReAct Agent Query
   const handleRunAgent = async (customQuery?: string, customContext?: Record<string, any>) => {
     const query = (customQuery || agentQueryText || '').trim();
@@ -402,10 +426,20 @@ export default function CitizenPage() {
               setActiveMode('VOICE');
               if (!sessionId) {
                 try {
+                  setIsProcessing(true);
                   const s = await createCitizenSession();
                   setSessionId(s.session_id);
                   sessionStorage.setItem(STORAGE_SESSION_KEY, s.session_id);
-                } catch {}
+                } catch (err: any) {
+                  console.error('Failed to create voice session:', err);
+                  setErrorMessage(
+                    isHi
+                      ? 'आवाज़ सत्र प्रारंभ करने में समस्या आई। कृपया पुनः प्रयास करें।'
+                      : 'Failed to initialize voice session. Please try again.'
+                  );
+                } finally {
+                  setIsProcessing(false);
+                }
               }
             }}
             className={`flex-1 min-w-[110px] py-2.5 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
@@ -822,15 +856,25 @@ export default function CitizenPage() {
         {/* ------------------------------------------------------------- */}
         {/* MODE 4: VOICE ASSISTANT (Bilingual Voice Assistant)           */}
         {/* ------------------------------------------------------------- */}
-        {activeMode === 'VOICE' && sessionId && (
-          <VoiceMode
-            sessionId={sessionId}
-            conversationVersion={currentConversation?.meta?.version}
-            lang={language}
-            onConversationResponse={applyConversationResponse}
-            onSwitchToText={() => setActiveMode('AGENT')}
-            onStartOver={handleStartOver}
-          />
+        {activeMode === 'VOICE' && (
+          sessionId ? (
+            <VoiceMode
+              sessionId={sessionId}
+              conversationVersion={currentConversation?.meta?.version}
+              currentConversation={currentConversation}
+              lang={language}
+              onConversationResponse={applyConversationResponse}
+              onSwitchToText={() => setActiveMode('AGENT')}
+              onStartOver={handleStartOver}
+            />
+          ) : (
+            <div className="w-full bg-white dark:bg-slate-900 rounded-3xl p-12 border border-slate-200 dark:border-slate-800 text-center space-y-4 shadow-sm">
+              <div className="w-10 h-10 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto" />
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                {isHi ? 'आवाज़ सत्र प्रारंभ हो रहा है…' : 'Initializing voice session…'}
+              </p>
+            </div>
+          )
         )}
 
         {/* MODAL 1: CITATION DRAWER (Official Gazette Evidence) */}

@@ -1386,7 +1386,14 @@ export async function sendVoiceTurn(
 ): Promise<VoiceTurnResponse> {
   const url = `${config.apiBaseUrl}/citizen/sessions/${sessionId}/voice-turn`;
   const formData = new FormData();
-  formData.append("audio", audioBlob, "recording.webm");
+  const ext = audioBlob.type.includes("mp4")
+    ? "mp4"
+    : audioBlob.type.includes("ogg")
+    ? "ogg"
+    : audioBlob.type.includes("wav")
+    ? "wav"
+    : "webm";
+  formData.append("audio", audioBlob, `recording.${ext}`);
   formData.append("voice_turn_id", voiceTurnId);
   if (conversationVersion !== undefined) {
     formData.append("conversation_version", conversationVersion.toString());

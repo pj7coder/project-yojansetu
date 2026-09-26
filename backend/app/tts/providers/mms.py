@@ -18,6 +18,11 @@ from app.tts.interface import TextToSpeechProvider
 from app.tts.schemas import TTSErrorCode, TTSResult
 from app.tts.temp_storage import get_tts_temp_manager
 
+try:
+    import torch
+except Exception:
+    torch = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -64,22 +69,41 @@ class MMSHindiTTSProvider(TextToSpeechProvider):
             MMSHindiTTSProvider._cached_available = False
         return MMSHindiTTSProvider._cached_available
 
-
     def is_loaded(self) -> bool:
         return self._model is not None and self._tokenizer is not None
+
+    def _resolve_model_target(self) -> str:
+        local_path = Path(self._model_name)
+        if local_path.is_dir() and (local_path / "config.json").is_file():
+            return str(local_path.resolve())
+
+        candidate_roots = [
+            Path.cwd(),
+            Path.cwd() / "backend",
+            Path(__file__).resolve().parents[2],
+            Path(__file__).resolve().parents[3],
+            Path(__file__).resolve().parents[4],
+        ]
+        for root in candidate_roots:
+            cand = root / "storage" / "models" / "mms_tts_hin"
+            if (cand / "config.json").is_file():
+                return str(cand.resolve())
+
+        return self._model_name
 
     def load_model(self) -> None:
         """Loads MMS VITS model and tokenizer onto target device."""
         if self.is_loaded():
             return
 
-        logger.info(f"Loading MMS-TTS model {self._model_name} on {self._device}...")
+        model_target = self._resolve_model_target()
+        logger.info(f"Loading MMS-TTS model '{model_target}' on {self._device}...")
         t0 = time.perf_counter()
         try:
             from transformers import AutoTokenizer, VitsModel
 
-            self._tokenizer = AutoTokenizer.from_pretrained(self._model_name)
-            self._model = VitsModel.from_pretrained(self._model_name)
+            self._tokenizer = AutoTokenizer.from_pretrained(model_target)
+            self._model = VitsModel.from_pretrained(model_target)
             self._model.to(self._device)
             self._model.eval()
 
@@ -98,7 +122,7 @@ class MMSHindiTTSProvider(TextToSpeechProvider):
         self._model = None
         self._tokenizer = None
         gc.collect()
-        if torch.cuda.is_available():
+        if torch is not None and hasattr(torch, "cuda") and torch.cuda.is_available():
             torch.cuda.empty_cache()
         logger.info("MMS-TTS model unloaded from memory.")
 
@@ -121,7 +145,10 @@ class MMSHindiTTSProvider(TextToSpeechProvider):
             inputs = self._tokenizer(text, return_tensors="pt")
             inputs = {k: v.to(self._device) for k, v in inputs.items()}
 
-            with torch.no_grad():
+            if torch is not None:
+                with torch.no_grad():
+                    output = self._model(**inputs).waveform
+            else:
                 output = self._model(**inputs).waveform
 
             waveform = output.squeeze().cpu().numpy()
