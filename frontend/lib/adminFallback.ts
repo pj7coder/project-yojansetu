@@ -18,7 +18,15 @@ import {
   WatchFolderStatus,
   SchemeDetailResponse,
 } from "../types/admin";
-import { ReviewQueueResponse, ReviewSessionDetail } from "../types/review";
+import {
+  ReviewQueueResponse,
+  ReviewSessionDetail,
+  HumanReviewItem,
+  ConflictItem,
+  ReviewAuditEvent,
+  ItemDecisionPayload,
+  ConflictResolutionPayload,
+} from "../types/review";
 
 export function getFallbackAdminOverview(): AdminOverviewResponse {
   return {
@@ -657,14 +665,14 @@ export function getFallbackAdminConflicts(): AdminConflictListResponse {
         id: "conf_sample_1",
         conflict_type: "ELIGIBILITY_RULE_CONFLICT",
         severity: "CRITICAL",
-        title: "Verification Issue: eligibility.root_rule.group_type",
-        description: "ELIGIBILITY verification requires officer resolution. Risk: CRITICAL, Result: Unconfirmed",
-        scheme_id: "draft_01",
-        scheme_name: "Pension Scheme Draft",
-        document_id: "doc_01",
+        title: "Verification Issue: eligibility.family.definition",
+        description: "Page 4 states entire enrolled Jan Aadhaar family is covered; amendment on page 9 notes sub-ceiling on married adult children.",
+        scheme_id: "32de7937-11bb-4cb0-90c6-bd414550ef58",
+        scheme_name: "Mukhyamantri Ayushman Arogya Yojana",
+        document_id: "5bcd06f1-636b-4276-a227-da7dfa2cc9de",
         source_count: 1,
         status: "PENDING_OFFICER_REVIEW",
-        link: "/admin/review",
+        link: "/admin/review/32de7937-11bb-4cb0-90c6-bd414550ef58",
         created_at: new Date().toISOString(),
       },
     ],
@@ -712,28 +720,860 @@ export function getFallbackReviewQueue(): ReviewQueueResponse {
   return {
     items: [
       {
-        draft_id: "draft_fallback_1",
-        internal_scheme_code: "IND-AGRI-PMKISAN",
-        scheme_name: "Pradhan Mantri Kisan Samman Nidhi",
-        department_name: "Ministry of Agriculture & Farmers Welfare",
-        source_filename: "PMKISAN_Guidelines.pdf",
-        document_id: "doc_01",
-        draft_status: "READY_FOR_HUMAN_REVIEW",
-        review_status: "NOT_STARTED",
+        draft_id: "32de7937-11bb-4cb0-90c6-bd414550ef58",
+        internal_scheme_code: "RJ-DRAFT-AA68443B",
+        scheme_name: "Mukhyamantri Ayushman Arogya Yojana",
+        department_name: "Medical, Health and Family Welfare Department",
+        source_filename: "Raj_Sahay_Healthcare_Agent_Ready_v3_Audited.xlsx",
+        document_id: "5bcd06f1-636b-4276-a227-da7dfa2cc9de",
+        draft_status: "IN_HUMAN_REVIEW",
+        review_status: "IN_PROGRESS",
+        critical_issues: 0,
+        contradicted_facts: 0,
+        insufficient_facts: 0,
+        ocr_risks: 0,
+        conflicts: 1,
+        total_facts: 37,
+        resolved_facts: 0,
+        last_updated: "2026-09-26T21:43:29.000Z",
+      },
+      {
+        draft_id: "bdbe3313-9686-4a0e-8723-42de6ab01bc0",
+        internal_scheme_code: "RJ-REV-BDBE3313",
+        scheme_name: "राजस्थान वृद्धावस्था पेंशन योजना",
+        department_name: "सामाजिक न्याय एवं अधिकारिता विभाग",
+        source_filename: "rajasthan_pension_guidelines.pdf",
+        document_id: "7912570f-a84c-4e51-891b-6e425b0c16a3",
+        draft_status: "IN_HUMAN_REVIEW",
+        review_status: "IN_PROGRESS",
         critical_issues: 0,
         contradicted_facts: 0,
         insufficient_facts: 0,
         ocr_risks: 0,
         conflicts: 0,
-        total_facts: 18,
-        resolved_facts: 18,
-        last_updated: new Date().toISOString(),
+        total_facts: 5,
+        resolved_facts: 8,
+        last_updated: "2026-09-26T21:43:28.558Z",
+      },
+      {
+        draft_id: "711b5499-5371-484c-b71d-ca8e7f38735d",
+        internal_scheme_code: "RJ-REV-711B5499",
+        scheme_name: "राजस्थान वृद्धावस्था पेंशन योजना",
+        department_name: "सामाजिक न्याय एवं अधिकारिता विभाग",
+        source_filename: "rajasthan_pension_guidelines.pdf",
+        document_id: "6e2c45c8-2eff-48a8-a499-48058d2f2553",
+        draft_status: "IN_HUMAN_REVIEW",
+        review_status: "IN_PROGRESS",
+        critical_issues: 1,
+        contradicted_facts: 0,
+        insufficient_facts: 0,
+        ocr_risks: 0,
+        conflicts: 0,
+        total_facts: 5,
+        resolved_facts: 8,
+        last_updated: "2026-09-26T21:43:28.167Z",
+      },
+      {
+        draft_id: "33407d9a-dee9-4af0-abff-774ed0a16514",
+        internal_scheme_code: "RJ-REV-33407D9A",
+        scheme_name: "राजस्थान वृद्धावस्था पेंशन योजना",
+        department_name: "सामाजिक न्याय एवं अधिकारिता विभाग",
+        source_filename: "rajasthan_pension_guidelines.pdf",
+        document_id: "6e2c45c8-2eff-48a8-a499-48058d2f2553",
+        draft_status: "IN_HUMAN_REVIEW",
+        review_status: "IN_PROGRESS",
+        critical_issues: 0,
+        contradicted_facts: 0,
+        insufficient_facts: 0,
+        ocr_risks: 0,
+        conflicts: 0,
+        total_facts: 5,
+        resolved_facts: 0,
+        last_updated: "2026-09-26T21:43:28.107Z",
+      },
+      {
+        draft_id: "dd5da4ee-f806-4652-9c30-90cb8b1f277f",
+        internal_scheme_code: "RJ-REV-DD5DA4EE",
+        scheme_name: "राजस्थान वृद्धावस्था पेंशन योजना",
+        department_name: "सामाजिक न्याय एवं अधिकारिता विभाग",
+        source_filename: "rajasthan_pension_guidelines.pdf",
+        document_id: "04506837-0f6e-44c0-8fe7-0d0980c96b4f",
+        draft_status: "IN_HUMAN_REVIEW",
+        review_status: "IN_PROGRESS",
+        critical_issues: 0,
+        contradicted_facts: 0,
+        insufficient_facts: 0,
+        ocr_risks: 0,
+        conflicts: 0,
+        total_facts: 5,
+        resolved_facts: 0,
+        last_updated: "2026-09-26T21:43:28.107Z",
+      },
+      {
+        draft_id: "d1fa7497-d00b-40e8-bc54-dff88e2a8e92",
+        internal_scheme_code: "RJ-REV-D1FA7497",
+        scheme_name: "राजस्थान वृद्धावस्था पेंशन योजना",
+        department_name: "सामाजिक न्याय एवं अधिकारिता विभाग",
+        source_filename: "rajasthan_pension_guidelines.pdf",
+        document_id: "fa047b50-4164-419f-aa58-94f74a191a2f",
+        draft_status: "IN_HUMAN_REVIEW",
+        review_status: "IN_PROGRESS",
+        critical_issues: 0,
+        contradicted_facts: 0,
+        insufficient_facts: 0,
+        ocr_risks: 0,
+        conflicts: 0,
+        total_facts: 5,
+        resolved_facts: 0,
+        last_updated: "2026-09-26T21:43:28.040Z",
+      },
+      {
+        draft_id: "09454c26-8fc8-41b5-82db-080be32c983b",
+        internal_scheme_code: "RJ-REV-09454C26",
+        scheme_name: "राजस्थान वृद्धावस्था पेंशन योजना",
+        department_name: "सामाजिक न्याय एवं अधिकारिता विभाग",
+        source_filename: "rajasthan_pension_guidelines.pdf",
+        document_id: "41d275da-1f03-429e-81d4-55d01ed42022",
+        draft_status: "IN_HUMAN_REVIEW",
+        review_status: "IN_PROGRESS",
+        critical_issues: 0,
+        contradicted_facts: 0,
+        insufficient_facts: 0,
+        ocr_risks: 0,
+        conflicts: 0,
+        total_facts: 5,
+        resolved_facts: 0,
+        last_updated: "2026-09-26T21:43:27.976Z",
+      },
+      {
+        draft_id: "75653309-1711-4a83-88b5-e3f111496382",
+        internal_scheme_code: "RJ-REV-75653309",
+        scheme_name: "राजस्थान वृद्धावस्था पेंशन योजना",
+        department_name: "सामाजिक न्याय एवं अधिकारिता विभाग",
+        source_filename: "rajasthan_pension_guidelines.pdf",
+        document_id: "8ed37fc6-0656-46a4-b013-3788dfc58a25",
+        draft_status: "EVIDENCE_REVIEW_REQUIRED",
+        review_status: "IN_PROGRESS",
+        critical_issues: 22,
+        contradicted_facts: 0,
+        insufficient_facts: 8,
+        ocr_risks: 0,
+        conflicts: 0,
+        total_facts: 8,
+        resolved_facts: 1,
+        last_updated: "2026-09-26T21:43:27.842Z",
+      },
+      {
+        draft_id: "c36f1d17-6ff8-4f13-b485-789dce75d764",
+        internal_scheme_code: "RJ-REV-C36F1D17",
+        scheme_name: "राजस्थान वृद्धावस्था पेंशन योजना",
+        department_name: "सामाजिक न्याय एवं अधिकारिता विभाग",
+        source_filename: "rajasthan_pension_guidelines.pdf",
+        document_id: "61120855-72a0-458f-a246-820526c7e970",
+        draft_status: "IN_HUMAN_REVIEW",
+        review_status: "IN_PROGRESS",
+        critical_issues: 0,
+        contradicted_facts: 0,
+        insufficient_facts: 0,
+        ocr_risks: 0,
+        conflicts: 0,
+        total_facts: 5,
+        resolved_facts: 1,
+        last_updated: "2026-09-26T21:43:03.946Z",
+      },
+      {
+        draft_id: "e3038635-c043-48d1-9334-e33d9183a101",
+        internal_scheme_code: "RJ-REV-E3038635",
+        scheme_name: "राजस्थान वृद्धावस्था पेंशन योजना",
+        department_name: "सामाजिक न्याय एवं अधिकारिता विभाग",
+        source_filename: "rajasthan_pension_guidelines.pdf",
+        document_id: "e7235bba-5ba5-4174-97f9-dd6faa2b054e",
+        draft_status: "IN_HUMAN_REVIEW",
+        review_status: "IN_PROGRESS",
+        critical_issues: 0,
+        contradicted_facts: 0,
+        insufficient_facts: 0,
+        ocr_risks: 0,
+        conflicts: 0,
+        total_facts: 5,
+        resolved_facts: 1,
+        last_updated: "2026-09-26T21:43:03.777Z",
+      },
+      {
+        draft_id: "c53c7c30-38eb-4f41-9b35-822c2bd3d5ba",
+        internal_scheme_code: "RJ-REV-C53C7C30",
+        scheme_name: "राजस्थान वृद्धावस्था पेंशन योजना",
+        department_name: "सामाजिक न्याय एवं अधिकारिता विभाग",
+        source_filename: "rajasthan_pension_guidelines.pdf",
+        document_id: "716d48a4-5207-450d-9b07-1d4eb3a3ff34",
+        draft_status: "IN_HUMAN_REVIEW",
+        review_status: "IN_PROGRESS",
+        critical_issues: 0,
+        contradicted_facts: 0,
+        insufficient_facts: 0,
+        ocr_risks: 0,
+        conflicts: 0,
+        total_facts: 5,
+        resolved_facts: 0,
+        last_updated: "2026-09-26T21:43:03.648Z",
       },
     ],
     total: 11,
     page: 1,
     page_size: 25,
   };
+}
+
+// Local in-memory store for fallback review session modifications
+const fallbackReviewStore: Record<string, ReviewSessionDetail> = {};
+
+export function getFallbackReviewDetail(draftId?: string): ReviewSessionDetail {
+  const targetId =
+    draftId && draftId !== "undefined"
+      ? draftId
+      : "32de7937-11bb-4cb0-90c6-bd414550ef58";
+
+  if (fallbackReviewStore[targetId]) {
+    return fallbackReviewStore[targetId];
+  }
+
+  const isPension =
+    targetId.startsWith("RJ-REV") ||
+    targetId.includes("pension") ||
+    targetId === "bdbe3313-9686-4a0e-8723-42de6ab01bc0" ||
+    targetId === "711b5499-5371-484c-b71d-ca8e7f38735d" ||
+    targetId === "33407d9a-dee9-4af0-abff-774ed0a16514" ||
+    targetId === "dd5da4ee-f806-4652-9c30-90cb8b1f277f" ||
+    targetId === "d1fa7497-d00b-40e8-bc54-dff88e2a8e92" ||
+    targetId === "09454c26-8fc8-41b5-82db-080be32c983b" ||
+    targetId === "75653309-1711-4a83-88b5-e3f111496382" ||
+    targetId === "c36f1d17-6ff8-4f13-b485-789dce75d764" ||
+    targetId === "e3038635-c043-48d1-9334-e33d9183a101" ||
+    targetId === "c53c7c30-38eb-4f41-9b35-822c2bd3d5ba";
+
+  const schemeName = isPension
+    ? "राजस्थान वृद्धावस्था पेंशन योजना"
+    : "Mukhyamantri Ayushman Arogya Yojana";
+  const deptName = isPension
+    ? "सामाजिक न्याय एवं अधिकारिता विभाग"
+    : "Medical, Health and Family Welfare Department";
+  const internalCode = isPension
+    ? `RJ-REV-${targetId.slice(0, 8).toUpperCase()}`
+    : "RJ-DRAFT-AA68443B";
+  const docId = isPension
+    ? "6e2c45c8-2eff-48a8-a499-48058d2f2553"
+    : "5bcd06f1-636b-4276-a227-da7dfa2cc9de";
+  const sessionId = `session_${targetId.slice(0, 8)}`;
+
+  const items: HumanReviewItem[] = isPension
+    ? [
+        {
+          id: `item_${targetId}_1`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-PENS-001",
+          field_path: "identity.official_name_raw",
+          item_type: "IDENTITY",
+          risk_level: "NORMAL",
+          statement: "योजना का आधिकारिक नाम 'राजस्थान वृद्धावस्था पेंशन योजना' है।",
+          original_value_json: { name: "राजस्थान वृद्धावस्था पेंशन योजना" },
+          current_value_json: { name: "राजस्थान वृद्धावस्था पेंशन योजना" },
+          raw_text: "राजस्थान वृद्धावस्था पेंशन योजना",
+          evidence_refs: ["p1_b1"],
+          evidence_text: "राजस्थान सरकार, सामाजिक न्याय एवं अधिकारिता विभाग - वृद्धावस्था पेंशन नियम",
+          page_number: 1,
+          block_id: "p1_b1",
+          decision: "APPROVED",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: "DEV_REVIEWER",
+        },
+        {
+          id: `item_${targetId}_2`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-PENS-002",
+          field_path: "eligibility.age.female_min",
+          item_type: "ELIGIBILITY",
+          risk_level: "NORMAL",
+          statement: "महिला आवेदकों हेतु न्यूनतम आयु सीमा 55 वर्ष है।",
+          original_value_json: { min_age: 55, gender: "FEMALE" },
+          current_value_json: { min_age: 55, gender: "FEMALE" },
+          raw_text: "महिला की आयु 55 वर्ष या अधिक हो।",
+          evidence_refs: ["p2_b3"],
+          evidence_text: "खंड 4(क): महिला आवेदक की न्यूनतम आयु 55 वर्ष पूर्ण होनी आवश्यक है।",
+          page_number: 2,
+          block_id: "p2_b3",
+          decision: "PENDING",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+        },
+        {
+          id: `item_${targetId}_3`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-PENS-003",
+          field_path: "eligibility.age.male_min",
+          item_type: "ELIGIBILITY",
+          risk_level: "NORMAL",
+          statement: "पुरुष आवेदकों हेतु न्यूनतम आयु सीमा 58 वर्ष है।",
+          original_value_json: { min_age: 58, gender: "MALE" },
+          current_value_json: { min_age: 58, gender: "MALE" },
+          raw_text: "पुरुष की आयु 58 वर्ष या अधिक हो।",
+          evidence_refs: ["p2_b4"],
+          evidence_text: "खंड 4(ख): पुरुष आवेदक की न्यूनतम आयु 58 वर्ष अथवा अधिक हो।",
+          page_number: 2,
+          block_id: "p2_b4",
+          decision: "PENDING",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+        },
+        {
+          id: `item_${targetId}_4`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-PENS-004",
+          field_path: "eligibility.income.max_annual",
+          item_type: "ELIGIBILITY",
+          risk_level: "HIGH",
+          statement: "आवेदक की वार्षिक कुल पारिवारिक आय ₹48,000 से अधिक न हो। BPL परिवार हेतु आय सीमा में छूट।",
+          original_value_json: { max_income: 48000, bpl_exempt: true },
+          current_value_json: { max_income: 48000, bpl_exempt: true },
+          raw_text: "पारिवारिक वार्षिक आय 48,000/- से अधिक न हो।",
+          evidence_refs: ["p3_b1"],
+          evidence_text: "खंड 5: संपूर्ण स्रोतों से वार्षिक आय 48,000 से कम होनी चाहिए; बीपीएल/अंत्योदय कार्डधारक छूट प्राप्त हैं।",
+          page_number: 3,
+          block_id: "p3_b1",
+          decision: "PENDING",
+          verification_result: "CONTRADICTED",
+          verification_reason_code: "AMENDMENT_CEILING_REVISED",
+          ocr_risk: false,
+        },
+        {
+          id: `item_${targetId}_5`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-PENS-005",
+          field_path: "benefits.financial.monthly_pension",
+          item_type: "BENEFIT",
+          risk_level: "NORMAL",
+          statement: "मासिक पेंशन राशि ₹1,000 से ₹1,500 आयु वर्ग के आधार पर प्रत्यक्ष बैंक खाते (DBT) में देय।",
+          original_value_json: { amount: 1000, currency: "INR", frequency: "MONTHLY" },
+          current_value_json: { amount: 1000, currency: "INR", frequency: "MONTHLY" },
+          raw_text: "न्यूनतम ₹1,000 प्रतिमाह पेंशन सीधे बैंक खाते में हस्तांतरित होगी।",
+          evidence_refs: ["p3_b7"],
+          evidence_text: "राजस्थान न्यूनतम आय गारंटी अधिनियम के तहत 15% वार्षिक वृद्धि सहित ₹1000 प्रतिमाह न्यूनतम।",
+          page_number: 3,
+          block_id: "p3_b7",
+          decision: "APPROVED",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: "DEV_REVIEWER",
+        },
+        {
+          id: `item_${targetId}_6`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-PENS-006",
+          field_path: "exclusions.pensioners",
+          item_type: "EXCLUSION",
+          risk_level: "NORMAL",
+          statement: "केंद्र या राज्य सरकार से अन्य किसी प्रकार की नियमित सेवा पेंशन प्राप्तकर्ता अपात्र हैं।",
+          original_value_json: { excluded: "Recipients of government civil/service pensions" },
+          current_value_json: { excluded: "Recipients of government civil/service pensions" },
+          raw_text: "शासकीय पेंशनभोगी परिवार इस योजना हेतु अपात्र होंगे।",
+          evidence_refs: ["p4_b2"],
+          evidence_text: "खंड 7(अ): यदि आवेदक किसी अन्य सरकारी स्रोत से पेंशन प्राप्त कर रहा है तो वह इस योजना का पात्र नहीं होगा।",
+          page_number: 4,
+          block_id: "p4_b2",
+          decision: "PENDING",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+        },
+        {
+          id: `item_${targetId}_7`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-PENS-007",
+          field_path: "documents.required.janaadhaar",
+          item_type: "DOCUMENT",
+          risk_level: "NORMAL",
+          statement: "जनाधार कार्ड / आधार कार्ड तथा बैंक खाता विवरण अनिवार्य दस्तावेज हैं।",
+          original_value_json: { documents: ["Jan Aadhaar Card", "Aadhaar Card", "Bank Passbook"], mandatory: true },
+          current_value_json: { documents: ["Jan Aadhaar Card", "Aadhaar Card", "Bank Passbook"], mandatory: true },
+          raw_text: "जनाधार पोर्टल के माध्यम से ऑनलाइन सत्यापन अनिवार्य।",
+          evidence_refs: ["p5_b1"],
+          evidence_text: "खंड 9: आवेदन हेतु जनाधार संख्या एवं बैंक खाते का एक्टिव होना अनिवार्य।",
+          page_number: 5,
+          block_id: "p5_b1",
+          decision: "PENDING",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+        },
+        {
+          id: `item_${targetId}_8`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-PENS-008",
+          field_path: "application.process.channels",
+          item_type: "APPLICATION",
+          risk_level: "NORMAL",
+          statement: "ई-मित्र केंद्र (E-Mitra) या जन सूचना पोर्टल (SSO) के माध्यम से ऑनलाइन आवेदन प्रक्रिया।",
+          original_value_json: { channels: ["EMITRA", "SSO_ONLINE"], portal: "https://ssp.rajasthan.gov.in" },
+          current_value_json: { channels: ["EMITRA", "SSO_ONLINE"], portal: "https://ssp.rajasthan.gov.in" },
+          raw_text: "आवेदन निकटतम ई-मित्र अथवा ऑनलाइन एसएसपी पोर्टल द्वारा।",
+          evidence_refs: ["p6_b2"],
+          evidence_text: "प्रक्रिया: नागरिक स्वयं अथवा ई-मित्र के माध्यम से जनाधार डेटा द्वारा आवेदन कर सकते हैं।",
+          page_number: 6,
+          block_id: "p6_b2",
+          decision: "EDITED",
+          edit_reason: "Verified official URL update to ssp.rajasthan.gov.in",
+          reviewer_comment: "Updated application portal link to match current SSP system.",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: "DEV_REVIEWER",
+        },
+      ]
+    : [
+        {
+          id: `item_${targetId}_1`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-AA68443B-001",
+          field_path: "identity.official_name_raw",
+          item_type: "IDENTITY",
+          risk_level: "NORMAL",
+          statement: "Official scheme name is 'Mukhyamantri Ayushman Arogya Yojana'.",
+          original_value_json: { name: "Mukhyamantri Ayushman Arogya Yojana" },
+          current_value_json: { name: "Mukhyamantri Ayushman Arogya Yojana" },
+          raw_text: "Mukhyamantri Ayushman Arogya Yojana",
+          evidence_refs: ["p1_b1"],
+          evidence_text: "Official scheme notification and operational guidelines for Ayushman Arogya Yojana.",
+          page_number: 1,
+          block_id: "p1_b1",
+          decision: "APPROVED",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: "DEV_REVIEWER",
+        },
+        {
+          id: `item_${targetId}_2`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-AA68443B-002",
+          field_path: "eligibility.residence.state",
+          item_type: "ELIGIBILITY",
+          risk_level: "NORMAL",
+          statement: "Applicant must be a permanent resident of Rajasthan or enrolled in Jan Aadhaar database.",
+          original_value_json: { state_criteria: "Rajasthan permanent residents / Jan Aadhaar enrolled" },
+          current_value_json: { state_criteria: "Rajasthan permanent residents / Jan Aadhaar enrolled" },
+          raw_text: "All families registered under Jan Aadhaar card in Rajasthan.",
+          evidence_refs: ["p2_b1"],
+          evidence_text: "Clause 3: All families enrolled under Jan Aadhaar scheme are covered under the entitlement criteria.",
+          page_number: 2,
+          block_id: "p2_b1",
+          decision: "APPROVED",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: "DEV_REVIEWER",
+        },
+        {
+          id: `item_${targetId}_3`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-AA68443B-003",
+          field_path: "eligibility.family.definition",
+          item_type: "ELIGIBILITY",
+          risk_level: "HIGH",
+          statement: "Family unit definition for secondary package entitlement.",
+          original_value_json: { family_criteria: "Listed in Jan Aadhaar database" },
+          current_value_json: { family_criteria: "Listed in Jan Aadhaar database" },
+          raw_text: "Clause 4 specifies coverage for all members; amendment indicates separate unit definition for married children.",
+          evidence_refs: ["p4_b2"],
+          evidence_text: "Page 4 indicates coverage for all enrolled members; amendment on page 9 notes sub-ceiling on non-dependents.",
+          page_number: 4,
+          block_id: "p4_b2",
+          decision: "PENDING",
+          verification_result: "CONTRADICTED",
+          verification_reason_code: "RULE_AMENDMENT_CONFLICT",
+          ocr_risk: false,
+        },
+        {
+          id: `item_${targetId}_4`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-AA68443B-004",
+          field_path: "benefits.cashless_cover.annual_sum_insured",
+          item_type: "BENEFIT",
+          risk_level: "NORMAL",
+          statement: "Annual cashless health cover up to ₹25,00,000 per family per year in empanelled hospitals.",
+          original_value_json: { annual_limit: 2500000, currency: "INR", type: "CASHLESS_HOSPITALIZATION" },
+          current_value_json: { annual_limit: 2500000, currency: "INR", type: "CASHLESS_HOSPITALIZATION" },
+          raw_text: "Cashless treatment package up to Rs 25 Lakhs per family per year in empanelled hospitals.",
+          evidence_refs: ["p5_b1"],
+          evidence_text: "Section 5.1: Cashless medical treatment package up to 25 Lakhs per family per annum.",
+          page_number: 5,
+          block_id: "p5_b1",
+          decision: "PENDING",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+        },
+        {
+          id: `item_${targetId}_5`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-AA68443B-005",
+          field_path: "benefits.accidental_insurance.cover_limit",
+          item_type: "BENEFIT",
+          risk_level: "LOW",
+          statement: "Accidental death and permanent disability insurance cover up to ₹10,00,000.",
+          original_value_json: { accidental_cover: 1000000, currency: "INR" },
+          current_value_json: { accidental_cover: 1000000, currency: "INR" },
+          raw_text: "Accidental insurance cover up to Rs 10 Lakhs.",
+          evidence_refs: ["p6_b3"],
+          evidence_text: "Accidental death or permanent total disability provides financial relief up to Rs. 10 Lakhs.",
+          page_number: 6,
+          block_id: "p6_b3",
+          decision: "PENDING",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+        },
+        {
+          id: `item_${targetId}_6`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-AA68443B-006",
+          field_path: "exclusions.government_employees",
+          item_type: "EXCLUSION",
+          risk_level: "NORMAL",
+          statement: "Government employees covered under RGHS (Rajasthan Government Health Scheme) excluded.",
+          original_value_json: { excluded_category: "State govt regular employees covered under RGHS" },
+          current_value_json: { excluded_category: "State govt regular employees covered under RGHS" },
+          raw_text: "Employees eligible for RGHS are not eligible under Ayushman Arogya Yojana.",
+          evidence_refs: ["p7_b1"],
+          evidence_text: "Clause 7.2: Regular employees and pensioners covered under RGHS are excluded from this scheme.",
+          page_number: 7,
+          block_id: "p7_b1",
+          decision: "PENDING",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+        },
+        {
+          id: `item_${targetId}_7`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-AA68443B-007",
+          field_path: "documents.required.jan_aadhaar",
+          item_type: "DOCUMENT",
+          risk_level: "NORMAL",
+          statement: "Jan Aadhaar Card or Jan Aadhaar Enrollment Slip mandatory for identification.",
+          original_value_json: { document_name: "Jan Aadhaar Card / Slip", mandatory: true },
+          current_value_json: { document_name: "Jan Aadhaar Card / Slip", mandatory: true },
+          raw_text: "Jan Aadhaar enrollment slip or card required at hospital registration.",
+          evidence_refs: ["p2_b4"],
+          evidence_text: "Hospital registration requires verification of identity via Jan Aadhaar or Aadhaar biometric / OTP.",
+          page_number: 2,
+          block_id: "p2_b4",
+          decision: "PENDING",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+        },
+        {
+          id: `item_${targetId}_8`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-AA68443B-008",
+          field_path: "documents.required.aadhaar",
+          item_type: "DOCUMENT",
+          risk_level: "NORMAL",
+          statement: "Aadhaar card of patient / family head.",
+          original_value_json: { document_name: "Aadhaar Card", mandatory: true },
+          current_value_json: { document_name: "Aadhaar Card", mandatory: true },
+          raw_text: "Aadhaar verification required at the time of hospital admission.",
+          evidence_refs: ["p2_b5"],
+          evidence_text: "Aadhaar authentication required at hospital admission counter.",
+          page_number: 2,
+          block_id: "p2_b5",
+          decision: "PENDING",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+        },
+        {
+          id: `item_${targetId}_9`,
+          review_session_id: sessionId,
+          scheme_draft_id: targetId,
+          fact_id: "FACT-AA68443B-009",
+          field_path: "application.process.online_portal",
+          item_type: "APPLICATION",
+          risk_level: "NORMAL",
+          statement: "Registration via SSO Portal (sso.rajasthan.gov.in) or E-Mitra kiosk.",
+          original_value_json: { channels: ["ONLINE_SSO", "EMITRA"], portal: "https://health.rajasthan.gov.in" },
+          current_value_json: { channels: ["ONLINE_SSO", "EMITRA"], portal: "https://health.rajasthan.gov.in" },
+          raw_text: "Citizen can apply directly on SSO or visit nearest E-Mitra kiosk.",
+          evidence_refs: ["p8_b2"],
+          evidence_text: "Online registration available at SSO portal or offline through E-Mitra network.",
+          page_number: 8,
+          block_id: "p8_b2",
+          decision: "EDITED",
+          edit_reason: "Added explicit E-Mitra kiosk support flag",
+          reviewer_comment: "Verified that both SSO and E-Mitra channels are active.",
+          verification_result: "SUPPORTED",
+          ocr_risk: false,
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: "DEV_REVIEWER",
+        },
+      ];
+
+  const approved = items.filter((i) => i.decision === "APPROVED").length;
+  const edited = items.filter((i) => i.decision === "EDITED").length;
+  const rejected = items.filter((i) => i.decision === "REJECTED").length;
+  const not_applicable = items.filter((i) => i.decision === "NOT_APPLICABLE").length;
+  const pending = items.filter((i) => i.decision === "PENDING").length;
+
+  const conflicts: ConflictItem[] = [
+    {
+      conflict_id: `CONF-${targetId.slice(0, 8)}-01`,
+      field: isPension ? "eligibility.income.max_annual" : "eligibility.family.definition",
+      status: "UNRESOLVED",
+      explanation: isPension
+        ? "खंड 5 में पारिवारिक आय ₹48,000 अंकित है जबकि हालिया परिपत्र में यह सीमा ₹60,000 संशोधित की गई है।"
+        : "Page 4 states entire registered Jan Aadhaar family is covered; Page 9 indicates sub-ceiling on married sons.",
+      values: [
+        {
+          value: isPension ? "वार्षिक आय सीमा ₹48,000" : "All Jan Aadhaar family members covered unconditionally",
+          page_number: isPension ? 3 : 4,
+          text_snippet: isPension
+            ? "खंड 5: संपूर्ण स्रोतों से वार्षिक आय ₹48,000 से कम होनी चाहिए।"
+            : "All family members enumerated in the Jan Aadhaar family card get full cashless entitlement.",
+          source_type: "PRIMARY_GUIDELINE",
+        },
+        {
+          value: isPension ? "संशोधित सीमा ₹60,000 (परिपत्र 2024)" : "Excludes married children maintaining separate ration units",
+          page_number: isPension ? 6 : 9,
+          text_snippet: isPension
+            ? "संशोधन: ग्रामीण एवं शहरी क्षेत्र हेतु अधिकतम वार्षिक आय सीमा ₹60,000 निर्धारित की गई है।"
+            : "Married adult children who have established independent households shall constitute a distinct entitlement unit.",
+          source_type: "SUBSEQUENT_AMENDMENT",
+        },
+      ],
+    },
+  ];
+
+  const audit_events: ReviewAuditEvent[] = [
+    {
+      id: `audit_${targetId}_1`,
+      review_session_id: sessionId,
+      scheme_draft_id: targetId,
+      reviewer_id: "DEV_REVIEWER",
+      action_type: "DECISION_EDITED",
+      field_path: isPension ? "application.process.channels" : "application.process.online_portal",
+      reason: "Verified official channel and portal URLs.",
+      created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
+    },
+    {
+      id: `audit_${targetId}_2`,
+      review_session_id: sessionId,
+      scheme_draft_id: targetId,
+      reviewer_id: "SYSTEM",
+      action_type: "VERIFICATION_COMPLETED",
+      reason: "Automated evidence verification and fact cross-matching executed.",
+      created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
+    },
+    {
+      id: `audit_${targetId}_3`,
+      review_session_id: sessionId,
+      scheme_draft_id: targetId,
+      reviewer_id: "SYSTEM",
+      action_type: "SESSION_INITIALIZED",
+      reason: "Human review session opened from ingestion pipeline.",
+      created_at: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
+    },
+  ];
+
+  const detail: ReviewSessionDetail = {
+    session_id: sessionId,
+    scheme_draft_id: targetId,
+    document_id: docId,
+    internal_scheme_code: internalCode,
+    scheme_name: schemeName,
+    department_name: deptName,
+    reviewer_id: "DEV_REVIEWER",
+    session_status: "IN_PROGRESS",
+    draft_status: "IN_HUMAN_REVIEW",
+    review_version: 1,
+    canonical_artifact_sha256: "4b29684ae07d2926e65761fbf2eff369dc30fc54f85b507c8cf2c9b73f112842",
+    is_stale: false,
+    notes: "Human verification in progress for statutory welfare benefits and citizen criteria.",
+    summary: {
+      total_items: items.length,
+      approved,
+      edited,
+      rejected,
+      not_applicable,
+      pending,
+    },
+    items,
+    conflicts,
+    validation_summary: {
+      total_checks: 42,
+      passed: 40,
+      warnings: 2,
+      errors: 0,
+      blockers: 0,
+    },
+    verification_summary: {
+      total_facts: items.length,
+      supported: items.filter((i) => i.verification_result === "SUPPORTED").length,
+      contradicted: items.filter((i) => i.verification_result === "CONTRADICTED").length,
+      not_enough_evidence: 0,
+    },
+    audit_events,
+    started_at: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
+    completed_at: null,
+  };
+
+  fallbackReviewStore[targetId] = detail;
+  return detail;
+}
+
+export function updateFallbackReviewDecision(
+  itemId: string,
+  payload: ItemDecisionPayload
+): HumanReviewItem {
+  for (const detail of Object.values(fallbackReviewStore)) {
+    const item = detail.items.find((i) => i.id === itemId);
+    if (item) {
+      item.decision = payload.decision;
+      if (payload.reviewer_comment !== undefined) item.reviewer_comment = payload.reviewer_comment;
+      if (payload.edit_reason !== undefined) item.edit_reason = payload.edit_reason;
+      if (payload.override_reason !== undefined) item.override_reason = payload.override_reason;
+      if (payload.edit_value !== undefined) item.current_value_json = payload.edit_value;
+      item.reviewed_at = new Date().toISOString();
+      item.reviewed_by = "DEV_REVIEWER";
+
+      // Recalculate summary
+      detail.summary = {
+        total_items: detail.items.length,
+        approved: detail.items.filter((i) => i.decision === "APPROVED").length,
+        edited: detail.items.filter((i) => i.decision === "EDITED").length,
+        rejected: detail.items.filter((i) => i.decision === "REJECTED").length,
+        not_applicable: detail.items.filter((i) => i.decision === "NOT_APPLICABLE").length,
+        pending: detail.items.filter((i) => i.decision === "PENDING").length,
+      };
+
+      // Add audit event
+      detail.audit_events.unshift({
+        id: `audit_${Date.now()}`,
+        review_session_id: detail.session_id,
+        scheme_draft_id: detail.scheme_draft_id,
+        reviewer_id: "DEV_REVIEWER",
+        action_type: `DECISION_${payload.decision}`,
+        field_path: item.field_path,
+        item_id: item.id,
+        reason: payload.reviewer_comment || payload.edit_reason || payload.override_reason || null,
+        created_at: new Date().toISOString(),
+      });
+
+      return item;
+    }
+  }
+
+  // Return a generic fallback item if not found
+  return {
+    id: itemId,
+    review_session_id: "session_fallback",
+    scheme_draft_id: "32de7937-11bb-4cb0-90c6-bd414550ef58",
+    fact_id: "FACT-FALLBACK",
+    field_path: "field.updated",
+    item_type: "ELIGIBILITY",
+    risk_level: "NORMAL",
+    statement: "Decision recorded.",
+    decision: payload.decision,
+    reviewer_comment: payload.reviewer_comment,
+    ocr_risk: false,
+    evidence_refs: [],
+    reviewed_at: new Date().toISOString(),
+    reviewed_by: "DEV_REVIEWER",
+  };
+}
+
+export function resolveFallbackConflict(
+  draftId: string,
+  conflictId: string,
+  payload: ConflictResolutionPayload
+): any {
+  const detail = fallbackReviewStore[draftId] || getFallbackReviewDetail(draftId);
+  const conflict = detail.conflicts.find((c) => c.conflict_id === conflictId);
+  if (conflict) {
+    conflict.status = "RESOLVED";
+  }
+  detail.audit_events.unshift({
+    id: `audit_${Date.now()}`,
+    review_session_id: detail.session_id,
+    scheme_draft_id: detail.scheme_draft_id,
+    reviewer_id: "DEV_REVIEWER",
+    action_type: "CONFLICT_RESOLVED",
+    reason: `Conflict ${conflictId} resolved with choice: ${payload.choice}`,
+    created_at: new Date().toISOString(),
+  });
+  return { success: true, conflict_id: conflictId, resolution: payload.choice };
+}
+
+export function completeFallbackReview(draftId: string, notes?: string): any {
+  const detail = fallbackReviewStore[draftId] || getFallbackReviewDetail(draftId);
+  detail.session_status = "COMPLETED";
+  detail.draft_status = "HUMAN_VERIFIED";
+  detail.completed_at = new Date().toISOString();
+  if (notes) detail.notes = notes;
+  detail.audit_events.unshift({
+    id: `audit_${Date.now()}`,
+    review_session_id: detail.session_id,
+    scheme_draft_id: detail.scheme_draft_id,
+    reviewer_id: "DEV_REVIEWER",
+    action_type: "DECISION_COMPLETE",
+    reason: notes || "Review session completed and sealed.",
+    created_at: new Date().toISOString(),
+  });
+  return { success: true, message: "Scheme draft successfully verified and sealed!" };
+}
+
+export function rejectFallbackReview(draftId: string, reason: string): any {
+  const detail = fallbackReviewStore[draftId] || getFallbackReviewDetail(draftId);
+  detail.session_status = "REJECTED";
+  detail.draft_status = "HUMAN_REJECTED";
+  detail.notes = reason;
+  detail.audit_events.unshift({
+    id: `audit_${Date.now()}`,
+    review_session_id: detail.session_id,
+    scheme_draft_id: detail.scheme_draft_id,
+    reviewer_id: "DEV_REVIEWER",
+    action_type: "DECISION_REJECT",
+    reason,
+    created_at: new Date().toISOString(),
+  });
+  return { success: true, message: "Scheme draft rejected." };
+}
+
+export function reopenFallbackReview(draftId: string, reason: string): any {
+  const detail = fallbackReviewStore[draftId] || getFallbackReviewDetail(draftId);
+  detail.session_status = "IN_PROGRESS";
+  detail.draft_status = "IN_HUMAN_REVIEW";
+  detail.review_version = (detail.review_version || 1) + 1;
+  detail.audit_events.unshift({
+    id: `audit_${Date.now()}`,
+    review_session_id: detail.session_id,
+    scheme_draft_id: detail.scheme_draft_id,
+    reviewer_id: "DEV_REVIEWER",
+    action_type: "REVIEW_REOPENED",
+    reason,
+    created_at: new Date().toISOString(),
+  });
+  return { success: true, message: "Review session reopened." };
 }
 
 export function getFallbackSchemeDetail(schemeId: string): SchemeDetailResponse {

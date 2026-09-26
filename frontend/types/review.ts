@@ -59,7 +59,7 @@ export interface HumanReviewItem {
   fact_id: string;
   field_path: string;
   item_type: string;
-  risk_level: "BLOCKER" | "HIGH" | "MEDIUM" | "LOW" | "CLEAN";
+  risk_level: "BLOCKER" | "HIGH" | "MEDIUM" | "LOW" | "CLEAN" | "NORMAL" | string;
   statement: string;
   original_value_json?: any;
   current_value_json?: any;

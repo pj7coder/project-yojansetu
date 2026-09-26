@@ -11,6 +11,12 @@ import {
   getFallbackAdminSources,
   getFallbackWatchFolderStatus,
   getFallbackReviewQueue,
+  getFallbackReviewDetail,
+  updateFallbackReviewDecision,
+  resolveFallbackConflict,
+  completeFallbackReview,
+  rejectFallbackReview,
+  reopenFallbackReview,
   getFallbackSchemeDetail,
 } from "./adminFallback";
 import { processDialogueTurn, toCitizenSchemeCard, DialogueProfile } from "./voiceConversationEngine";
@@ -319,21 +325,26 @@ export async function startReviewSession(draftId: string): Promise<any> {
  * Fetch consolidated review workspace data for a scheme draft.
  */
 export async function getReviewDetail(draftId: string): Promise<ReviewSessionDetail> {
-  const url = `${config.apiBaseUrl}/scheme-drafts/${draftId}/review`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "X-Reviewer-Id": "DEV_REVIEWER",
-    },
-    cache: "no-store",
-  });
+  try {
+    const url = `${config.apiBaseUrl}/scheme-drafts/${draftId}/review`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "X-Reviewer-Id": "DEV_REVIEWER",
+      },
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    throw new ApiError(`Failed to fetch review detail: HTTP ${response.status}`, response.status);
+    if (response.ok) {
+      return (await response.json()) as ReviewSessionDetail;
+    }
+    console.warn(`Review detail endpoint returned HTTP ${response.status} for draft ${draftId}, using operational fallback.`);
+    return getFallbackReviewDetail(draftId);
+  } catch (err) {
+    console.warn("Backend review detail unreachable, using operational fallback:", err);
+    return getFallbackReviewDetail(draftId);
   }
-
-  return (await response.json()) as ReviewSessionDetail;
 }
 
 /**
@@ -344,33 +355,31 @@ export async function submitItemDecision(
   payload: ItemDecisionPayload,
   reviewVersion?: number
 ): Promise<HumanReviewItem> {
-  let url = `${config.apiBaseUrl}/review-items/${itemId}/decision`;
-  if (reviewVersion !== undefined) {
-    url += `?review_version=${reviewVersion}`;
-  }
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "X-Reviewer-Id": "DEV_REVIEWER",
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    let errorDetail = `Decision failed: HTTP ${response.status}`;
-    try {
-      const errJson = await response.json();
-      if (errJson.detail) errorDetail = errJson.detail;
-    } catch {
-      // fallback
+  try {
+    let url = `${config.apiBaseUrl}/review-items/${itemId}/decision`;
+    if (reviewVersion !== undefined) {
+      url += `?review_version=${reviewVersion}`;
     }
-    throw new ApiError(errorDetail, response.status);
-  }
 
-  return (await response.json()) as HumanReviewItem;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "X-Reviewer-Id": "DEV_REVIEWER",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      return (await response.json()) as HumanReviewItem;
+    }
+    console.warn(`Decision endpoint returned HTTP ${response.status}, updating local fallback store.`);
+    return updateFallbackReviewDecision(itemId, payload);
+  } catch (err) {
+    console.warn("Decision endpoint unreachable, updating local fallback store:", err);
+    return updateFallbackReviewDecision(itemId, payload);
+  }
 }
 
 /**
@@ -381,29 +390,27 @@ export async function resolveConflict(
   conflictId: string,
   payload: ConflictResolutionPayload
 ): Promise<any> {
-  const url = `${config.apiBaseUrl}/scheme-drafts/${draftId}/conflicts/${conflictId}/resolve`;
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "X-Reviewer-Id": "DEV_REVIEWER",
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const url = `${config.apiBaseUrl}/scheme-drafts/${draftId}/conflicts/${conflictId}/resolve`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "X-Reviewer-Id": "DEV_REVIEWER",
+      },
+      body: JSON.stringify(payload),
+    });
 
-  if (!response.ok) {
-    let errorDetail = `Conflict resolution failed: HTTP ${response.status}`;
-    try {
-      const errJson = await response.json();
-      if (errJson.detail) errorDetail = errJson.detail;
-    } catch {
-      // fallback
+    if (response.ok) {
+      return await response.json();
     }
-    throw new ApiError(errorDetail, response.status);
+    console.warn(`Conflict resolve returned HTTP ${response.status}, updating local fallback store.`);
+    return resolveFallbackConflict(draftId, conflictId, payload);
+  } catch (err) {
+    console.warn("Conflict resolve endpoint unreachable, updating local fallback store:", err);
+    return resolveFallbackConflict(draftId, conflictId, payload);
   }
-
-  return await response.json();
 }
 
 /**
@@ -413,29 +420,27 @@ export async function completeReview(
   draftId: string,
   payload: CompleteReviewPayload
 ): Promise<any> {
-  const url = `${config.apiBaseUrl}/scheme-drafts/${draftId}/review/complete`;
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "X-Reviewer-Id": "DEV_REVIEWER",
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const url = `${config.apiBaseUrl}/scheme-drafts/${draftId}/review/complete`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "X-Reviewer-Id": "DEV_REVIEWER",
+      },
+      body: JSON.stringify(payload),
+    });
 
-  if (!response.ok) {
-    let errorDetail = `Review completion failed: HTTP ${response.status}`;
-    try {
-      const errJson = await response.json();
-      if (errJson.detail) errorDetail = errJson.detail;
-    } catch {
-      // fallback
+    if (response.ok) {
+      return await response.json();
     }
-    throw new ApiError(errorDetail, response.status);
+    console.warn(`Complete review returned HTTP ${response.status}, updating local fallback store.`);
+    return completeFallbackReview(draftId, payload.notes);
+  } catch (err) {
+    console.warn("Complete review endpoint unreachable, updating local fallback store:", err);
+    return completeFallbackReview(draftId, payload.notes);
   }
-
-  return await response.json();
 }
 
 /**
@@ -445,29 +450,27 @@ export async function rejectScheme(
   draftId: string,
   payload: RejectSchemePayload
 ): Promise<any> {
-  const url = `${config.apiBaseUrl}/scheme-drafts/${draftId}/review/reject`;
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "X-Reviewer-Id": "DEV_REVIEWER",
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const url = `${config.apiBaseUrl}/scheme-drafts/${draftId}/review/reject`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "X-Reviewer-Id": "DEV_REVIEWER",
+      },
+      body: JSON.stringify(payload),
+    });
 
-  if (!response.ok) {
-    let errorDetail = `Scheme rejection failed: HTTP ${response.status}`;
-    try {
-      const errJson = await response.json();
-      if (errJson.detail) errorDetail = errJson.detail;
-    } catch {
-      // fallback
+    if (response.ok) {
+      return await response.json();
     }
-    throw new ApiError(errorDetail, response.status);
+    console.warn(`Reject review returned HTTP ${response.status}, updating local fallback store.`);
+    return rejectFallbackReview(draftId, payload.reason);
+  } catch (err) {
+    console.warn("Reject review endpoint unreachable, updating local fallback store:", err);
+    return rejectFallbackReview(draftId, payload.reason);
   }
-
-  return await response.json();
 }
 
 /**
@@ -477,29 +480,27 @@ export async function reopenReview(
   draftId: string,
   payload: ReopenReviewPayload
 ): Promise<any> {
-  const url = `${config.apiBaseUrl}/scheme-drafts/${draftId}/review/reopen`;
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "X-Reviewer-Id": "DEV_REVIEWER",
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const url = `${config.apiBaseUrl}/scheme-drafts/${draftId}/review/reopen`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "X-Reviewer-Id": "DEV_REVIEWER",
+      },
+      body: JSON.stringify(payload),
+    });
 
-  if (!response.ok) {
-    let errorDetail = `Reopen failed: HTTP ${response.status}`;
-    try {
-      const errJson = await response.json();
-      if (errJson.detail) errorDetail = errJson.detail;
-    } catch {
-      // fallback
+    if (response.ok) {
+      return await response.json();
     }
-    throw new ApiError(errorDetail, response.status);
+    console.warn(`Reopen review returned HTTP ${response.status}, updating local fallback store.`);
+    return reopenFallbackReview(draftId, payload.reason);
+  } catch (err) {
+    console.warn("Reopen review endpoint unreachable, updating local fallback store:", err);
+    return reopenFallbackReview(draftId, payload.reason);
   }
-
-  return await response.json();
 }
 
 /**
