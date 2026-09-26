@@ -40,7 +40,7 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen w-full bg-slate-100 flex text-slate-800 font-sans antialiased">
       <AdminSidebar />
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen pl-64">
         <AdminHeader
           systemStatus={systemStatus}
           statusReasons={statusReasons}

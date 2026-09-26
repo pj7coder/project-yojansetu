@@ -17,7 +17,6 @@ import {
   ItemDecisionPayload,
   ReviewSessionDetail,
 } from "../../../../types/review";
-import { PdfViewer } from "../../../../components/admin/review/PdfViewer";
 import { ReviewHeader } from "../../../../components/admin/review/ReviewHeader";
 import { ReviewItemCard } from "../../../../components/admin/review/ReviewItemCard";
 import { ConflictReviewModal } from "../../../../components/admin/review/ConflictReviewModal";
@@ -200,20 +199,8 @@ export default function SchemeReviewWorkspacePage() {
         isSubmitting={isSubmitting}
       />
 
-      {/* Main Split-Screen Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
-        {/* Left Side: Original PDF Viewer (Sticky on desktop) */}
-        <div className="w-full lg:sticky lg:top-18 lg:h-[calc(100vh-100px)] h-[550px] flex flex-col">
-          <PdfViewer
-            documentId={detail.document_id}
-            targetPage={targetPdfPage}
-            filename={`${detail.internal_scheme_code}.pdf`}
-          />
-        </div>
-
-        {/* Right Side: Review Facts & Decision Panel */}
-        <div className="w-full flex flex-col">
-          <div className="bg-white border border-slate-200 rounded-xl shadow-xs flex flex-col">
+      {/* Review Facts & Decision Panel (Full Width) */}
+      <div className="w-full bg-white border border-slate-200 rounded-xl shadow-xs flex flex-col">
             {/* Navigation Tabs (Sticky at top of facts card during scroll) */}
             <div className="sticky top-14 lg:top-18 z-10 flex items-center gap-1 px-4 pt-3 pb-2 border-b border-slate-200 bg-white/95 backdrop-blur-xs rounded-t-xl overflow-x-auto text-xs shadow-xs">
               <button
@@ -369,8 +356,6 @@ export default function SchemeReviewWorkspacePage() {
               )}
             </div>
           </div>
-        </div>
-      </div>
 
       {/* Conflict Review Modal Trigger */}
       {activeConflict && (

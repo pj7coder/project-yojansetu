@@ -3,9 +3,22 @@
  * Centralizes environment variable access.
  */
 
+function resolveApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  }
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname || "localhost";
+    const protocol = window.location.protocol || "http:";
+    return `${protocol}//${host}:8000/api/v1`;
+  }
+  return "http://localhost:8000/api/v1";
+}
+
 export const config = {
-  apiBaseUrl:
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000/api/v1",
+  get apiBaseUrl(): string {
+    return resolveApiBaseUrl();
+  },
   appName: "YojanSetu",
   appNameHindi: "योजनसेतु",
   appSubtitleHindi: "राष्ट्रीय एवं राज्य जनकल्याण योजना सेतु (भारत)",

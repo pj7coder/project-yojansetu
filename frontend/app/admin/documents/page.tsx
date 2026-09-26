@@ -209,7 +209,7 @@ export default function AdminDocumentsPage() {
   const [documents, setDocuments] = useState<AdminDocumentListItem[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [pageSize] = useState<number>(20);
+  const [pageSize, setPageSize] = useState<number>(25);
 
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [methodFilter, setMethodFilter] = useState<string>("");
@@ -568,6 +568,22 @@ export default function AdminDocumentsPage() {
             />
             <span className="text-slate-700 font-medium">Failed only</span>
           </label>
+
+          <div className="flex items-center gap-1.5 ml-auto">
+            <span className="text-slate-500 font-medium">Per page:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setPage(1);
+              }}
+              className="h-8 px-2 bg-slate-50 border border-slate-300 rounded text-xs font-semibold text-slate-700 cursor-pointer"
+            >
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100 (Show All)</option>
+            </select>
+          </div>
         </div>
 
         {/* Documents Table */}
