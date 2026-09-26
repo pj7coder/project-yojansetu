@@ -19,7 +19,7 @@ import wave
 
 logger = logging.getLogger("yojansetu.stt.audio_normalizer")
 
-ALLOWED_AUDIO_EXTENSIONS = {".wav", ".mp3", ".m4a", ".ogg", ".flac", ".aac", ".webm"}
+ALLOWED_AUDIO_EXTENSIONS = {".wav", ".mp3", ".m4a", ".ogg", ".flac", ".aac", ".webm", ".mp4"}
 MAX_AUDIO_SIZE_BYTES = 50 * 1024 * 1024  # 50 MB limit
 MAX_AUDIO_DURATION_SECONDS = 300.0       # 5 minutes limit
 CANONICAL_SAMPLE_RATE = 16000

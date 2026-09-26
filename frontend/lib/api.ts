@@ -1536,7 +1536,10 @@ export async function sendVoiceTurn(
     window.location.protocol === "https:" &&
     url.startsWith("http://");
 
-  if (!isMixedContent && !sessionId.startsWith("sess_local_")) {
+  const text = (clientTranscript || "").trim();
+  const isHi = language === "hi";
+
+  if (!isMixedContent && !sessionId.startsWith("sess_local_") && audioBlob.size > 500) {
     try {
       const formData = new FormData();
       const ext = audioBlob.type.includes("mp4")
@@ -1562,16 +1565,24 @@ export async function sendVoiceTurn(
       clearTimeout(timer);
 
       if (response.ok) {
-        return await response.json();
+        const result: VoiceTurnResponse = await response.json();
+        // If backend audio VAD or STT failed, but client browser captured live speech, rescue the turn!
+        if (
+          result.warning &&
+          (result.error_code === "NO_SPEECH_DETECTED" ||
+            result.error_code === "STT_EMPTY_RESULT" ||
+            result.error_code === "INVALID_AUDIO") &&
+          text
+        ) {
+          // Proceed to client-side ReAct evaluation below
+        } else {
+          return result;
+        }
       }
     } catch {
       // Backend unavailable or timed out -> proceed to fallback
     }
   }
-
-  // Standalone / Offline / Vercel fallback voice turn processing:
-  const text = (clientTranscript || "").trim();
-  const isHi = language === "hi";
 
   if (!text) {
     return {

@@ -7,12 +7,13 @@ import {
   sendVoiceTurn,
   getVoiceResponseAudioUrl,
   replayVoiceResponse,
-  ApiError,
 } from '@/lib/api';
 import { config } from '@/lib/config';
 import { useVoiceRecorder } from './useVoiceRecorder';
 import { VoiceStatus } from './VoiceStatus';
 import { VoiceControls } from './VoiceControls';
+import { AudioWaveform } from './AudioWaveform';
+import { cleanTextForSpeech, findBestVoice } from '@/lib/speechHelpers';
 
 interface VoiceModeProps {
   sessionId: string;
@@ -23,6 +24,37 @@ interface VoiceModeProps {
   onSwitchToText: () => void;
   onStartOver?: () => void;
   onEndConversation?: () => void;
+}
+
+// Gentle pleasant Web Audio chime for microphone start/stop
+function playChime(type: 'start' | 'stop') {
+  if (typeof window === 'undefined') return;
+  try {
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    const now = ctx.currentTime;
+
+    if (type === 'start') {
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+    } else {
+      osc.frequency.setValueAtTime(750, now);
+      osc.frequency.exponentialRampToValueAtTime(370, now + 0.12);
+    }
+
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.15);
+  } catch {}
 }
 
 export function VoiceMode({
@@ -41,6 +73,8 @@ export function VoiceMode({
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState<boolean>(false);
+
   const [activeConversation, setActiveConversation] = useState<ConversationTurnResponse | null>(
     currentConversation || null
   );
@@ -95,35 +129,50 @@ export function VoiceMode({
     setTransportState('READY');
   }, []);
 
-  // Web Speech Synthesis browser fallback
+  // Web Speech Synthesis browser fallback with natural voice selection & clean text
   const speakBrowserSynthesis = useCallback(
-    (text: string) => {
+    (rawText: string) => {
       stopPlayback();
-      if (typeof window !== 'undefined' && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = isHi ? 'hi-IN' : 'en-IN';
-        utterance.rate = 1.0;
-        setIsPlaying(true);
-        setTransportState('SPEAKING');
-
-        utterance.onend = () => {
-          setIsPlaying(false);
-          setTransportState('READY');
-        };
-
-        utterance.onerror = (e) => {
-          console.warn('SpeechSynthesis error:', e);
-          setIsPlaying(false);
-          setTransportState('READY');
-        };
-
-        window.speechSynthesis.speak(utterance);
-      } else {
+      if (typeof window === 'undefined' || !window.speechSynthesis) {
         setTransportState('READY');
+        return;
       }
+
+      const spokenText = cleanTextForSpeech(rawText, lang);
+      if (!spokenText.trim()) {
+        setTransportState('READY');
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(spokenText);
+      utterance.lang = isHi ? 'hi-IN' : 'en-IN';
+      utterance.rate = 0.95; // Crisp cadence
+      utterance.pitch = 1.0;
+
+      // Assign highest quality available voice
+      const bestVoice = findBestVoice(lang);
+      if (bestVoice) {
+        utterance.voice = bestVoice;
+      }
+
+      setIsPlaying(true);
+      setTransportState('SPEAKING');
+
+      utterance.onend = () => {
+        setIsPlaying(false);
+        setTransportState('READY');
+      };
+
+      utterance.onerror = (e) => {
+        console.warn('SpeechSynthesis event notice:', e);
+        setIsPlaying(false);
+        setTransportState('READY');
+      };
+
+      window.speechSynthesis.speak(utterance);
     },
-    [isHi, stopPlayback]
+    [isHi, lang, stopPlayback]
   );
 
   // Play synthesized audio stream enforcing half-duplex rules
@@ -150,7 +199,7 @@ export function VoiceMode({
       };
 
       audio.onerror = (err) => {
-        console.warn('Audio playback error:', err, 'falling back to speech synthesis');
+        console.warn('Audio stream error, falling back to speech synthesis:', err);
         stopPlayback();
         if (fallbackText) {
           speakBrowserSynthesis(fallbackText);
@@ -180,18 +229,21 @@ export function VoiceMode({
     [isHi, stopPlayback, speakBrowserSynthesis]
   );
 
-  // Voice Turn Submission Handler
+  // Core Voice Turn Submission Handler
   const handleRecordingComplete = useCallback(
     async (audioBlob: Blob, liveTranscript?: string) => {
+      playChime('stop');
       setTransportState('PROCESSING_AUDIO');
       setErrorMessage(null);
       setFeedbackMessage(null);
+      setHasUserInteracted(true);
 
-      if (liveTranscript) {
-        setLastTranscript(liveTranscript);
+      const capturedText = (liveTranscript || '').trim();
+      if (capturedText) {
+        setLastTranscript(capturedText);
       }
 
-      // Generate client-side idempotency turn token
+      // Generate client-side turn UUID
       const voiceTurnId = `vturn_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
       try {
@@ -201,22 +253,22 @@ export function VoiceMode({
           audioBlob,
           voiceTurnId,
           activeConversation?.meta?.version ?? conversationVersion,
-          liveTranscript,
+          capturedText,
           lang
         );
 
-        // Update transcript if available
+        // Update transcript if returned from backend STT
         if (turnResult.transcription?.text) {
           setLastTranscript(turnResult.transcription.text);
         }
 
-        // Forward structured conversation response to parent CitizenPage
+        // Forward structured conversation response to parent page
         if (turnResult.conversation) {
           setActiveConversation(turnResult.conversation);
           onConversationResponse(turnResult.conversation);
         }
 
-        // Handle retry warnings (e.g. no speech detected or empty STT)
+        // Handle retry warnings
         if (turnResult.warning) {
           setFeedbackMessage(turnResult.warning);
         }
@@ -254,8 +306,8 @@ export function VoiceMode({
           setErrorMessage(
             err.message ||
               (isHi
-                ? 'आवाज़ प्रोसेस करने में त्रुटि हुई। कृपया दोबारा बोलें या टेक्स्ट में लिखें।'
-                : 'Error processing voice. Please speak again or type in text.')
+                ? 'आवाज़ प्रोसेस करने में त्रुटि हुई। कृपया दोबारा बोलें या नीचे टेक्स्ट में लिखें।'
+                : 'Error processing voice. Please speak again or type in text below.')
           );
         }
       }
@@ -273,15 +325,30 @@ export function VoiceMode({
     ]
   );
 
-  // MediaRecorder + SpeechRecognition hook
+  // Quick query handler (e.g. from suggestion chips or typed text bar)
+  const handleQuickQuery = useCallback(
+    (text: string) => {
+      setLastTranscript(text);
+      // Create lightweight dummy audio blob to accompany recognized text
+      const dummyBlob = new Blob([new Uint8Array(44)], { type: 'audio/wav' });
+      handleRecordingComplete(dummyBlob, text);
+    },
+    [handleRecordingComplete]
+  );
+
+  // MediaRecorder + Web Audio API level meter + SpeechRecognition hook
   const {
     isRecording,
     permissionState,
     recordingDuration,
+    audioLevel,
+    liveTranscript,
     startRecording: triggerStartRecording,
     stopRecording,
   } = useVoiceRecorder({
     maxDurationSeconds: 60,
+    silenceTimeoutSeconds: 2.2,
+    autoStopOnSilence: true,
     lang,
     onRecordingComplete: handleRecordingComplete,
     onError: (err) => {
@@ -289,8 +356,8 @@ export function VoiceMode({
       if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
         setErrorMessage(
           isHi
-            ? 'माइक्रोफ़ोन की अनुमति आवश्यक है। आप टेक्स्ट मोड जारी रख सकते हैं।'
-            : 'Microphone permission is required. You can continue in text mode.'
+            ? 'माइक्रोफ़ोन की अनुमति अस्वीकृत है। आप नीचे टेक्स्ट में लिखकर पूछ सकते हैं।'
+            : 'Microphone permission denied. You can type below to ask questions.'
         );
       } else {
         setErrorMessage(err.message);
@@ -298,12 +365,14 @@ export function VoiceMode({
     },
   });
 
-  // Half-duplex guard: Prevent starting microphone while speaking
+  // Half-duplex guard: Prevent starting microphone while assistant is speaking
   const startRecordingSafe = useCallback(() => {
     if (isPlaying) {
       stopPlayback();
     }
+    playChime('start');
     setTransportState('LISTENING');
+    setHasUserInteracted(true);
     triggerStartRecording();
   }, [isPlaying, stopPlayback, triggerStartRecording]);
 
@@ -341,6 +410,15 @@ export function VoiceMode({
     }
   }, [sessionId, isPlaying, stopPlayback, playAudioStream, resolveAudioUrl, speakBrowserSynthesis, activeConversation, isHi]);
 
+  // Welcome greeting speech trigger
+  const handleWelcomeSpeech = useCallback(() => {
+    setHasUserInteracted(true);
+    const welcome = isHi
+      ? 'नमस्ते! मैं योजनसेतु आवाज़ सहायक हूँ। आप अपनी उम्र, कृषि भूमि, सामाजिक श्रेणी या पेंशन योजना के बारे में बोलकर पूछ सकते हैं।'
+      : 'Hello! I am YojanSetu Voice Assistant. You can speak about your age, land, pension or government schemes to find your benefits.';
+    speakBrowserSynthesis(welcome);
+  }, [isHi, speakBrowserSynthesis]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -349,21 +427,26 @@ export function VoiceMode({
   }, [stopPlayback]);
 
   return (
-    <div className="w-full bg-gradient-to-b from-indigo-50/70 to-white dark:from-slate-900 dark:to-slate-800/80 rounded-3xl border border-indigo-100 dark:border-slate-700/60 p-6 md:p-8 shadow-xl shadow-indigo-500/5 mb-6">
+    <div className="w-full bg-linear-to-b from-indigo-50/80 via-white to-indigo-50/40 dark:from-slate-900 dark:via-slate-800/90 dark:to-slate-900 rounded-3xl border border-indigo-200/80 dark:border-slate-700/80 p-5 sm:p-8 shadow-2xl shadow-indigo-500/10 mb-6 transition-all">
       {/* Voice Mode Header */}
-      <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-indigo-100/60 dark:border-slate-700/40">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-indigo-100 dark:border-slate-700/50">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-indigo-600 text-white font-bold text-xl shadow-md shadow-indigo-600/20">
+          <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-indigo-600 text-white font-bold text-2xl shadow-md shadow-indigo-600/30">
             🎙️
           </div>
           <div>
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">
-              {isHi ? 'योजनसेतु — आवाज़ सहायक' : 'YojanSetu — Voice Assistant'}
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-extrabold text-slate-900 dark:text-slate-100 text-lg sm:text-xl">
+                {isHi ? 'योजनसेतु — स्मार्ट आवाज़ सहायक' : 'YojanSetu — Smart Voice Assistant'}
+              </h3>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold text-[10px] uppercase tracking-wider">
+                Live
+              </span>
+            </div>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               {isHi
-                ? 'ऑफ़लाइन हिंदी वाणी पहचान एवं सुरक्षित उत्तर'
-                : 'Offline Vernacular Speech Recognition & Synthesis'}
+                ? 'राजस्थानी व हिंदी वाणी पहचान, नियम-आधारित पात्रता एवं त्वरित मौखिक उत्तर'
+                : 'Vernacular Speech Recognition, Rule-Based Eligibility & Instant Vocal Reply'}
             </p>
           </div>
         </div>
@@ -376,6 +459,28 @@ export function VoiceMode({
         />
       </div>
 
+      {/* Welcome Greeting Prompt for first-time entry */}
+      {!hasUserInteracted && !isPlaying && !isRecording && (
+        <div className="mb-5 p-4 rounded-2xl bg-indigo-500/10 dark:bg-indigo-500/15 border border-indigo-200 dark:border-indigo-800/50 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="text-2xl">👋</span>
+            <span className="text-xs sm:text-sm font-semibold text-indigo-950 dark:text-indigo-200">
+              {isHi
+                ? 'नमस्ते! योजनसेतु से बातचीत शुरू करने के लिए स्वागत संदेश सुनें या सीधे बोलें।'
+                : 'Welcome! Listen to the welcome audio or tap the mic to speak.'}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handleWelcomeSpeech}
+            className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs transition-transform hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>🔊</span>
+            <span>{isHi ? 'स्वागत संदेश सुनें' : 'Listen Welcome'}</span>
+          </button>
+        </div>
+      )}
+
       {/* Permission Denied Alert */}
       {permissionState === 'denied' && (
         <div className="mb-6 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-800 dark:text-rose-200 text-sm flex items-start gap-3">
@@ -386,16 +491,9 @@ export function VoiceMode({
             </p>
             <p className="text-xs opacity-90 mb-3">
               {isHi
-                ? 'आवाज़ में बात करने के लिए ब्राउज़र में माइक्रोफ़ोन की अनुमति दें, अथवा टेक्स्ट मोड का उपयोग करें।'
-                : 'Please enable microphone access in browser settings or continue using text mode.'}
+                ? 'आवाज़ में बात करने के लिए ब्राउज़र के एड्रेस बार में माइक्रोफ़ोन की अनुमति दें, या नीचे दिए गए टेक्स्ट बॉक्स में लिखें।'
+                : 'Enable microphone access in browser settings, or type your question below.'}
             </p>
-            <button
-              type="button"
-              onClick={onSwitchToText}
-              className="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer"
-            >
-              {isHi ? 'टेक्स्ट मोड में जाएँ' : 'Switch to Text'}
-            </button>
           </div>
         </div>
       )}
@@ -408,7 +506,7 @@ export function VoiceMode({
           <button
             type="button"
             onClick={() => setErrorMessage(null)}
-            className="text-rose-400 hover:text-rose-700 text-xs font-bold"
+            className="text-rose-400 hover:text-rose-700 text-xs font-bold cursor-pointer"
           >
             ✕
           </button>
@@ -422,17 +520,44 @@ export function VoiceMode({
           <button
             type="button"
             onClick={() => setFeedbackMessage(null)}
-            className="text-amber-500 hover:text-amber-800 text-xs font-bold"
+            className="text-amber-500 hover:text-amber-800 text-xs font-bold cursor-pointer"
           >
             ✕
           </button>
         </div>
       )}
 
-      {/* Transcript feedback if available */}
-      {lastTranscript && (
-        <div className="mb-4 px-4 py-3 rounded-2xl bg-indigo-500/5 dark:bg-indigo-500/10 border border-indigo-200/50 dark:border-indigo-800/40 text-xs text-indigo-900 dark:text-indigo-200 flex items-center gap-2">
-          <span className="font-semibold">{isHi ? 'मैंने सुना:' : 'Heard:'}</span>
+      {/* Real-Time Reactive Audio Waveform Visualizer */}
+      <AudioWaveform
+        isRecording={isRecording}
+        isPlaying={isPlaying}
+        audioLevel={audioLevel}
+        lang={lang}
+      />
+
+      {/* Live In-Progress Speech Recognition Feedback Bubble */}
+      {isRecording && (
+        <div className="mb-4 px-4 py-3 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/50 text-rose-900 dark:text-rose-200 text-xs sm:text-sm flex items-start gap-2.5 animate-pulse">
+          <span className="text-base shrink-0">🎙️</span>
+          <div>
+            <span className="font-bold block text-[11px] uppercase tracking-wider text-rose-600 dark:text-rose-400">
+              {isHi ? 'लाइव आवाज़ पहचान:' : 'Live Speech Recognized:'}
+            </span>
+            <span className="font-medium italic">
+              {liveTranscript
+                ? `“${liveTranscript}”`
+                : isHi
+                ? 'बोलिए, आपकी आवाज़ रिकॉर्ड हो रही है…'
+                : 'Listening, speak your query now…'}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Last Recognized Transcript (After Recording) */}
+      {!isRecording && lastTranscript && (
+        <div className="mb-4 px-4 py-3 rounded-2xl bg-indigo-500/5 dark:bg-indigo-500/10 border border-indigo-200/60 dark:border-indigo-800/40 text-xs text-indigo-950 dark:text-indigo-200 flex items-center gap-2">
+          <span className="font-bold shrink-0">{isHi ? 'आपने कहा:' : 'You said:'}</span>
           <span className="italic font-medium">“{lastTranscript}”</span>
         </div>
       )}
@@ -440,21 +565,22 @@ export function VoiceMode({
       {/* Assistant Voice Response Card */}
       {activeConversation?.message && (
         <div
-          className={`mb-6 p-5 rounded-2xl transition-all border ${
+          className={`mb-6 p-5 sm:p-6 rounded-2xl transition-all border ${
             isPlaying
-              ? 'bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700/60 shadow-md shadow-emerald-500/10 ring-2 ring-emerald-500/20'
+              ? 'bg-emerald-50/90 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700/60 shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/30'
               : 'bg-white dark:bg-slate-800/90 border-slate-200/80 dark:border-slate-700/60 shadow-sm'
           }`}
         >
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <span className="text-base">{isPlaying ? '🔊' : '🏛️'}</span>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <span className="text-lg">{isPlaying ? '🔊' : '🏛️'}</span>
+              <span className="text-xs font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300">
                 {isHi ? 'योजनसेतु का उत्तर' : "YojanSetu's Response"}
               </span>
               {isPlaying && (
-                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/60 px-2 py-0.5 rounded-full animate-pulse">
-                  <span>●</span> {isHi ? 'बोल रहा है…' : 'Speaking…'}
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/60 px-2.5 py-0.5 rounded-full animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  {isHi ? 'बोल रहा है…' : 'Speaking…'}
                 </span>
               )}
             </div>
@@ -464,40 +590,42 @@ export function VoiceMode({
               type="button"
               onClick={handleReplay}
               disabled={isPlaying || isRecording}
-              className="text-xs font-medium text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 flex items-center gap-1 cursor-pointer disabled:opacity-40"
+              className="text-xs font-bold text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 flex items-center gap-1 cursor-pointer disabled:opacity-40"
               title={isHi ? 'दोबारा सुनें' : 'Listen again'}
             >
               <span>🔊</span>
-              <span>{isHi ? 'सुनें' : 'Listen'}</span>
+              <span>{isHi ? 'दोबारा सुनें' : 'Listen'}</span>
             </button>
           </div>
 
-          <p className="text-sm font-medium text-slate-800 dark:text-slate-100 leading-relaxed">
+          <p className="text-sm sm:text-base font-medium text-slate-800 dark:text-slate-100 leading-relaxed whitespace-pre-wrap">
             {isHi ? activeConversation.message.text_hi : activeConversation.message.text_en}
           </p>
 
           {/* If Eligible Schemes Discovered */}
           {activeConversation.results?.eligible && activeConversation.results.eligible.length > 0 && (
-            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap items-center justify-between gap-2">
-              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                🎉{' '}
-                {isHi
-                  ? `${activeConversation.results.eligible.length} योजनाएँ पात्र पाई गईं!`
-                  : `${activeConversation.results.eligible.length} Eligible schemes found!`}
+            <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap items-center justify-between gap-3">
+              <span className="text-xs sm:text-sm font-extrabold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
+                <span>🎉</span>
+                <span>
+                  {isHi
+                    ? `${activeConversation.results.eligible.length} सरकारी योजनाएँ आपके लिए पात्र पाई गईं!`
+                    : `${activeConversation.results.eligible.length} Eligible welfare schemes found!`}
+                </span>
               </span>
               <button
                 type="button"
                 onClick={onSwitchToText}
-                className="text-xs font-semibold px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors cursor-pointer"
+                className="text-xs font-bold px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-xs transition-colors cursor-pointer"
               >
-                {isHi ? 'योजनाएँ देखें' : 'View Schemes'}
+                {isHi ? 'विस्तृत विवरण व पर्ची देखें ➔' : 'View Full Details & Slip ➔'}
               </button>
             </div>
           )}
         </div>
       )}
 
-      {/* Voice Controls with Push-to-Talk Button */}
+      {/* Voice Controls with Push-to-Talk, Quick Suggestions & In-Voice Text Bar */}
       <VoiceControls
         state={transportState}
         isRecording={isRecording}
@@ -506,6 +634,7 @@ export function VoiceMode({
         onStopRecord={stopRecording}
         onStopSpeaking={stopPlayback}
         onReplay={handleReplay}
+        onQuickQuery={handleQuickQuery}
         onSwitchToText={onSwitchToText}
         onStartOver={onStartOver}
         onEndConversation={onEndConversation}
