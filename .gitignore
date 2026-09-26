@@ -46,6 +46,7 @@ frontend/.next/
 frontend/out/
 .next/
 out/
+*.tsbuildinfo
 
 # Testing & Coverage
 .pytest_cache/

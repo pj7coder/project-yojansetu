@@ -6,12 +6,14 @@ export type MicPermissionState = 'prompt' | 'granted' | 'denied' | 'unavailable'
 
 interface UseVoiceRecorderOptions {
   maxDurationSeconds?: number;
-  onRecordingComplete: (audioBlob: Blob) => void;
+  lang?: 'hi' | 'en';
+  onRecordingComplete: (audioBlob: Blob, transcript?: string) => void;
   onError?: (error: Error) => void;
 }
 
 export function useVoiceRecorder({
   maxDurationSeconds = 60,
+  lang = 'hi',
   onRecordingComplete,
   onError,
 }: UseVoiceRecorderOptions) {
@@ -21,6 +23,8 @@ export function useVoiceRecorder({
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const transcriptRef = useRef<string>('');
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const durationTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -75,6 +79,7 @@ export function useVoiceRecorder({
     try {
       cleanupStream();
       chunksRef.current = [];
+      transcriptRef.current = '';
       setRecordingDuration(0);
 
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -89,6 +94,38 @@ export function useVoiceRecorder({
       mediaStreamRef.current = stream;
       setPermissionState('granted');
 
+      // Initialize browser SpeechRecognition if available for instant live transcription
+      const SpeechRec =
+        typeof window !== 'undefined'
+          ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+          : null;
+
+      if (SpeechRec) {
+        try {
+          const recognition = new SpeechRec();
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.lang = lang === 'en' ? 'en-IN' : 'hi-IN';
+
+          recognition.onresult = (e: any) => {
+            let fullText = '';
+            for (let i = 0; i < e.results.length; i++) {
+              fullText += e.results[i][0].transcript + ' ';
+            }
+            transcriptRef.current = fullText.trim();
+          };
+
+          recognition.onerror = (e: any) => {
+            console.warn('SpeechRecognition notice:', e.error);
+          };
+
+          recognition.start();
+          recognitionRef.current = recognition;
+        } catch (recErr) {
+          console.warn('SpeechRecognition failed to start:', recErr);
+        }
+      }
+
       const mimeType = getSupportedMimeType();
       const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
       mediaRecorderRef.current = recorder;
@@ -100,15 +137,23 @@ export function useVoiceRecorder({
       };
 
       recorder.onstop = () => {
+        if (recognitionRef.current) {
+          try {
+            recognitionRef.current.stop();
+          } catch {}
+          recognitionRef.current = null;
+        }
+
         const fullBlob = new Blob(chunksRef.current, {
           type: mimeType || 'audio/webm',
         });
+        const finalTranscript = transcriptRef.current;
         chunksRef.current = [];
         cleanupStream();
         clearTimers();
         setIsRecording(false);
         if (fullBlob.size > 0) {
-          onRecordingComplete(fullBlob);
+          onRecordingComplete(fullBlob, finalTranscript);
         }
       };
 
@@ -128,6 +173,12 @@ export function useVoiceRecorder({
         }
       }, maxDurationSeconds * 1000);
     } catch (err: any) {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch {}
+        recognitionRef.current = null;
+      }
       cleanupStream();
       clearTimers();
       setIsRecording(false);
@@ -138,20 +189,32 @@ export function useVoiceRecorder({
       }
       onError?.(err);
     }
-  }, [isSupported, maxDurationSeconds, onRecordingComplete, onError, cleanupStream, clearTimers]);
+  }, [isSupported, lang, maxDurationSeconds, onRecordingComplete, onError, cleanupStream, clearTimers]);
 
   const stopRecording = useCallback(() => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {}
+    }
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
       mediaRecorderRef.current.stop();
     }
   }, []);
 
   const cancelRecording = useCallback(() => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch {}
+      recognitionRef.current = null;
+    }
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
       mediaRecorderRef.current.onstop = null; // Do not trigger callback
       mediaRecorderRef.current.stop();
     }
     chunksRef.current = [];
+    transcriptRef.current = '';
     cleanupStream();
     clearTimers();
     setIsRecording(false);

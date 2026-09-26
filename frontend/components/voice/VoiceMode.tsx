@@ -58,7 +58,7 @@ export function VoiceMode({
   // Resolves backend relative or absolute audio URLs to full fetchable backend URLs
   const resolveAudioUrl = useCallback(
     (rawUrl?: string, responseId?: string): string => {
-      if (sessionId && responseId) {
+      if (sessionId && responseId && !responseId.startsWith('local_')) {
         return getVoiceResponseAudioUrl(sessionId, responseId);
       }
       if (!rawUrl) return '';
@@ -79,6 +79,9 @@ export function VoiceMode({
 
   // Stop audio playback cleanly
   const stopPlayback = useCallback(() => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
     if (audioPlayerRef.current) {
       audioPlayerRef.current.pause();
       audioPlayerRef.current.currentTime = 0;
@@ -92,13 +95,48 @@ export function VoiceMode({
     setTransportState('READY');
   }, []);
 
+  // Web Speech Synthesis browser fallback
+  const speakBrowserSynthesis = useCallback(
+    (text: string) => {
+      stopPlayback();
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = isHi ? 'hi-IN' : 'en-IN';
+        utterance.rate = 1.0;
+        setIsPlaying(true);
+        setTransportState('SPEAKING');
+
+        utterance.onend = () => {
+          setIsPlaying(false);
+          setTransportState('READY');
+        };
+
+        utterance.onerror = (e) => {
+          console.warn('SpeechSynthesis error:', e);
+          setIsPlaying(false);
+          setTransportState('READY');
+        };
+
+        window.speechSynthesis.speak(utterance);
+      } else {
+        setTransportState('READY');
+      }
+    },
+    [isHi, stopPlayback]
+  );
+
   // Play synthesized audio stream enforcing half-duplex rules
   const playAudioStream = useCallback(
-    (audioUrl: string) => {
+    (audioUrl: string, fallbackText?: string) => {
       stopPlayback();
 
       if (!audioUrl) {
-        setTransportState('READY');
+        if (fallbackText) {
+          speakBrowserSynthesis(fallbackText);
+        } else {
+          setTransportState('READY');
+        }
         return;
       }
 
@@ -112,34 +150,46 @@ export function VoiceMode({
       };
 
       audio.onerror = (err) => {
-        console.warn('Audio playback error:', err, 'URL:', audioUrl);
+        console.warn('Audio playback error:', err, 'falling back to speech synthesis');
         stopPlayback();
-        setFeedbackMessage(
-          isHi
-            ? 'ऑडियो प्लेबैक में समस्या आई। उत्तर नीचे स्क्रीन पर पढ़ सकते हैं।'
-            : 'Audio playback encountered an issue. You can read the response on screen.'
-        );
+        if (fallbackText) {
+          speakBrowserSynthesis(fallbackText);
+        } else {
+          setFeedbackMessage(
+            isHi
+              ? 'ऑडियो प्लेबैक में समस्या आई। उत्तर नीचे स्क्रीन पर पढ़ सकते हैं।'
+              : 'Audio playback encountered an issue. You can read the response on screen.'
+          );
+        }
       };
 
       audio.play().catch((playErr) => {
         console.warn('Browser prevented audio autoplay:', playErr);
         stopPlayback();
-        setFeedbackMessage(
-          isHi
-            ? 'ब्राउज़र ने आवाज़ को स्वतः चलने से रोक दिया। सुनने के लिए "दोबारा सुनें" बटन दबाएँ।'
-            : 'Browser blocked audio autoplay. Click "Replay" to listen.'
-        );
+        if (fallbackText) {
+          speakBrowserSynthesis(fallbackText);
+        } else {
+          setFeedbackMessage(
+            isHi
+              ? 'ब्राउज़र ने आवाज़ को स्वतः चलने से रोक दिया। सुनने के लिए "दोबारा सुनें" बटन दबाएँ।'
+              : 'Browser blocked audio autoplay. Click "Replay" to listen.'
+          );
+        }
       });
     },
-    [isHi, stopPlayback]
+    [isHi, stopPlayback, speakBrowserSynthesis]
   );
 
   // Voice Turn Submission Handler
   const handleRecordingComplete = useCallback(
-    async (audioBlob: Blob) => {
+    async (audioBlob: Blob, liveTranscript?: string) => {
       setTransportState('PROCESSING_AUDIO');
       setErrorMessage(null);
       setFeedbackMessage(null);
+
+      if (liveTranscript) {
+        setLastTranscript(liveTranscript);
+      }
 
       // Generate client-side idempotency turn token
       const voiceTurnId = `vturn_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
@@ -150,7 +200,9 @@ export function VoiceMode({
           sessionId,
           audioBlob,
           voiceTurnId,
-          activeConversation?.meta?.version ?? conversationVersion
+          activeConversation?.meta?.version ?? conversationVersion,
+          liveTranscript,
+          lang
         );
 
         // Update transcript if available
@@ -169,14 +221,16 @@ export function VoiceMode({
           setFeedbackMessage(turnResult.warning);
         }
 
-        // Play synthesized TTS audio if provided
-        if (turnResult.audio) {
+        const replySpeech = isHi
+          ? turnResult.conversation?.message?.text_hi
+          : turnResult.conversation?.message?.text_en;
+
+        // Play synthesized TTS audio if provided, or speak via browser SpeechSynthesis
+        if (turnResult.audio?.audio_url) {
           const streamUrl = resolveAudioUrl(turnResult.audio.audio_url, turnResult.audio.response_id);
-          if (streamUrl) {
-            playAudioStream(streamUrl);
-          } else {
-            setTransportState('READY');
-          }
+          playAudioStream(streamUrl, replySpeech);
+        } else if (replySpeech) {
+          speakBrowserSynthesis(replySpeech);
         } else {
           setTransportState('READY');
         }
@@ -211,13 +265,15 @@ export function VoiceMode({
       activeConversation,
       conversationVersion,
       isHi,
+      lang,
       onConversationResponse,
       playAudioStream,
       resolveAudioUrl,
+      speakBrowserSynthesis,
     ]
   );
 
-  // MediaRecorder hook
+  // MediaRecorder + SpeechRecognition hook
   const {
     isRecording,
     permissionState,
@@ -226,6 +282,7 @@ export function VoiceMode({
     stopRecording,
   } = useVoiceRecorder({
     maxDurationSeconds: 60,
+    lang,
     onRecordingComplete: handleRecordingComplete,
     onError: (err) => {
       setTransportState('READY');
@@ -258,19 +315,31 @@ export function VoiceMode({
     try {
       setFeedbackMessage(null);
       const replay = await replayVoiceResponse(sessionId);
-      if (replay.audio) {
+      const fallbackText = isHi
+        ? replay.speech_text || activeConversation?.message?.text_hi
+        : replay.speech_text || activeConversation?.message?.text_en;
+
+      if (replay.audio?.audio_url) {
         const streamUrl = resolveAudioUrl(replay.audio.audio_url, replay.audio.response_id);
         if (streamUrl) {
-          playAudioStream(streamUrl);
+          playAudioStream(streamUrl, fallbackText);
+          return;
         }
       }
+
+      if (fallbackText) {
+        speakBrowserSynthesis(fallbackText);
+      }
     } catch (err: any) {
-      console.warn('Voice replay failed:', err);
-      setFeedbackMessage(
-        isHi ? 'पुनः आवाज़ चलाने में असमर्थ।' : 'Unable to replay audio response.'
-      );
+      console.warn('Voice replay notice:', err);
+      const fallbackText = isHi
+        ? activeConversation?.message?.text_hi
+        : activeConversation?.message?.text_en;
+      if (fallbackText) {
+        speakBrowserSynthesis(fallbackText);
+      }
     }
-  }, [sessionId, isPlaying, stopPlayback, playAudioStream, resolveAudioUrl, isHi]);
+  }, [sessionId, isPlaying, stopPlayback, playAudioStream, resolveAudioUrl, speakBrowserSynthesis, activeConversation, isHi]);
 
   // Cleanup on unmount
   useEffect(() => {
