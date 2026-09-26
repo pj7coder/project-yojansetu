@@ -60,7 +60,7 @@ export default function AdminOverviewPage() {
   if (!overview) return null;
 
   return (
-    <div className="flex flex-col gap-3 h-full max-w-full">
+    <div className="flex flex-col gap-4 w-full">
       {/* Top Header Bar */}
       <div className="flex items-center justify-between pb-1 border-b border-slate-200">
         <div className="flex items-center gap-2.5">
@@ -218,10 +218,10 @@ export default function AdminOverviewPage() {
         </Link>
       </div>
 
-      {/* 3-Column Zero-Scroll Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 flex-1 min-h-0">
+      {/* 3-Column Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Column 1: Pipeline Breakdown (Compact List) */}
-        <div className="bg-white rounded-xl border border-slate-200 p-3 flex flex-col min-h-0 shadow-xs">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col shadow-xs">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
               <span>⚡</span>
@@ -234,7 +234,7 @@ export default function AdminOverviewPage() {
               Inspect Queue →
             </Link>
           </div>
-          <div className="mt-2 space-y-1.5 overflow-y-auto pr-1 flex-1">
+          <div className="mt-2.5 space-y-2">
             {(overview.pipeline_stages || []).slice(0, 7).map((stage, idx) => (
               <div
                 key={idx}
@@ -272,7 +272,7 @@ export default function AdminOverviewPage() {
         </div>
 
         {/* Column 2: Critical Alerts & Subsystems */}
-        <div className="bg-white rounded-xl border border-slate-200 p-3 flex flex-col min-h-0 shadow-xs">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col shadow-xs">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
               <span>⚠️</span>
@@ -286,7 +286,7 @@ export default function AdminOverviewPage() {
             </Link>
           </div>
 
-          <div className="mt-2 space-y-2 overflow-y-auto pr-1 flex-1">
+          <div className="mt-2.5 space-y-2">
             {overview.critical_issues && overview.critical_issues.length > 0 ? (
               overview.critical_issues.slice(0, 4).map((issue) => (
                 <div
@@ -303,7 +303,7 @@ export default function AdminOverviewPage() {
                 </div>
               ))
             ) : (
-              <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-center my-auto">
+              <div className="p-3.5 rounded-lg bg-emerald-50 border border-emerald-200 text-center my-2">
                 <div className="text-emerald-700 font-bold text-xs">All Systems Nominal</div>
                 <div className="text-[10px] text-emerald-600 mt-0.5">
                   No critical pipeline blockers or schema verification discrepancies detected.
@@ -312,7 +312,7 @@ export default function AdminOverviewPage() {
             )}
 
             {/* Quick Subsystems Status Row */}
-            <div className="mt-auto pt-2 border-t border-slate-100 grid grid-cols-3 gap-1.5 text-center text-[10px]">
+            <div className="pt-3 border-t border-slate-100 grid grid-cols-3 gap-1.5 text-center text-[10px]">
               <div className="p-1 rounded bg-slate-50 border border-slate-200">
                 <span className="font-bold text-slate-700">Database</span>
                 <div className="text-emerald-600 font-bold mt-0.5">● Connected</div>
@@ -330,7 +330,7 @@ export default function AdminOverviewPage() {
         </div>
 
         {/* Column 3: Quick Shortcuts & Live Activity */}
-        <div className="bg-white rounded-xl border border-slate-200 p-3 flex flex-col min-h-0 shadow-xs">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col shadow-xs">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
               <span>📋</span>
@@ -345,10 +345,10 @@ export default function AdminOverviewPage() {
           </div>
 
           {/* Quick Action Buttons */}
-          <div className="grid grid-cols-2 gap-1.5 my-2">
+          <div className="grid grid-cols-2 gap-2 my-2.5">
             <Link
               href="/admin/review"
-              className="p-1.5 rounded-lg border border-slate-200 hover:border-orange-300 hover:bg-orange-50 text-left transition flex items-center justify-between"
+              className="p-2 rounded-lg border border-slate-200 hover:border-orange-300 hover:bg-orange-50 text-left transition flex items-center justify-between"
             >
               <div>
                 <div className="text-[11px] font-bold text-slate-800">Verification</div>
@@ -358,7 +358,7 @@ export default function AdminOverviewPage() {
             </Link>
             <Link
               href="/admin/processing"
-              className="p-1.5 rounded-lg border border-slate-200 hover:border-orange-300 hover:bg-orange-50 text-left transition flex items-center justify-between"
+              className="p-2 rounded-lg border border-slate-200 hover:border-orange-300 hover:bg-orange-50 text-left transition flex items-center justify-between"
             >
               <div>
                 <div className="text-[11px] font-bold text-slate-800">Pipeline Queue</div>
@@ -369,11 +369,11 @@ export default function AdminOverviewPage() {
           </div>
 
           {/* Activity Stream */}
-          <div className="space-y-1.5 overflow-y-auto pr-1 flex-1">
+          <div className="space-y-1.5">
             {activities.slice(0, 4).map((act, i) => (
               <div
                 key={act.id || i}
-                className="p-1.5 rounded-md bg-slate-50 border border-slate-150 text-[11px] flex items-center justify-between"
+                className="p-2 rounded-md bg-slate-50 border border-slate-150 text-[11px] flex items-center justify-between"
               >
                 <div className="truncate pr-2">
                   <span className="font-semibold text-slate-800 mr-1.5">{act.title}</span>

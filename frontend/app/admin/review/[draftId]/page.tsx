@@ -136,7 +136,7 @@ export default function SchemeReviewWorkspacePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6 text-xs text-slate-500">
+      <div className="py-20 flex items-center justify-center p-6 text-xs text-slate-500">
         <div className="text-center space-y-2">
           <div className="animate-spin text-3xl">⚙</div>
           <div className="font-semibold text-slate-700">Loading Review Workspace...</div>
@@ -148,7 +148,7 @@ export default function SchemeReviewWorkspacePage() {
 
   if (error || !detail) {
     return (
-      <div className="min-h-screen bg-slate-100 p-8 flex items-center justify-center">
+      <div className="py-20 p-8 flex items-center justify-center">
         <div className="bg-white border border-red-200 rounded-2xl p-6 max-w-md w-full text-center space-y-3 shadow-sm">
           <div className="text-3xl">⚠</div>
           <h2 className="text-base font-bold text-slate-900">Review Workspace Error</h2>
@@ -190,7 +190,7 @@ export default function SchemeReviewWorkspacePage() {
   });
 
   return (
-    <div className="h-screen flex flex-col bg-slate-100 overflow-hidden">
+    <div className="space-y-4">
       {/* Top Review Header */}
       <ReviewHeader
         detail={detail}
@@ -201,9 +201,9 @@ export default function SchemeReviewWorkspacePage() {
       />
 
       {/* Main Split-Screen Workspace */}
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* Left Side: Original PDF Viewer (50% desktop width) */}
-        <div className="w-full lg:w-1/2 h-[45vh] lg:h-full p-3 lg:pr-1.5 flex flex-col">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+        {/* Left Side: Original PDF Viewer (Sticky on desktop) */}
+        <div className="w-full lg:sticky lg:top-18 lg:h-[calc(100vh-100px)] h-[550px] flex flex-col">
           <PdfViewer
             documentId={detail.document_id}
             targetPage={targetPdfPage}
@@ -211,17 +211,17 @@ export default function SchemeReviewWorkspacePage() {
           />
         </div>
 
-        {/* Right Side: Review Facts & Decision Panel (50% desktop width) */}
-        <div className="w-full lg:w-1/2 h-[55vh] lg:h-full p-3 lg:pl-1.5 flex flex-col overflow-hidden">
-          <div className="bg-white border border-slate-200 rounded-xl shadow-xs flex-1 flex flex-col overflow-hidden">
-            {/* Navigation Tabs */}
-            <div className="flex items-center gap-1 px-4 pt-3 pb-2 border-b border-slate-200 bg-slate-50/70 overflow-x-auto text-xs">
+        {/* Right Side: Review Facts & Decision Panel */}
+        <div className="w-full flex flex-col">
+          <div className="bg-white border border-slate-200 rounded-xl shadow-xs flex flex-col">
+            {/* Navigation Tabs (Sticky at top of facts card during scroll) */}
+            <div className="sticky top-14 lg:top-18 z-10 flex items-center gap-1 px-4 pt-3 pb-2 border-b border-slate-200 bg-white/95 backdrop-blur-xs rounded-t-xl overflow-x-auto text-xs shadow-xs">
               <button
                 type="button"
                 onClick={() => setActiveTab("all")}
                 className={`px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition ${
                   activeTab === "all"
-                    ? "bg-white text-blue-700 shadow-xs border border-slate-200"
+                    ? "bg-slate-100 text-blue-700 shadow-xs border border-slate-200"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -232,7 +232,7 @@ export default function SchemeReviewWorkspacePage() {
                 onClick={() => setActiveTab("eligibility")}
                 className={`px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition ${
                   activeTab === "eligibility"
-                    ? "bg-white text-blue-700 shadow-xs border border-slate-200"
+                    ? "bg-slate-100 text-blue-700 shadow-xs border border-slate-200"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -243,7 +243,7 @@ export default function SchemeReviewWorkspacePage() {
                 onClick={() => setActiveTab("exclusions")}
                 className={`px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition ${
                   activeTab === "exclusions"
-                    ? "bg-white text-blue-700 shadow-xs border border-slate-200"
+                    ? "bg-slate-100 text-blue-700 shadow-xs border border-slate-200"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -254,7 +254,7 @@ export default function SchemeReviewWorkspacePage() {
                 onClick={() => setActiveTab("benefits")}
                 className={`px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition ${
                   activeTab === "benefits"
-                    ? "bg-white text-blue-700 shadow-xs border border-slate-200"
+                    ? "bg-slate-100 text-blue-700 shadow-xs border border-slate-200"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -265,7 +265,7 @@ export default function SchemeReviewWorkspacePage() {
                 onClick={() => setActiveTab("documents")}
                 className={`px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition ${
                   activeTab === "documents"
-                    ? "bg-white text-blue-700 shadow-xs border border-slate-200"
+                    ? "bg-slate-100 text-blue-700 shadow-xs border border-slate-200"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -276,7 +276,7 @@ export default function SchemeReviewWorkspacePage() {
                 onClick={() => setActiveTab("application")}
                 className={`px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition ${
                   activeTab === "application"
-                    ? "bg-white text-blue-700 shadow-xs border border-slate-200"
+                    ? "bg-slate-100 text-blue-700 shadow-xs border border-slate-200"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -304,7 +304,7 @@ export default function SchemeReviewWorkspacePage() {
                 onClick={() => setActiveTab("audit")}
                 className={`px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition ${
                   activeTab === "audit"
-                    ? "bg-white text-blue-700 shadow-xs border border-slate-200"
+                    ? "bg-slate-100 text-blue-700 shadow-xs border border-slate-200"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -313,7 +313,7 @@ export default function SchemeReviewWorkspacePage() {
             </div>
 
             {/* Content Body: Scrollable Fact List or Conflicts or Audit */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-3">
+            <div className="p-4 space-y-3">
               {activeTab === "audit" ? (
                 <AuditLogViewer events={detail.audit_events} />
               ) : activeTab === "conflicts" ? (

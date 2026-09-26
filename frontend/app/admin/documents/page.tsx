@@ -584,8 +584,8 @@ export default function AdminDocumentsPage() {
 
         {/* Upload Modal */}
         {showUpload && (
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-xl border border-slate-200 shadow-2xl max-w-md w-full p-6 text-xs text-slate-800 space-y-4">
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto py-8">
+            <div className="bg-white rounded-xl border border-slate-200 shadow-2xl max-w-md w-full p-6 text-xs text-slate-800 space-y-4 max-h-[90vh] overflow-y-auto my-auto">
               <div className="flex items-center justify-between border-b pb-3">
                 <div>
                   <h3 className="font-bold text-sm text-slate-900">Upload Government Document</h3>

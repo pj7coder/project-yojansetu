@@ -49,35 +49,8 @@ export default function AdminReviewQueuePage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col">
-      {/* Admin Top Navbar */}
-      <header className="bg-slate-900 text-white border-b border-slate-800 px-6 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Link href="/" className="font-bold text-base tracking-tight text-white flex items-center gap-2">
-            <span>🛡 YojanSetu</span>
-            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
-              Admin Workspace
-            </span>
-          </Link>
-          <span className="text-slate-600">/</span>
-          <span className="text-sm text-slate-300 font-medium">Human Verification Queue</span>
-        </div>
-        <div className="flex items-center gap-3 text-xs">
-          <span className="px-2 py-1 rounded bg-slate-800 text-slate-300 font-mono">
-            Reviewer: DEV_REVIEWER
-          </span>
-          <Link
-            href="/documents"
-            className="text-slate-400 hover:text-white transition"
-          >
-            Documents
-          </Link>
-        </div>
-      </header>
-
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-6 space-y-5">
-        {/* Title & Queue Stats Header */}
+    <div className="space-y-5">
+      {/* Title & Queue Stats Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
@@ -287,7 +260,6 @@ export default function AdminReviewQueuePage() {
             </div>
           </div>
         )}
-      </main>
     </div>
   );
 }

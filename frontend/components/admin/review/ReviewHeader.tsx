@@ -211,8 +211,8 @@ export function ReviewHeader({
 
       {/* Complete Verification Modal */}
       {showCompleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto py-8">
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto my-auto">
             <h3 className="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
               ✓ Seal Human Verification
             </h3>
@@ -259,8 +259,8 @@ export function ReviewHeader({
 
       {/* Reject Scheme Modal */}
       {showRejectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto py-8">
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto my-auto">
             <h3 className="text-base font-bold text-red-700 mb-2 flex items-center gap-2">
               ✕ Reject Scheme Draft
             </h3>
@@ -308,8 +308,8 @@ export function ReviewHeader({
 
       {/* Reopen Review Modal */}
       {showReopenModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto py-8">
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto my-auto">
             <h3 className="text-base font-bold text-slate-900 mb-2">
               ↻ Reopen Scheme Review
             </h3>

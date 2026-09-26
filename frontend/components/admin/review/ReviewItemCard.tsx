@@ -389,8 +389,8 @@ export function ReviewItemCard({
 
       {/* Approve / Override Modal */}
       {showApproveModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto py-8">
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto my-auto">
             <h3 className="text-base font-bold text-slate-900 mb-2">
               {requiresOverride ? "⚠ Override & Approve Fact" : "✓ Approve Fact"}
             </h3>
@@ -458,8 +458,8 @@ export function ReviewItemCard({
 
       {/* Reject Modal */}
       {showRejectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto py-8">
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto my-auto">
             <h3 className="text-base font-bold text-red-700 mb-2">
               ✕ Reject Fact
             </h3>
