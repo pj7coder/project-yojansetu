@@ -652,15 +652,12 @@ export default function CitizenPage() {
                     {/* Interactive Follow-Up Question Card */}
                     {msg.followUpQuestion && (
                       <div className="mt-3.5 p-3.5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50/80 border border-amber-300 shadow-sm space-y-2.5">
-                        <div className="flex items-center gap-1.5 text-amber-900 font-black text-xs uppercase tracking-wide">
-                          <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-                          <span>❓ {isHi ? "पात्रता निर्धारण हेतु अगला प्रश्न" : "Follow-Up Verification Question"}</span>
-                        </div>
-                        <p className="font-extrabold text-slate-900 text-xs sm:text-sm leading-snug">
-                          {isHi ? msg.followUpQuestion.question_hi : msg.followUpQuestion.question_en}
+                        <p className="font-bold text-slate-900 text-xs sm:text-sm leading-snug flex items-start gap-2">
+                          <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-amber-500 flex items-center justify-center text-white text-[10px]">?</span>
+                          <span>{isHi ? msg.followUpQuestion.question_hi : msg.followUpQuestion.question_en}</span>
                         </p>
                         {msg.followUpQuestion.rationale_hi && (
-                          <p className="text-[11px] text-amber-800/80 italic">
+                          <p className="text-[11px] text-amber-700/80 italic pl-6">
                             ℹ️ {isHi ? msg.followUpQuestion.rationale_hi : msg.followUpQuestion.rationale_en}
                           </p>
                         )}

@@ -803,7 +803,7 @@ function evaluateConfidenceAndFollowUp(
       question_id: "ask_initial_need",
       field: "occupation",
       question_hi: "नमस्ते! भारत सरकार एवं समस्त राज्य सरकारों की 450+ जन कल्याणकारी योजनाओं में से आपके लिए 100% सही व सर्वाधिक लाभ वाली योजना खोजने के लिए, मुझे आपकी कुछ बुनियादी जानकारी की आवश्यकता होगी।\n\nकृपया मुझे बताएं:\n1. आपकी वर्तमान उम्र (आयु) कितनी है?\n2. आपका मुख्य कार्य/व्यवसाय क्या है? (जैसे किसान, विद्यार्थी, दैनिक श्रमिक, छोटा व्यापार, या वरिष्ठ नागरिक)\n3. आप भारत के किस राज्य में रहते हैं?",
-      question_en: "Namaste! To find the exact welfare schemes, direct benefit transfers (DBT), and financial assistance tailored for you among 450+ Central and State welfare programs, I need a few basic details first.\n\nPlease share:\n1. What is your current age?\n2. What is your primary occupation or role? (Farmer, Student, Artisan / Worker, Homemaker, or Senior Citizen?)\n3. Which State/UT of India do you reside in?",
+      question_en: "To find the exact welfare scheme for you, I need a few quick details. What is your age and primary occupation? (e.g. Farmer, Student, Senior Citizen, Women, Artisan)",
       rationale_hi: "सटीक पात्रता सत्यापन के लिए बुनियादी जानकारी आवश्यक है ताकि कोई गलत अनुमान न लगे।",
       rationale_en: "Basic profile details are required to accurately evaluate statutory eligibility without assumptions.",
       options: [
@@ -904,46 +904,17 @@ function synthesizeFollowUpAnswer(
   isHi: boolean
 ): string {
   const pct = Math.round(score * 100);
+  // The question text is rendered by the UI yellow card — only return a brief status line here
   if (isHi) {
-    const lines: string[] = [];
     if (score < 0.4) {
-      lines.push("नमस्ते! भारत सरकार एवं समस्त राज्य सरकारों की जन कल्याणकारी योजनाओं में से आपके लिए 100% सही व सर्वाधिक लाभ वाली योजना खोजने के लिए, मुझे आपकी कुछ बुनियादी जानकारी की आवश्यकता होगी:\n");
-    } else {
-      lines.push(`🔒 **पात्रता निर्धारण प्रक्रियाधीन (सत्यापन स्तर: ${pct}%)**`);
-      lines.push("सटीक व कानूनी रूप से मान्य सरकारी योजना स्वीकृत करने हेतु एक महत्वपूर्ण जानकारी आवश्यक है:\n");
+      return `⏳ पात्रता सत्यापन जारी है (${pct}% विश्वास)। सटीक योजना बताने के लिए एक आवश्यक जानकारी चाहिए:`;
     }
-
-    lines.push(`❓ **${question.question_hi}**`);
-    if (question.rationale_hi) {
-      lines.push(`*ℹ️ नियम: ${question.rationale_hi}*`);
-    }
-
-    if (candidates.length > 0 && score >= 0.6) {
-      lines.push(`\n💡 *प्रारंभिक संभावित योजनाएं*: ${candidates.map((c) => c.name_hi).join(", ")}`);
-    }
-
-    lines.push("\n👇 कृपया नीचे दिए गए विकल्पों में से चुनें या बोलकर बताएं:");
-    return lines.join("\n");
+    return `⏳ पात्रता सत्यापन जारी (${pct}% विश्वास)। सत्यापन पूरा करने के लिए एक महत्वपूर्ण जानकारी आवश्यक है:`;
   } else {
-    const lines: string[] = [];
     if (score < 0.4) {
-      lines.push("Greetings! To discover the exact government welfare schemes and financial benefits tailored for you, I need a few basic details first:\n");
-    } else {
-      lines.push(`🔒 **Eligibility Verification in Progress (Confidence: ${pct}%)**`);
-      lines.push("To confirm official statutory entitlement without premature assumptions, please clarify this key detail:\n");
+      return `⏳ Eligibility verification in progress (${pct}% confidence). One basic detail needed to find your best scheme:`;
     }
-
-    lines.push(`❓ **${question.question_en}**`);
-    if (question.rationale_en) {
-      lines.push(`*ℹ️ Statutory Rule: ${question.rationale_en}*`);
-    }
-
-    if (candidates.length > 0 && score >= 0.6) {
-      lines.push(`\n💡 *Potential Candidate Schemes*: ${candidates.map((c) => c.name_en).join(", ")}`);
-    }
-
-    lines.push("\n👇 Please select an option below or speak into the microphone:");
-    return lines.join("\n");
+    return `⏳ Eligibility verification in progress (${pct}% confidence). One more detail needed to confirm your entitlement:`;
   }
 }
 

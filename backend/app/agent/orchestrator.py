@@ -581,15 +581,13 @@ class WelfareAgentOrchestrator:
 
         if is_hi:
             lines = []
-            lines.append("नमस्ते! आपके द्वारा दी गई जानकारी के आधार पर हमारी विश्लेषण रिपोर्ट प्रस्तुत है:")
 
             if follow_up_question and confidence_score < 0.80:
-                lines.append(f"\n🔍 **प्रारंभिक पात्रता स्थिति (सत्यापन विश्वास: {conf_pct}%)**")
-                lines.append("सटीक व कानूनी रूप से मान्य सरकारी योजना स्वीकृत करने हेतु एक महत्वपूर्ण जानकारी आवश्यक है:")
-                lines.append(f"\n❓ **{follow_up_question.get('question_hi', '')}**")
-                if follow_up_question.get("rationale_hi"):
-                    lines.append(f"ℹ️ *सरकारी नियम*: {follow_up_question.get('rationale_hi')}")
+                # Question is rendered by the UI yellow card — only output a brief status line here
+                lines.append(f"⏳ पात्रता सत्यापन जारी है ({conf_pct}% विश्वास)। सटीक योजना बताने के लिए एक जानकारी और चाहिए:")
                 return "\n".join(lines)
+
+            lines.append("नमस्ते! आपके विवरण के आधार पर पात्रता विश्लेषण:")
 
             if recommended_schemes:
                 primary = recommended_schemes[0]
@@ -627,15 +625,13 @@ class WelfareAgentOrchestrator:
             return "\n".join(lines)
         else:
             lines = []
-            lines.append("Greetings! Based on the demographic details provided, here is your verified welfare analysis:")
 
             if follow_up_question and confidence_score < 0.80:
-                lines.append(f"\n🔍 **Preliminary Assessment (Confidence: {conf_pct}%)**")
-                lines.append("To confirm official statutory entitlement without premature assumptions, please clarify this key detail:")
-                lines.append(f"\n❓ **{follow_up_question.get('question_en', '')}**")
-                if follow_up_question.get("rationale_en"):
-                    lines.append(f"ℹ️ *Statutory Rule*: {follow_up_question.get('rationale_en')}")
+                # Question is rendered by the UI yellow card — only output a brief status line here
+                lines.append(f"⏳ Eligibility verification in progress ({conf_pct}% confidence). One more detail needed to find your best scheme:")
                 return "\n".join(lines)
+
+            lines.append("Based on your profile, here is your verified eligibility analysis:")
 
             if recommended_schemes:
                 primary = recommended_schemes[0]
