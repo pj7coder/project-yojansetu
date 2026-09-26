@@ -19,6 +19,7 @@ import {
   SchemeCitation,
   RequiredDocument,
   EmitraKioskInfo,
+  FollowUpQuestion,
 } from "../../types/agent";
 import { LanguageToggle } from "../../components/citizen/LanguageToggle";
 import CitationDrawer from "../../components/citizen/CitationDrawer";
@@ -33,10 +34,14 @@ interface ChatMessage {
   text: string;
   timestamp: string;
   schemes?: RecommendedScheme[];
+  candidateSchemes?: RecommendedScheme[];
   documents?: RequiredDocument[];
   citations?: SchemeCitation[];
   kioskInfo?: EmitraKioskInfo;
   reasoningSteps?: any[];
+  confidenceScore?: number;
+  confidenceLevel?: "HIGH" | "MEDIUM" | "LOW";
+  followUpQuestion?: FollowUpQuestion | null;
 }
 
 const STORAGE_CHATS_KEY = "yojansetu_citizen_chat_sessions_v2";
@@ -352,10 +357,14 @@ export default function CitizenPage() {
         text: resp.final_answer || (isHi ? "यहाँ आपकी पात्रता और योजनाओं की जानकारी है।" : "Here is your eligibility and scheme information."),
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         schemes: resp.structured_data?.recommended_schemes || [],
+        candidateSchemes: resp.structured_data?.candidate_schemes || [],
         documents: resp.structured_data?.required_documents || [],
         citations: resp.structured_data?.citations || [],
         kioskInfo: resp.structured_data?.emitra_kiosk_info,
         reasoningSteps: resp.steps || [],
+        confidenceScore: resp.structured_data?.confidence_score,
+        confidenceLevel: resp.structured_data?.confidence_level,
+        followUpQuestion: resp.structured_data?.follow_up_question || null,
       };
 
       const finalMessages = [...updatedMessages, assistantMsg];
@@ -589,8 +598,100 @@ export default function CitizenPage() {
                         : "bg-slate-50 text-slate-800 border border-slate-200 shadow-2xs rounded-tl-xs"
                     }`}
                   >
+                    {/* Confidence Score Pill for Assistant Messages */}
+                    {!isUser && msg.confidenceScore !== undefined && (
+                      <div className="flex items-center gap-1.5 mb-2">
+                        <span
+                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${
+                            msg.confidenceScore >= 0.8
+                              ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
+                              : msg.confidenceScore >= 0.5
+                              ? "bg-amber-50 text-amber-800 border-amber-300 shadow-2xs"
+                              : "bg-slate-100 text-slate-700 border-slate-300"
+                          }`}
+                        >
+                          <span>{msg.confidenceScore >= 0.8 ? "🔒" : "⏳"}</span>
+                          <span>
+                            {msg.confidenceScore >= 0.8
+                              ? isHi
+                                ? "100% सत्यापित व पुष्ट पात्रता"
+                                : "100% Confident Match"
+                              : isHi
+                              ? `सत्यापन प्रक्रियाधीन (${Math.round(msg.confidenceScore * 100)}% सटीकता)`
+                              : `Verification in Progress (${Math.round(msg.confidenceScore * 100)}% Confidence)`}
+                          </span>
+                        </span>
+                      </div>
+                    )}
+
                     {/* Message Text */}
                     <div className="whitespace-pre-wrap font-medium">{msg.text}</div>
+
+                    {/* Interactive Follow-Up Question Card */}
+                    {msg.followUpQuestion && (
+                      <div className="mt-3.5 p-3.5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50/80 border border-amber-300 shadow-sm space-y-2.5">
+                        <div className="flex items-center gap-1.5 text-amber-900 font-black text-xs uppercase tracking-wide">
+                          <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+                          <span>❓ {isHi ? "पात्रता निर्धारण हेतु अगला प्रश्न" : "Follow-Up Verification Question"}</span>
+                        </div>
+                        <p className="font-extrabold text-slate-900 text-xs sm:text-sm leading-snug">
+                          {isHi ? msg.followUpQuestion.question_hi : msg.followUpQuestion.question_en}
+                        </p>
+                        {msg.followUpQuestion.rationale_hi && (
+                          <p className="text-[11px] text-amber-800/80 italic">
+                            ℹ️ {isHi ? msg.followUpQuestion.rationale_hi : msg.followUpQuestion.rationale_en}
+                          </p>
+                        )}
+
+                        {/* Quick Interactive Clickable Option Buttons */}
+                        {msg.followUpQuestion.options && msg.followUpQuestion.options.length > 0 && (
+                          <div className="pt-1 flex flex-wrap gap-1.5">
+                            {msg.followUpQuestion.options.map((opt, i) => (
+                              <button
+                                key={i}
+                                type="button"
+                                onClick={() => {
+                                  if (opt.value) {
+                                    setParameters((prev) => ({
+                                      ...prev,
+                                      ...opt.value,
+                                    }));
+                                    const keys = Object.keys(opt.value);
+                                    if (keys.length > 0) setLastUpdatedField(keys[0]);
+                                  }
+                                  const answerText = isHi ? opt.label_hi : opt.label_en;
+                                  handleSendMessage(answerText);
+                                }}
+                                className="px-3 py-1.5 rounded-lg bg-white hover:bg-orange-600 hover:text-white text-slate-800 font-bold text-xs border border-amber-300 shadow-2xs hover:shadow-xs transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
+                              >
+                                <span>👉</span>
+                                <span>{isHi ? opt.label_hi : opt.label_en}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Candidate Schemes under verification */}
+                    {msg.candidateSchemes && msg.candidateSchemes.length > 0 && (!msg.schemes || msg.schemes.length === 0) && (
+                      <div className="mt-3 pt-2.5 border-t border-slate-200 space-y-1.5">
+                        <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wide flex items-center gap-1">
+                          <span>💡</span>
+                          <span>{isHi ? "संभावित योजनाएं (सत्यापन जारी):" : "Potential Schemes Under Evaluation:"}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {msg.candidateSchemes.map((cs, i) => (
+                            <span
+                              key={i}
+                              className="px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-700 text-[11px] font-semibold"
+                            >
+                              {isHi ? cs.name_hi : cs.name_en}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Eligible Scheme Cards */}
                     {msg.schemes && msg.schemes.length > 0 && (

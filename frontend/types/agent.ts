@@ -47,12 +47,27 @@ export interface EmitraKioskInfo {
   citizen_tip: string;
 }
 
+export interface FollowUpQuestion {
+  question_id: string;
+  field: string;
+  question_hi: string;
+  question_en: string;
+  rationale_hi: string;
+  rationale_en: string;
+  options?: Array<{ label_hi: string; label_en: string; value: any }>;
+}
+
 export interface AgentStructuredData {
   citations?: SchemeCitation[];
   recommended_schemes?: RecommendedScheme[];
+  candidate_schemes?: RecommendedScheme[];
   required_documents?: RequiredDocument[];
   emitra_kiosk_info?: EmitraKioskInfo;
   profile_extracted?: Record<string, any>;
+  confidence_score?: number;
+  confidence_level?: "HIGH" | "MEDIUM" | "LOW";
+  confidence_reasons?: string[];
+  follow_up_question?: FollowUpQuestion | null;
 }
 
 export interface AgentQueryResponse {

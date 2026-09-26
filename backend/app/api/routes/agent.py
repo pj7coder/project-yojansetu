@@ -76,9 +76,13 @@ def run_agent_query(
         structured = {
             "citations": result.citations,
             "recommended_schemes": result.recommended_schemes,
+            "candidate_schemes": getattr(result, "candidate_schemes", []),
             "required_documents": result.required_documents,
             "emitra_kiosk_info": result.emitra_kiosk_info,
             "profile_extracted": result.profile_extracted,
+            "confidence_score": getattr(result, "confidence_score", 1.0),
+            "confidence_level": getattr(result, "confidence_level", "HIGH"),
+            "follow_up_question": getattr(result, "follow_up_question", None),
         }
 
         exec_ms = round((time.time() - start_time) * 1000, 2)

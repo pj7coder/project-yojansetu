@@ -64,6 +64,10 @@ class AgentResult:
     emitra_kiosk_info: Optional[Dict[str, Any]]
     profile_extracted: Dict[str, Any]
     total_execution_time_ms: float
+    candidate_schemes: List[Dict[str, Any]] = field(default_factory=list)
+    confidence_score: float = 1.0
+    confidence_level: str = "HIGH"
+    follow_up_question: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -73,9 +77,13 @@ class AgentResult:
             "reasoning_steps": [s.to_dict() for s in self.reasoning_steps],
             "citations": self.citations,
             "recommended_schemes": self.recommended_schemes,
+            "candidate_schemes": self.candidate_schemes,
             "required_documents": self.required_documents,
             "emitra_kiosk_info": self.emitra_kiosk_info,
             "profile_extracted": self.profile_extracted,
+            "confidence_score": self.confidence_score,
+            "confidence_level": self.confidence_level,
+            "follow_up_question": self.follow_up_question,
             "total_execution_time_ms": round(self.total_execution_time_ms, 2),
         }
 
@@ -459,6 +467,70 @@ class WelfareAgentOrchestrator:
             )
         )
 
+        # Confidence & Decisive Criteria Calculation
+        has_age = profile.get("age") is not None
+        has_income = profile.get("annual_income") is not None or profile.get("is_bpl")
+        has_land = profile.get("land_area_bigha") is not None
+        is_widow = bool(profile.get("is_widow") or profile.get("marital_status") == "WIDOWED")
+        is_farmer = bool(profile.get("occupation") == "FARMER" or has_land)
+        is_pension = "pension" in query.lower() or "पेंशन" in query or is_widow
+
+        confidence_score = 0.95
+        follow_up_question = None
+        candidate_schemes: List[Dict[str, Any]] = []
+
+        if is_pension and not has_age:
+            confidence_score = 0.35
+            follow_up_question = {
+                "question_id": "ask_age_for_pension",
+                "field": "age",
+                "question_hi": "राजस्थान वृद्धजन सम्मान पेंशन के लिए महिलाओं हेतु न्यूनतम आयु 55 वर्ष तथा पुरुषों हेतु 58 वर्ष आवश्यक है। आपकी सही पात्रता जांचने के लिए कृपया अपनी वर्तमान उम्र बताएं:",
+                "question_en": "For Rajasthan Old Age Pension, the minimum age is 55 for women and 58 for men. Please state your current age:",
+                "rationale_hi": "आयु के बिना पेंशन स्वीकृति का निर्धारण असंभव है।",
+                "rationale_en": "Age is a decisive statutory requirement for pension approval.",
+                "options": [
+                    {"label_hi": "60 वर्ष या अधिक", "label_en": "60 Years or Older", "value": {"age": 60}},
+                    {"label_hi": "55 से 59 वर्ष", "label_en": "55 - 59 Years", "value": {"age": 58}},
+                    {"label_hi": "55 वर्ष से कम आयु", "label_en": "Under 55 Years", "value": {"age": 48}},
+                ],
+            }
+        elif is_pension and not has_income:
+            confidence_score = 0.65
+            follow_up_question = {
+                "question_id": "ask_income_for_pension",
+                "field": "income",
+                "question_hi": "आपकी आयु पेंशन के अनुकूल है। पेंशन नियम 2024 के अनुसार पारिवारिक आय ₹48,000 वार्षिक से कम या बीपीएल कार्ड होना आवश्यक है। क्या आपकी आय इस सीमा में है?",
+                "question_en": "Your age qualifies for pension. According to rules, annual family income must be below ₹48,000 or you must hold a BPL card. Does your income meet this?",
+                "rationale_hi": "पेंशन नियमों के तहत अधिकतम आय सीमा ₹48,000 वार्षिक निर्धारित है।",
+                "rationale_en": "Income ceiling of ₹48,000/yr is legally required for non-BPL applicants.",
+                "options": [
+                    {"label_hi": "हाँ, आय ₹48,000 से कम है", "label_en": "Yes, income < ₹48,000", "value": {"income": 40000}},
+                    {"label_hi": "हाँ, मेरे पास BPL / अंत्योदय कार्ड है", "label_en": "Yes, I hold BPL/AAY Card", "value": {"rationCard": "BPL", "income": 36000}},
+                    {"label_hi": "नहीं, आय ₹48,000 से अधिक है", "label_en": "No, income > ₹48,000", "value": {"income": 100000}},
+                ],
+            }
+        elif is_farmer and not has_land:
+            confidence_score = 0.55
+            follow_up_question = {
+                "question_id": "ask_farmer_land",
+                "field": "landBigha",
+                "question_hi": "राजस्थान किसान अतिरिक्त सहायता (₹2,000 टॉप-अप) व अनुदान हेतु: आपके पास कितने बीघा कृषि भूमि है?",
+                "question_en": "For Rajasthan Farmer Subsidy and Top-Up: How many bighas of agricultural land do you own?",
+                "rationale_hi": "भूमि के रकबे के आधार पर लघु/सीमांत किसान की आधिकारिक पात्रता तय होती है।",
+                "rationale_en": "Landholding size determines small/marginal farmer eligibility status.",
+                "options": [
+                    {"label_hi": "सीमांत किसान (2.5 बीघा से कम)", "label_en": "Marginal (< 2.5 Bigha)", "value": {"landBigha": 2, "occupation": "FARMER"}},
+                    {"label_hi": "लघु किसान (2.5 से 5 बीघा)", "label_en": "Small (2.5 - 5 Bigha)", "value": {"landBigha": 4, "occupation": "FARMER"}},
+                    {"label_hi": "मध्यम / बड़ा किसान (> 5 बीघा)", "label_en": "Large (> 5 Bigha)", "value": {"landBigha": 8, "occupation": "FARMER"}},
+                ],
+            }
+
+        if confidence_score < 0.80:
+            candidate_schemes = list(recommended_schemes)
+            recommended_schemes = []
+
+        confidence_level = "HIGH" if confidence_score >= 0.80 else "MEDIUM" if confidence_score >= 0.50 else "LOW"
+
         # FINAL SYNTHESIS: Construct Traceable Vernacular Response
         answer_text = cls._synthesize_answer(
             is_hi=is_hi,
@@ -468,6 +540,8 @@ class WelfareAgentOrchestrator:
             citations=citations,
             documents=all_required_docs,
             emitra_info=emitra_info,
+            follow_up_question=follow_up_question,
+            confidence_score=confidence_score,
         )
 
         total_time_ms = (time.perf_counter() - start_time) * 1000.0
@@ -479,9 +553,13 @@ class WelfareAgentOrchestrator:
             reasoning_steps=steps,
             citations=citations,
             recommended_schemes=recommended_schemes,
+            candidate_schemes=candidate_schemes,
             required_documents=all_required_docs,
             emitra_kiosk_info=emitra_info,
             profile_extracted=profile,
+            confidence_score=confidence_score,
+            confidence_level=confidence_level,
+            follow_up_question=follow_up_question,
             total_execution_time_ms=total_time_ms,
         )
 
@@ -495,15 +573,27 @@ class WelfareAgentOrchestrator:
         citations: List[Dict[str, Any]],
         documents: List[Dict[str, Any]],
         emitra_info: Optional[Dict[str, Any]],
+        follow_up_question: Optional[Dict[str, Any]] = None,
+        confidence_score: float = 1.0,
     ) -> str:
         """Constructs an authoritative, respectful, traceable bilingual response."""
+        conf_pct = int(confidence_score * 100)
+
         if is_hi:
             lines = []
             lines.append("नमस्ते! आपके द्वारा दी गई जानकारी के आधार पर हमारी विश्लेषण रिपोर्ट प्रस्तुत है:")
 
+            if follow_up_question and confidence_score < 0.80:
+                lines.append(f"\n🔍 **प्रारंभिक पात्रता स्थिति (सत्यापन विश्वास: {conf_pct}%)**")
+                lines.append("सटीक व कानूनी रूप से मान्य सरकारी योजना स्वीकृत करने हेतु एक महत्वपूर्ण जानकारी आवश्यक है:")
+                lines.append(f"\n❓ **{follow_up_question.get('question_hi', '')}**")
+                if follow_up_question.get("rationale_hi"):
+                    lines.append(f"ℹ️ *सरकारी नियम*: {follow_up_question.get('rationale_hi')}")
+                return "\n".join(lines)
+
             if recommended_schemes:
                 primary = recommended_schemes[0]
-                lines.append(f"\n🎯 **पात्र योजना**: **{primary.get('name_hi', primary.get('name_en'))}**")
+                lines.append(f"\n🎯 **सत्यापित पात्र योजना ({conf_pct}% पूर्ण विश्वास)**: **{primary.get('name_hi', primary.get('name_en'))}**")
 
                 monthly = primary_benefit.get("monthly_payout_inr", 0)
                 annual = primary_benefit.get("annual_total_inr", 0)
@@ -539,9 +629,17 @@ class WelfareAgentOrchestrator:
             lines = []
             lines.append("Greetings! Based on the demographic details provided, here is your verified welfare analysis:")
 
+            if follow_up_question and confidence_score < 0.80:
+                lines.append(f"\n🔍 **Preliminary Assessment (Confidence: {conf_pct}%)**")
+                lines.append("To confirm official statutory entitlement without premature assumptions, please clarify this key detail:")
+                lines.append(f"\n❓ **{follow_up_question.get('question_en', '')}**")
+                if follow_up_question.get("rationale_en"):
+                    lines.append(f"ℹ️ *Statutory Rule*: {follow_up_question.get('rationale_en')}")
+                return "\n".join(lines)
+
             if recommended_schemes:
                 primary = recommended_schemes[0]
-                lines.append(f"\n🎯 **Eligible Scheme**: **{primary.get('name_en')}**")
+                lines.append(f"\n🎯 **Statutory Verified Scheme ({conf_pct}% Confidence)**: **{primary.get('name_en')}**")
 
                 monthly = primary_benefit.get("monthly_payout_inr", 0)
                 annual = primary_benefit.get("annual_total_inr", 0)
@@ -573,3 +671,4 @@ class WelfareAgentOrchestrator:
                 lines.append("\nNo exact scheme match found for the inputs. Please provide your age, annual income, or land holding to verify eligibility.")
 
             return "\n".join(lines)
+
