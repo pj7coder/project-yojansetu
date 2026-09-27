@@ -1973,9 +1973,10 @@ import {
 export async function sendAgentQuery(
   query: string,
   context?: Record<string, any>,
-  language: string = "auto"
+  language: string = "auto",
+  history?: any[]
 ): Promise<AgentQueryResponse> {
-  const payload = { query, context: context || {}, language };
+  const payload = { query, context: context || {}, language, history: history || [] };
 
   // Tier 1: Try configured external backend if reachable
   const externalUrl = `${config.apiBaseUrl}/agent/query`;
@@ -2023,8 +2024,8 @@ export async function sendAgentQuery(
     }
   }
 
-  // Tier 3: Direct built-in deterministic agent execution
-  return executeFallbackAgent(query, context || {}, language);
+  // Tier 3: Direct built-in deterministic agent execution with full conversation history
+  return executeFallbackAgent(query, context || {}, language, history || []);
 }
 
 /**

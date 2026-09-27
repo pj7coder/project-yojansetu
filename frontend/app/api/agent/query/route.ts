@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { query, context, language } = body;
+    const { query, context, language, history } = body;
 
     // Check if an external backend is configured via env and reachable
     const externalApi = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
         const extResp = await fetch(`${externalApi}/agent/query`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query, context, language }),
+          body: JSON.stringify({ query, context, language, history }),
         });
         if (extResp.ok) {
           const data = await extResp.json();
@@ -26,8 +26,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Execute built-in deterministic Rajasthan welfare agent
-    const result = executeFallbackAgent(query || "", context || {}, language || "hi");
+    // Execute built-in deterministic Rajasthan welfare agent with conversation history
+    const result = executeFallbackAgent(query || "", context || {}, language || "hi", history || []);
     return NextResponse.json(result);
   } catch (error: any) {
     console.error("Agent route error:", error);

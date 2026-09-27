@@ -392,11 +392,15 @@ export default function CitizenPage() {
     }
 
     try {
-      const context = getContextFromParameters(activeParams);
+      const context = {
+        ...getContextFromParameters(activeParams),
+        turnCount: updatedMessages.length,
+      };
       const resp: AgentQueryResponse = await sendAgentQuery(
         query,
         context,
-        lang === "hi" ? "hi" : "en"
+        lang === "hi" ? "hi" : "en",
+        updatedMessages
       );
 
       const assistantMsg: ChatMessage = {
