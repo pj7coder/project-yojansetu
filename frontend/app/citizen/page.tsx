@@ -337,9 +337,25 @@ export default function CitizenPage() {
       id: `msg_${Date.now()}`,
       sender: "assistant",
       text: isHi
-        ? "नमस्ते! 🙏 मैं योजनसेतु AI सहायक हूँ।\n\nमैं आपको राजस्थान सरकार की सही सरकारी योजनाओं से जोड़ने में मदद करूंगा — जैसे पेंशन, छात्रवृत्ति, किसान सहायता, आवास योजना, और बहुत कुछ।\n\nबस मुझसे बात करें — आप किसके लिए योजना जानना चाहते हैं?"
-        : "Hello! 👋 I'm your YojanSetu AI assistant.\n\nI help connect citizens to the right government schemes in Rajasthan — pensions, scholarships, farmer aid, housing, and much more.\n\nJust chat with me — who are you looking for schemes for?",
+        ? "नमस्ते! 🙏 मैं आपका योजनसेतु AI सहायक हूँ।\n\nराजस्थान सरकार की सभी योजनाओं में आपकी मदद करूँगा — पेंशन, किसान सहायता, छात्रवृत्ति, स्वास्थ्य बीमा, आवास और बहुत कुछ।\n\nबस बताइए — **आपकी उम्र कितनी है और आप क्या करते हैं?**\n_(जैसे: 45 वर्षीय किसान, 19 वर्षीय छात्रा, 62 वर्षीय बुजुर्ग)_"
+        : "Hello! 👋 I'm your YojanSetu AI assistant.\n\nI help Rajasthan citizens access government benefits — pensions, farmer aid, scholarships, health insurance, housing, and more.\n\nJust tell me — **how old are you and what do you do?**\n_(e.g. 45-year-old farmer, 19-year-old student, 62-year-old senior)_",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      followUpQuestion: {
+        question_id: "ask_who_age_occupation",
+        field: "occupation",
+        question_hi: "आपकी उम्र कितनी है और आप क्या काम करते हैं?",
+        question_en: "How old are you and what do you do?",
+        rationale_hi: "",
+        rationale_en: "",
+        options: [
+          { label_hi: "🌾 45 वर्ष, किसान", label_en: "🌾 45 yrs, Farmer", value: "45 वर्ष किसान" },
+          { label_hi: "👴 62 वर्ष, बुजुर्ग (पेंशन)", label_en: "👴 62 yrs, Senior (Pension)", value: "62 वर्ष बुजुर्ग" },
+          { label_hi: "🎓 20 वर्ष, विद्यार्थी (छात्र)", label_en: "🎓 20 yrs, Student", value: "20 वर्ष विद्यार्थी" },
+          { label_hi: "👩 35 वर्ष, गृहिणी / महिला", label_en: "👩 35 yrs, Homemaker", value: "35 वर्ष महिला गृहिणी" },
+          { label_hi: "🔨 30 वर्ष, श्रमिक / मजदूर", label_en: "🔨 30 yrs, Daily Worker", value: "30 वर्ष श्रमिक मजदूर" },
+          { label_hi: "💼 28 वर्ष, दुकान / स्वरोजगार", label_en: "💼 28 yrs, Self-employed", value: "28 वर्ष स्वरोजगार" },
+        ],
+      },
     };
 
     setActiveSessionId(newId);
@@ -847,16 +863,6 @@ export default function CitizenPage() {
       {/* Top Navbar */}
       <header className="h-14 bg-white border-b border-slate-200 px-3 sm:px-4 flex items-center justify-between flex-shrink-0 z-30 shadow-2xs">
         <div className="flex items-center gap-2.5">
-          {/* Toggle Sidebar Button */}
-          <button
-            type="button"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-700 transition"
-            title={isSidebarOpen ? "Hide chat history" : "Show chat history"}
-          >
-            <span className="text-sm">📋</span>
-          </button>
-
           {/* Logo */}
           <Link href="/citizen" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center text-white font-black text-sm shadow-xs">
@@ -864,10 +870,10 @@ export default function CitizenPage() {
             </div>
             <div>
               <div className="font-black text-sm tracking-tight text-slate-900 leading-none">
-                योजनसेतु AI
+                {isHi ? "योजनसेतु AI" : "YojanSetu AI"}
               </div>
               <div className="text-[10px] text-orange-700 font-semibold leading-none mt-0.5">
-                {isHi ? "नागरिक कल्याण सहायक" : "Vernacular Scheme Assistant"}
+                {isHi ? "नागरिक कल्याण सहायक" : "Welfare Scheme Assistant"}
               </div>
             </div>
           </Link>
@@ -886,18 +892,6 @@ export default function CitizenPage() {
 
         {/* Right Controls */}
         <div className="flex items-center gap-2">
-          {/* New Chat Button */}
-          <button
-            type="button"
-            onClick={startNewChat}
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow-2xs transition cursor-pointer active:scale-95"
-            title={isHi ? "सभी विवरण रीसेट कर नई बातचीत शुरू करें" : "Start fresh conversation"}
-          >
-            <span>✨</span>
-            <span className="hidden xs:inline">{isHi ? "नई बातचीत" : "New Chat"}</span>
-          </button>
-
-
           <LanguageToggle currentLang={lang} onLanguageChange={(l) => setLang(l)} />
 
           <button
@@ -912,7 +906,7 @@ export default function CitizenPage() {
           >
             <span>⚙️</span>
             <span className="hidden sm:inline">
-              {isHi ? "प्रोफाइल पैरामीटर" : "Parameters"}
+              {isHi ? "प्रोफाइल" : "Parameters"}
             </span>
           </button>
         </div>
@@ -1018,14 +1012,36 @@ export default function CitizenPage() {
                     {/* Message Text */}
                     <div className="whitespace-pre-wrap font-medium">{msg.text}</div>
 
-                    {/* Follow-Up Question — shown as plain assistant text hint only */}
-                    {msg.followUpQuestion && (
+                    {/* Follow-Up Question Interactive Options / Chips */}
+                    {msg.followUpQuestion?.options && msg.followUpQuestion.options.length > 0 ? (
+                      <div className="mt-3 pt-2.5 border-t border-slate-100">
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                          <span>💡</span>
+                          <span>{isHi ? "त्वरित विकल्प (क्लिक करें):" : "Quick Options (Click to reply):"}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {msg.followUpQuestion.options.map((opt, oIdx) => (
+                            <button
+                              key={oIdx}
+                              type="button"
+                              disabled={isProcessing}
+                              onClick={() => {
+                                handleSendMessage(opt.value || (isHi ? opt.label_hi : opt.label_en));
+                              }}
+                              className="px-3 py-1.5 rounded-full text-xs font-semibold bg-orange-50 hover:bg-orange-100 text-orange-800 border border-orange-200 hover:border-orange-400 transition-all shadow-2xs hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center gap-1 disabled:opacity-50 disabled:pointer-events-none"
+                            >
+                              <span>{isHi ? opt.label_hi : opt.label_en}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : msg.followUpQuestion && !msg.text.includes(isHi ? msg.followUpQuestion.question_hi : msg.followUpQuestion.question_en) ? (
                       <div className="mt-2 pt-2 border-t border-slate-100">
                         <p className="text-[11px] text-slate-500 italic">
-                          {isHi ? msg.followUpQuestion.question_hi : msg.followUpQuestion.question_en}
+                          👉 {isHi ? msg.followUpQuestion.question_hi : msg.followUpQuestion.question_en}
                         </p>
                       </div>
-                    )}
+                    ) : null}
 
 
                     {/* Eligible Scheme Cards */}
