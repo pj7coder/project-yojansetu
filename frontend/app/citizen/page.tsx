@@ -337,27 +337,9 @@ export default function CitizenPage() {
       id: `msg_${Date.now()}`,
       sender: "assistant",
       text: isHi
-        ? "नमस्ते! मैं आपका योजनसेतु AI सहायक हूँ।\n\nआपके लिए 100% सही और सबसे अधिक लाभदायक सरकारी योजनाएं खोजने के लिए, मुझे पहले आपके बारे में कुछ बुनियादी बातें जाननी होंगी।\n\n👉 **कृपया बताएं: आपकी उम्र (आयु) क्या है और आप क्या काम करते हैं?** (जैसे: किसान, छात्र, वरिष्ठ नागरिक, छोटा व्यापारी, दैनिक श्रमिक, या गृहिणी?)"
-        : "Hello! I am your YojanSetu AI Assistant.\n\nTo find the exact government welfare schemes and financial benefits tailored for you, I need to know a little about you first.\n\n👉 **Please tell me: What is your current age and what is your primary profession or role?** (e.g. Farmer, Student, Senior Citizen, Small Business, Laborer, or Homemaker?)",
+        ? "नमस्ते! 🙏 मैं योजनसेतु AI सहायक हूँ।\n\nमैं आपको राजस्थान सरकार की सही सरकारी योजनाओं से जोड़ने में मदद करूंगा — जैसे पेंशन, छात्रवृत्ति, किसान सहायता, आवास योजना, और बहुत कुछ।\n\nबस मुझसे बात करें — आप किसके लिए योजना जानना चाहते हैं?"
+        : "Hello! 👋 I'm your YojanSetu AI assistant.\n\nI help connect citizens to the right government schemes in Rajasthan — pensions, scholarships, farmer aid, housing, and much more.\n\nJust chat with me — who are you looking for schemes for?",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      confidenceScore: 0.15,
-      confidenceLevel: "LOW",
-      followUpQuestion: {
-        question_id: "ask_identity_and_role",
-        field: "occupation",
-        question_hi: "कृपया अपना मुख्य कार्य या भूमिका चुनें:",
-        question_en: "Please select your primary role or category:",
-        rationale_hi: "सरकारी योजनाएं नागरिक की उम्र और व्यवसाय के आधार पर निर्धारित होती हैं।",
-        rationale_en: "Government schemes are strictly based on citizen age and occupation.",
-        options: [
-          { label_hi: "🌾 किसान / कृषक", label_en: "Farmer", value: { occupation: "FARMER" } },
-          { label_hi: "🎓 विद्यार्थी / छात्र", label_en: "Student", value: { occupation: "STUDENT" } },
-          { label_hi: "👴 वरिष्ठ नागरिक (60+ वर्ष)", label_en: "Senior Citizen (60+)", value: { age: 60, occupation: "RETIRED" } },
-          { label_hi: "💼 छोटा व्यापारी / स्वरोजगार", label_en: "Self-Employed / Shop", value: { occupation: "SELF_EMPLOYED" } },
-          { label_hi: "👩 गृहिणी / महिला", label_en: "Homemaker / Women", value: { gender: "FEMALE", occupation: "HOMEMAKER" } },
-          { label_hi: "🔨 दैनिक श्रमिक / मजदूर", label_en: "Daily Wage Worker", value: { occupation: "LABORER" } },
-        ],
-      },
     };
 
     setActiveSessionId(newId);
@@ -915,18 +897,6 @@ export default function CitizenPage() {
             <span className="hidden xs:inline">{isHi ? "नई बातचीत" : "New Chat"}</span>
           </button>
 
-          {/* Clear Current Chat Button */}
-          <button
-            type="button"
-            onClick={handleClearCurrentChat}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 transition cursor-pointer"
-            title={isHi ? "सभी बातचीत हटाएं और रीसेट करें" : "Clear conversation"}
-          >
-            <span>🗑️</span>
-            <span className="hidden sm:inline">
-              {isHi ? "चैट हटाएं" : "Clear Chat"}
-            </span>
-          </button>
 
           <LanguageToggle currentLang={lang} onLanguageChange={(l) => setLang(l)} />
 
@@ -1048,46 +1018,12 @@ export default function CitizenPage() {
                     {/* Message Text */}
                     <div className="whitespace-pre-wrap font-medium">{msg.text}</div>
 
-                    {/* Interactive Follow-Up Question Card */}
+                    {/* Follow-Up Question — shown as plain assistant text hint only */}
                     {msg.followUpQuestion && (
-                      <div className="mt-3.5 p-3.5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50/80 border border-amber-300 shadow-sm space-y-2.5">
-                        <p className="font-bold text-slate-900 text-xs sm:text-sm leading-snug flex items-start gap-2">
-                          <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-amber-500 flex items-center justify-center text-white text-[10px]">?</span>
-                          <span>{isHi ? msg.followUpQuestion.question_hi : msg.followUpQuestion.question_en}</span>
+                      <div className="mt-2 pt-2 border-t border-slate-100">
+                        <p className="text-[11px] text-slate-500 italic">
+                          {isHi ? msg.followUpQuestion.question_hi : msg.followUpQuestion.question_en}
                         </p>
-                        {msg.followUpQuestion.rationale_hi && (
-                          <p className="text-[11px] text-amber-700/80 italic pl-6">
-                            ℹ️ {isHi ? msg.followUpQuestion.rationale_hi : msg.followUpQuestion.rationale_en}
-                          </p>
-                        )}
-
-                        {/* Quick Interactive Clickable Option Buttons */}
-                        {msg.followUpQuestion.options && msg.followUpQuestion.options.length > 0 && (
-                          <div className="pt-1 flex flex-wrap gap-1.5">
-                            {msg.followUpQuestion.options.map((opt, i) => (
-                              <button
-                                key={i}
-                                type="button"
-                                onClick={() => {
-                                  if (opt.value) {
-                                    setParameters((prev) => ({
-                                      ...prev,
-                                      ...opt.value,
-                                    }));
-                                    const keys = Object.keys(opt.value);
-                                    if (keys.length > 0) setLastUpdatedField(keys[0]);
-                                  }
-                                  const answerText = isHi ? opt.label_hi : opt.label_en;
-                                  handleSendMessage(answerText);
-                                }}
-                                className="px-3 py-1.5 rounded-lg bg-white hover:bg-orange-600 hover:text-white text-slate-800 font-bold text-xs border border-amber-300 shadow-2xs hover:shadow-xs transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
-                              >
-                                <span>👉</span>
-                                <span>{isHi ? opt.label_hi : opt.label_en}</span>
-                              </button>
-                            ))}
-                          </div>
-                        )}
                       </div>
                     )}
 
@@ -1205,26 +1141,7 @@ export default function CitizenPage() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Suggested Quick Prompt Chips */}
-          {messages.length <= 2 && (
-            <div className="px-4 py-2 bg-slate-50/80 border-t border-slate-100 flex flex-wrap gap-1.5">
-              {[
-                { hi: "🌾 किसान सम्मान निधि व कृषि लोन", en: "Farmer subsidies & loans" },
-                { hi: "👵 60+ वर्ष वृद्धावस्था पेंशन नियम", en: "Old age pension criteria" },
-                { hi: "🎓 छात्रवृत्ति व अनुप्रति कोचिंग", en: "Scholarship & coaching" },
-                { hi: "👩 महिला स्वरोजगार सहायता", en: "Women self-employment" },
-              ].map((chip, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => handleSendMessage(isHi ? chip.hi : chip.en)}
-                  className="px-2.5 py-1 rounded-full bg-white hover:bg-orange-50 hover:text-orange-700 hover:border-orange-300 text-slate-700 text-[11px] font-semibold border border-slate-200 transition shadow-2xs active:scale-95 cursor-pointer"
-                >
-                  {isHi ? chip.hi : chip.en}
-                </button>
-              ))}
-            </div>
-          )}
+
 
           {/* Speech Error Banner if any */}
           {/* Active Voice Listening Banner with Auto-Send and Language Selector */}

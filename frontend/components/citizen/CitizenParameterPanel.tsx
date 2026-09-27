@@ -274,47 +274,6 @@ export function CitizenParameterPanel({
         </div>
       </div>
 
-      {/* Preset Personas Row */}
-      <div className="p-2.5 bg-orange-50/60 border-b border-orange-100">
-        <div className="text-[10px] font-black text-orange-800 uppercase tracking-wide mb-1.5 flex items-center justify-between">
-          <span>{isHi ? "त्वरित प्रोफाइल चुनें" : "Quick 1-Click Profiles"}</span>
-          <span className="text-[9px] text-orange-600 font-semibold">Demo Presets</span>
-        </div>
-        <div className="grid grid-cols-2 gap-1.5">
-          <button
-            type="button"
-            onClick={() => applyPreset("FARMER")}
-            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer active:scale-95"
-          >
-            <div className="text-[11px] font-bold text-slate-800">🌾 {isHi ? "किसान" : "Farmer"}</div>
-            <div className="text-[9px] text-slate-500">48 yr • BPL • 3 बीघा</div>
-          </button>
-          <button
-            type="button"
-            onClick={() => applyPreset("SENIOR")}
-            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer active:scale-95"
-          >
-            <div className="text-[11px] font-bold text-slate-800">👴 {isHi ? "वृद्ध नागरिक" : "Senior"}</div>
-            <div className="text-[9px] text-slate-500">65 yr • AAY • SC</div>
-          </button>
-          <button
-            type="button"
-            onClick={() => applyPreset("STUDENT")}
-            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer active:scale-95"
-          >
-            <div className="text-[11px] font-bold text-slate-800">🎓 {isHi ? "विद्यार्थी" : "Student"}</div>
-            <div className="text-[9px] text-slate-500">20 yr • ST • Udaipur</div>
-          </button>
-          <button
-            type="button"
-            onClick={() => applyPreset("WIDOW")}
-            className="p-1.5 rounded-lg bg-white border border-orange-200 hover:border-orange-400 text-left transition shadow-2xs cursor-pointer active:scale-95"
-          >
-            <div className="text-[11px] font-bold text-slate-800">👩 {isHi ? "महिला/विधवा" : "Widow"}</div>
-            <div className="text-[9px] text-slate-500">52 yr • Pension</div>
-          </button>
-        </div>
-      </div>
 
       {/* Main Parameters Form */}
       <div className="flex-1 overflow-y-auto p-3.5 space-y-4 text-xs scrollbar-thin">

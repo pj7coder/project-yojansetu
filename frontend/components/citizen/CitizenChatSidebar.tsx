@@ -50,28 +50,17 @@ export function CitizenChatSidebar({
 
   return (
     <aside
-      className={`h-full flex flex-col bg-slate-900 text-slate-100 border-r border-slate-800 transition-all duration-200 z-20 ${
+      className={`h-full flex flex-col bg-white text-slate-800 border-r border-slate-200 transition-all duration-200 z-20 shadow-sm ${
         isOpen ? "w-72 sm:w-80 flex-shrink-0" : "hidden"
       }`}
     >
       {/* Top Banner / New Chat CTA */}
-      <div className="p-3 border-b border-slate-800 space-y-2.5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
-            <h2 className="text-xs font-black uppercase tracking-wider text-slate-300">
-              {isHi ? "पिछली बातचीत" : "Past Chats"}
-            </h2>
-          </div>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="lg:hidden p-1 rounded hover:bg-slate-800 text-slate-400 text-sm"
-              title="Close history"
-            >
-              ✕
-            </button>
-          )}
+      <div className="p-3 border-b border-slate-100 space-y-2.5">
+        <div className="flex items-center gap-2 pb-1">
+          <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
+          <h2 className="text-xs font-black uppercase tracking-wider text-slate-500">
+            {isHi ? "पिछली बातचीत" : "Past Chats"}
+          </h2>
         </div>
 
         <button
@@ -90,12 +79,12 @@ export function CitizenChatSidebar({
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
               placeholder={isHi ? "चैट खोजें..." : "Search chats..."}
-              className="w-full py-1.5 px-2.5 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:border-orange-500"
+              className="w-full py-1.5 px-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 placeholder-slate-400 text-xs focus:outline-none focus:border-orange-400"
             />
             {filterText && (
               <button
                 onClick={() => setFilterText("")}
-                className="absolute right-2 top-1.5 text-xs text-slate-400 hover:text-white"
+                className="absolute right-2 top-1.5 text-xs text-slate-400 hover:text-slate-700"
               >
                 ✕
               </button>
@@ -105,14 +94,14 @@ export function CitizenChatSidebar({
       </div>
 
       {/* Chat List */}
-      <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin scrollbar-thumb-slate-700">
+      <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin scrollbar-thumb-slate-200">
         {filteredSessions.length === 0 ? (
-          <div className="py-12 px-4 text-center text-slate-500 space-y-2">
-            <div className="text-2xl opacity-60">💬</div>
-            <p className="text-xs font-medium">
+          <div className="py-12 px-4 text-center space-y-2">
+            <div className="text-2xl opacity-40">💬</div>
+            <p className="text-xs font-medium text-slate-500">
               {isHi ? "अभी कोई बातचीत सहेजी नहीं गई है" : "No saved chats yet"}
             </p>
-            <p className="text-[11px] text-slate-600">
+            <p className="text-[11px] text-slate-400">
               {isHi
                 ? "नीचे किसी भी योजना के बारे में पूछें, वह यहाँ स्वतः सहेज ली जाएगी।"
                 : "Ask any scheme question to automatically save conversation."}
@@ -127,8 +116,8 @@ export function CitizenChatSidebar({
                 onClick={() => onSelectSession(session.id)}
                 className={`group relative flex items-start justify-between p-2.5 rounded-xl cursor-pointer transition-all border ${
                   isActive
-                    ? "bg-slate-800 border-orange-500/60 text-white shadow-sm"
-                    : "border-transparent text-slate-300 hover:bg-slate-800/50 hover:text-white"
+                    ? "bg-orange-50 border-orange-300 text-slate-900 shadow-sm"
+                    : "border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
                 <div className="min-w-0 flex-1 pr-2">
@@ -143,7 +132,7 @@ export function CitizenChatSidebar({
                       {session.lastMessage}
                     </p>
                   )}
-                  <div className="text-[10px] text-slate-500 mt-1 pl-4 flex items-center gap-2">
+                  <div className="text-[10px] text-slate-400 mt-1 pl-4 flex items-center gap-2">
                     <span>{formatRelativeTime(session.timestamp)}</span>
                     <span>•</span>
                     <span>
@@ -159,7 +148,7 @@ export function CitizenChatSidebar({
                     e.stopPropagation();
                     onDeleteSession(session.id);
                   }}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-700/60 active:scale-90 transition opacity-80 sm:opacity-0 sm:group-hover:opacity-100 flex-shrink-0 cursor-pointer"
+                  className="p-1.5 rounded-lg text-slate-300 hover:text-rose-500 hover:bg-rose-50 active:scale-90 transition opacity-0 group-hover:opacity-100 flex-shrink-0 cursor-pointer"
                   title={isHi ? "यह चैट हटाएं" : "Delete conversation"}
                 >
                   <span className="text-sm">🗑️</span>
@@ -171,12 +160,12 @@ export function CitizenChatSidebar({
       </div>
 
       {/* Bottom Info / Privacy Badge */}
-      <div className="p-3 border-t border-slate-800 text-[11px] text-slate-500 flex items-center justify-between">
+      <div className="p-3 border-t border-slate-100 text-[11px] flex items-center justify-between">
         <span className="flex items-center gap-1 text-slate-400">
           <span>🔒</span>
           <span>{isHi ? "स्थानीय व सुरक्षित" : "Local & Private"}</span>
         </span>
-        <span className="text-[10px] text-slate-600 font-mono">YS-v5</span>
+        <span className="text-[10px] text-slate-400 font-mono">YS-v5</span>
       </div>
     </aside>
   );

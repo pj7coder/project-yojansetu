@@ -396,24 +396,17 @@ function evaluateConfidenceAndFollowUp(
     pending.push("नागरिक की आयु व मुख्य कार्य/व्यवसाय");
 
     text = isHi
-      ? "नमस्ते! मैं आपका योजनसेतु AI सहायक हूँ।\n\nआपको 100% सही और सबसे अधिक लाभदायक सरकारी योजनाएं बताने के लिए, मुझे पहले आपके बारे में कुछ बुनियादी बातें जाननी होंगी।\n\n👉 **कृपया बताएं: आपकी आयु (उम्र) क्या है और आप क्या काम करते हैं?** (जैसे: किसान, छात्र, वरिष्ठ नागरिक, छोटा व्यापारी, दैनिक श्रमिक, या गृहिणी?)"
-      : "Hello! I am your YojanSetu AI Assistant.\n\nTo find the exact government welfare schemes and financial benefits tailored for you, I need to know a little about you first.\n\n👉 **Please tell me: What is your current age and what is your primary profession or role?** (e.g. Farmer, Student, Senior Citizen, Small Business, Laborer, or Homemaker?)";
+      ? `मुझे खुशी होगी आपसे मिलकर! 😊\n\nमैं राजस्थान सरकार की स्कीमों का विशेषज्ञ हूँ — पेंशन, किसान सहायता, छात्रवृत्ति, आवास, स्वास्थ्य बीमां और अनेक वित्तीय सहायताओं के बारे में।\n\nआपकी सही पात्रता जानने के लिए मुझे कुछ पता लगाना होगा। सबसे पहले बताइए — **आपकी उम्र कितनी है और आप क्या काम करते हैं?** जैसे खेती, पढ़ाई, दुकान, मजदूरी, या घर संभालना — जो भी हो`
+      : `Great to meet you! 😊\n\nI specialize in Rajasthan government schemes — pensions, farmer aid, scholarships, housing, health insurance, and financial assistance.\n\nTo find what's right for you, I need to know a bit about you. Let's start — **how old are you and what do you do for a living?** (farming, studying, running a shop, daily work, household, retired — anything works!)`;
 
     followUp = {
       question_id: "ask_identity_and_role",
       field: "occupation",
-      question_hi: "कृपया अपना मुख्य कार्य या भूमिका चुनें:",
-      question_en: "Please select your primary role or category:",
-      rationale_hi: "सरकारी योजनाएं नागरिक की उम्र और व्यवसाय के आधार पर निर्धारित होती हैं।",
-      rationale_en: "Government schemes are strictly based on citizen age and occupation.",
-      options: [
-        { label_hi: "🌾 किसान / कृषक", label_en: "Farmer", value: { occupation: "FARMER", primaryIntent: "FARMER_SCHEME" } },
-        { label_hi: "🎓 विद्यार्थी / छात्र", label_en: "Student", value: { occupation: "STUDENT", primaryIntent: "STUDENT_SCHOLARSHIP" } },
-        { label_hi: "👴 वरिष्ठ नागरिक (60+ वर्ष)", label_en: "Senior Citizen (60+)", value: { age: 60, occupation: "RETIRED", primaryIntent: "OLD_AGE_PENSION" } },
-        { label_hi: "💼 छोटा व्यापारी / स्वरोजगार", label_en: "Self-Employed / Shop", value: { occupation: "SELF_EMPLOYED", primaryIntent: "SELF_EMPLOYMENT_LOAN" } },
-        { label_hi: "👩 गृहिणी / महिला", label_en: "Homemaker / Women", value: { gender: "FEMALE", occupation: "HOMEMAKER" } },
-        { label_hi: "🔨 दैनिक श्रमिक / मजदूर", label_en: "Daily Wage Worker", value: { occupation: "LABORER", primaryIntent: "SELF_EMPLOYMENT_LOAN" } },
-      ],
+      question_hi: "आपकी उम्र कितनी है और आप क्या काम करते हैं?",
+      question_en: "How old are you and what do you do?",
+      rationale_hi: "",
+      rationale_en: "",
+      options: [],
     };
 
     return {
@@ -450,22 +443,17 @@ function evaluateConfidenceAndFollowUp(
       : (isHi ? "नागरिक" : "Citizen");
 
     text = isHi
-      ? `नमस्ते! ${roleName} के रूप में आपकी सटीक पात्रता और आयु-सीमा जांचने के लिए:\n\n👉 **कृपया बताएं: आपकी वर्तमान उम्र (आयु) कितनी है?**`
-      : `Hello! For a ${roleName}, eligibility and benefit slabs depend on your age.\n\n👉 **Please tell me: What is your current age?**`;
+      ? `अच्छा! आप ${roleName} हैं — यह पता चल गया। 😊\n\nअब पड़ताल के लिए: **आपकी उम्र कितनी है?** (आप सीधे अंक में बता सकते हैं, जैसे: 45 या 32)`
+      : `Got it! You are a ${roleName}. 😊\n\nTo check your exact scheme eligibility: **How old are you?** (Just type your age in numbers, e.g. 45 or 32)`;
 
     followUp = {
       question_id: "ask_age",
       field: "age",
-      question_hi: "अपनी वर्तमान आयु सीमा चुनें या बताएं:",
-      question_en: "Select or state your current age:",
-      rationale_hi: "प्रत्येक कल्याणकारी योजना में न्यूनतम व अधिकतम आयु सीमा अनिवार्य होती है।",
-      rationale_en: "Statutory age limits are required for all government benefits.",
-      options: [
-        { label_hi: "18 से 35 वर्ष", label_en: "18 - 35 Years", value: { age: 25 } },
-        { label_hi: "36 से 55 वर्ष", label_en: "36 - 55 Years", value: { age: 45 } },
-        { label_hi: "56 से 70 वर्ष", label_en: "56 - 70 Years", value: { age: 62 } },
-        { label_hi: "70 वर्ष से अधिक", label_en: "70+ Years", value: { age: 75 } },
-      ],
+      question_hi: "आपकी उम्र कितनी है?",
+      question_en: "How old are you?",
+      rationale_hi: "",
+      rationale_en: "",
+      options: [],
     };
 
     return {
@@ -492,24 +480,17 @@ function evaluateConfidenceAndFollowUp(
     verified.push(`आयु: ${p.age} वर्ष`);
 
     text = isHi
-      ? `आपकी आयु (${p.age} वर्ष) दर्ज कर ली गई है। आपके लिए सही योजना खोजने के लिए:\n\n👉 **कृपया बताएं: आपका मुख्य कार्य या पेशा क्या है?** (जैसे: किसान, छात्र, छोटा व्यापारी, दैनिक श्रमिक, गृहिणी, या वरिष्ठ नागरिक पेंशन?)`
-      : `Your age (${p.age} years) is recorded. To find the right schemes for you:\n\n👉 **Please tell me: What is your primary profession or role?** (e.g. Farmer, Student, Small Business, Laborer, Homemaker, or Senior Citizen Pension?)`;
+      ? `ठीक है, ${p.age} वर्ष नोट कर लिया। 😊\n\nअब यह बताइए — **आप क्या काम करते हैं?** (जैसे खेती, पढ़ाई, दुकानदारी, मजदूरी, घर संभालना, या सेवानिवृत्त?)`
+      : `Got it, ${p.age} years noted! 😊\n\nNow tell me — **what do you do for work or livelihood?** (farming, studying, running a business, daily labour, homemaker, retired — anything is fine)`;
 
     followUp = {
       question_id: "ask_occupation_with_age",
       field: "occupation",
-      question_hi: "अपना मुख्य कार्य या श्रेणी चुनें:",
-      question_en: "Select your occupation or category:",
-      rationale_hi: "व्यवसाय अनुसार राजस्थान सरकार की विशिष्ट योजनाएं लागू होती हैं।",
-      rationale_en: "Schemes are tailored to specific occupational sectors.",
-      options: [
-        { label_hi: "🌾 किसान / कृषक", label_en: "Farmer", value: { occupation: "FARMER", primaryIntent: "FARMER_SCHEME" } },
-        { label_hi: "🎓 विद्यार्थी / छात्र", label_en: "Student", value: { occupation: "STUDENT", primaryIntent: "STUDENT_SCHOLARSHIP" } },
-        { label_hi: "👴 वरिष्ठ नागरिक पेंशन", label_en: "Senior Pension", value: { age: p.age, occupation: "RETIRED", primaryIntent: "OLD_AGE_PENSION" } },
-        { label_hi: "💼 छोटा व्यापारी / स्वरोजगार", label_en: "Self-Employed / Shop", value: { occupation: "SELF_EMPLOYED", primaryIntent: "SELF_EMPLOYMENT_LOAN" } },
-        { label_hi: "👩 गृहिणी / महिला", label_en: "Homemaker / Women", value: { gender: "FEMALE", occupation: "HOMEMAKER" } },
-        { label_hi: "🔨 दैनिक श्रमिक / मजदूर", label_en: "Daily Wage Worker", value: { occupation: "LABORER", primaryIntent: "SELF_EMPLOYMENT_LOAN" } },
-      ],
+      question_hi: "आप क्या काम करते हैं?",
+      question_en: "What do you do for work?",
+      rationale_hi: "",
+      rationale_en: "",
+      options: [],
     };
 
     return {
@@ -551,12 +532,7 @@ function evaluateConfidenceAndFollowUp(
         question_en: "How many bighas of land do you hold?",
         rationale_hi: "भूमि के रकबे के आधार पर लघु/सीमांत किसान की आधिकारिक पात्रता तय होती है।",
         rationale_en: "Landholding size determines small/marginal farmer eligibility.",
-        options: [
-          { label_hi: "🌾 सीमांत किसान (2.5 बीघा से कम)", label_en: "Marginal (< 2.5 Bigha)", value: { landBigha: 2, occupation: "FARMER" } },
-          { label_hi: "🚜 लघु किसान (2.5 से 5 बीघा)", label_en: "Small (2.5 - 5 Bigha)", value: { landBigha: 4, occupation: "FARMER" } },
-          { label_hi: "🌾 बड़ा किसान (> 5 बीघा)", label_en: "Large (> 5 Bigha)", value: { landBigha: 8, occupation: "FARMER" } },
-          { label_hi: "🌾 बटाईदार / भूमिहीन", label_en: "Landless / Tenant", value: { landBigha: 0, occupation: "FARMER" } },
-        ],
+        options: [],
       };
     } else {
       score = 0.95;
@@ -640,15 +616,11 @@ function evaluateConfidenceAndFollowUp(
       followUp = {
         question_id: "ask_income_for_pension",
         field: "income",
-        question_hi: "पारिवारिक आय व राशन कार्ड की स्थिति बताएं:",
-        question_en: "Confirm family income or BPL status:",
-        rationale_hi: "पेंशन नियमों के तहत पारिवारिक आय ₹48,000 से कम या बीपीएल होना अनिवार्य है।",
-        rationale_en: "Statutory income requirement under Rajasthan Pension Rules 2024.",
-        options: [
-          { label_hi: "हाँ, वार्षिक आय ₹48,000 से कम है", label_en: "Yes, income < ₹48,000", value: { income: 36000, occupation: "RETIRED" } },
-          { label_hi: "हाँ, मेरे पास BPL / अंत्योदय कार्ड है", label_en: "Yes, hold BPL/AAY Card", value: { rationCard: "BPL", income: 36000, occupation: "RETIRED" } },
-          { label_hi: "नहीं, वार्षिक आय ₹48,000 से अधिक है", label_en: "No, income > ₹48,000", value: { income: 90000, occupation: "RETIRED" } },
-        ],
+        question_hi: "क्या आपकी वार्षिक आय ₹48,000 से कम है या बीपीएल राशन कार्ड है?",
+        question_en: "Is your family income under ₹48,000 or do you have a BPL ration card?",
+        rationale_hi: "",
+        rationale_en: "",
+        options: [],
       };
     } else {
       score = 0.98;
