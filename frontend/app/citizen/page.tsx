@@ -78,6 +78,74 @@ export default function CitizenPage() {
   const noSpeechTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const audioStreamRef = useRef<MediaStream | null>(null);
 
+  // Text-To-Speech (Assistant Voice Synthesis)
+  const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null);
+  const lastInputWasVoiceRef = useRef<boolean>(false);
+
+  // Stop assistant speech immediately
+  const stopSpeech = useCallback(() => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch {}
+    }
+    setSpeakingMsgId(null);
+  }, []);
+
+  // Speak assistant text aloud with Indian vernacular tone
+  const speakText = useCallback(
+    (textToSpeak: string, msgId?: string) => {
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+
+      try {
+        window.speechSynthesis.cancel();
+      } catch {}
+
+      // Clean markdown, symbols, and formatting for clean natural speech
+      const clean = textToSpeak
+        .replace(/[*#_~`>]/g, " ")
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+        .replace(/https?:\/\/\S+/g, "")
+        .replace(/[^\w\s\u0900-\u097F.,?!₹%/-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      if (!clean) return;
+
+      const utterance = new SpeechSynthesisUtterance(clean);
+      utterance.lang = lang === "hi" ? "hi-IN" : "en-IN";
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+
+      try {
+        const voices = window.speechSynthesis.getVoices();
+        const targetPrefix = lang === "hi" ? "hi" : "en";
+        const matchedVoice =
+          voices.find(
+            (v) =>
+              v.lang.toLowerCase().startsWith(targetPrefix) &&
+              (v.lang.includes("IN") || v.name.toLowerCase().includes("india"))
+          ) || voices.find((v) => v.lang.toLowerCase().startsWith(targetPrefix));
+        if (matchedVoice) {
+          utterance.voice = matchedVoice;
+        }
+      } catch {}
+
+      utterance.onstart = () => {
+        setSpeakingMsgId(msgId || "active");
+      };
+      utterance.onend = () => {
+        setSpeakingMsgId(null);
+      };
+      utterance.onerror = () => {
+        setSpeakingMsgId(null);
+      };
+
+      window.speechSynthesis.speak(utterance);
+    },
+    [lang]
+  );
+
   // Modals & Drawers
   const [selectedCitation, setSelectedCitation] = useState<SchemeCitation | null>(
     null
@@ -178,6 +246,7 @@ export default function CitizenPage() {
   // Cleanup speech recognition, timers, and audio streams on unmount
   useEffect(() => {
     return () => {
+      stopSpeech();
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       if (noSpeechTimeoutRef.current) clearTimeout(noSpeechTimeoutRef.current);
       if (recognitionRef.current) {
@@ -189,7 +258,7 @@ export default function CitizenPage() {
         audioStreamRef.current.getTracks().forEach((t) => t.stop());
       }
     };
-  }, []);
+  }, [stopSpeech]);
 
   // Load Past Chats from localStorage on Mount
   useEffect(() => {
@@ -262,14 +331,33 @@ export default function CitizenPage() {
 
   // Start a fresh conversation
   const startNewChat = () => {
+    stopSpeech();
     const newId = `chat_${Date.now()}`;
     const initialGreeting: ChatMessage = {
       id: `msg_${Date.now()}`,
       sender: "assistant",
       text: isHi
-        ? "नमस्ते! मैं आपका योजनसेतु AI सहायक हूँ। भारत सरकार एवं समस्त राज्य सरकारों की पेंशन, कृषि (PM-KISAN), स्वास्थ्य (आयुष्मान भारत), छात्रवृत्ति, आवास (PMAY) व स्वरोजगार (मुद्रा/विश्वकर्मा) योजनाओं की सटीक जानकारी के लिए पूछें।"
-        : "Hello! I am your YojanSetu AI Assistant. Ask any question regarding Central & State welfare schemes, PM-KISAN, Ayushman Bharat, Pensions, PMAY, or Mudra loans.",
+        ? "नमस्ते! मैं आपका योजनसेतु AI सहायक हूँ।\n\nआपके लिए 100% सही और सबसे अधिक लाभदायक सरकारी योजनाएं खोजने के लिए, मुझे पहले आपके बारे में कुछ बुनियादी बातें जाननी होंगी।\n\n👉 **कृपया बताएं: आपकी उम्र (आयु) क्या है और आप क्या काम करते हैं?** (जैसे: किसान, छात्र, वरिष्ठ नागरिक, छोटा व्यापारी, दैनिक श्रमिक, या गृहिणी?)"
+        : "Hello! I am your YojanSetu AI Assistant.\n\nTo find the exact government welfare schemes and financial benefits tailored for you, I need to know a little about you first.\n\n👉 **Please tell me: What is your current age and what is your primary profession or role?** (e.g. Farmer, Student, Senior Citizen, Small Business, Laborer, or Homemaker?)",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      confidenceScore: 0.15,
+      confidenceLevel: "LOW",
+      followUpQuestion: {
+        question_id: "ask_identity_and_role",
+        field: "occupation",
+        question_hi: "कृपया अपना मुख्य कार्य या भूमिका चुनें:",
+        question_en: "Please select your primary role or category:",
+        rationale_hi: "सरकारी योजनाएं नागरिक की उम्र और व्यवसाय के आधार पर निर्धारित होती हैं।",
+        rationale_en: "Government schemes are strictly based on citizen age and occupation.",
+        options: [
+          { label_hi: "🌾 किसान / कृषक", label_en: "Farmer", value: { occupation: "FARMER" } },
+          { label_hi: "🎓 विद्यार्थी / छात्र", label_en: "Student", value: { occupation: "STUDENT" } },
+          { label_hi: "👴 वरिष्ठ नागरिक (60+ वर्ष)", label_en: "Senior Citizen (60+)", value: { age: 60 } },
+          { label_hi: "💼 छोटा व्यापारी / स्वरोजगार", label_en: "Self-Employed / Shop", value: { occupation: "SELF_EMPLOYED" } },
+          { label_hi: "👩 गृहिणी / महिला", label_en: "Homemaker / Women", value: { gender: "FEMALE", occupation: "HOMEMAKER" } },
+          { label_hi: "🔨 दैनिक श्रमिक / मजदूर", label_en: "Daily Wage Worker", value: { occupation: "LABORER" } },
+        ],
+      },
     };
 
     setActiveSessionId(newId);
@@ -360,6 +448,10 @@ export default function CitizenPage() {
     const query = (customQuery || inputText).trim();
     if (!query || isProcessing) return;
 
+    if (customQuery === undefined) {
+      lastInputWasVoiceRef.current = false;
+    }
+
     setInputText("");
     const userMsg: ChatMessage = {
       id: `usr_${Date.now()}`,
@@ -427,6 +519,12 @@ export default function CitizenPage() {
         parameters,
         isFirstQuery ? query : undefined
       );
+
+      // If voice input was used by the citizen, speak the reply aloud automatically!
+      if (lastInputWasVoiceRef.current) {
+        speakText(assistantMsg.text, assistantMsg.id);
+        lastInputWasVoiceRef.current = false;
+      }
     } catch (err: any) {
       console.error("Chat agent error:", err);
       const errorMsg: ChatMessage = {
@@ -493,6 +591,7 @@ export default function CitizenPage() {
 
     if (textToSend.length > 0) {
       hasSentRef.current = true;
+      lastInputWasVoiceRef.current = true;
       setInputText("");
       speechTextRef.current = "";
       // Immediately send query into chat without user needing to press Enter
@@ -528,6 +627,7 @@ export default function CitizenPage() {
       const textToSend = speechTextRef.current.trim();
       if (shouldSend && textToSend.length > 0 && !hasSentRef.current) {
         hasSentRef.current = true;
+        lastInputWasVoiceRef.current = true;
         setInputText("");
         speechTextRef.current = "";
         handleSendMessageRef.current?.(textToSend);
@@ -540,6 +640,8 @@ export default function CitizenPage() {
 
   // Toggle voice recognition with mic permission preflight, continuous capture, and autosend
   const toggleVoice = async () => {
+    stopSpeech(); // Stop any active assistant speech immediately when microphone is tapped
+
     if (isListeningRef.current) {
       // User tapped stop button: if speech text is present, immediately auto-send!
       stopVoiceListening(true);
@@ -864,29 +966,62 @@ export default function CitizenPage() {
                         : "bg-slate-50 text-slate-800 border border-slate-200 shadow-2xs rounded-tl-xs"
                     }`}
                   >
-                    {/* Confidence Score Pill for Assistant Messages */}
-                    {!isUser && msg.confidenceScore !== undefined && (
-                      <div className="flex items-center gap-1.5 mb-2">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${
-                            msg.confidenceScore >= 0.8
-                              ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
-                              : msg.confidenceScore >= 0.5
-                              ? "bg-amber-50 text-amber-800 border-amber-300 shadow-2xs"
-                              : "bg-slate-100 text-slate-700 border-slate-300"
-                          }`}
-                        >
-                          <span>{msg.confidenceScore >= 0.8 ? "🔒" : "⏳"}</span>
-                          <span>
-                            {msg.confidenceScore >= 0.8
-                              ? isHi
-                                ? "100% सत्यापित व पुष्ट पात्रता"
-                                : "100% Confident Match"
-                              : isHi
-                              ? `सत्यापन प्रक्रियाधीन (${Math.round(msg.confidenceScore * 100)}% सटीकता)`
-                              : `Verification in Progress (${Math.round(msg.confidenceScore * 100)}% Confidence)`}
+                    {/* Confidence Score Pill & Speaker Button for Assistant Messages */}
+                    {!isUser && (
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        {msg.confidenceScore !== undefined ? (
+                          <span
+                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${
+                              msg.confidenceScore >= 0.8
+                                ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
+                                : msg.confidenceScore >= 0.5
+                                ? "bg-amber-50 text-amber-800 border-amber-300 shadow-2xs"
+                                : "bg-slate-100 text-slate-700 border-slate-300"
+                            }`}
+                          >
+                            <span>{msg.confidenceScore >= 0.8 ? "🔒" : "⏳"}</span>
+                            <span>
+                              {msg.confidenceScore >= 0.8
+                                ? isHi
+                                  ? "100% सत्यापित व पुष्ट पात्रता"
+                                  : "100% Confident Match"
+                                : isHi
+                                ? `सत्यापन प्रक्रियाधीन (${Math.round(msg.confidenceScore * 100)}% सटीकता)`
+                                : `Verification in Progress (${Math.round(msg.confidenceScore * 100)}% Confidence)`}
+                            </span>
                           </span>
-                        </span>
+                        ) : (
+                          <span />
+                        )}
+
+                        {/* Speaker Read Aloud Button */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (speakingMsgId === msg.id) {
+                              stopSpeech();
+                            } else {
+                              speakText(msg.text, msg.id);
+                            }
+                          }}
+                          className={`px-2 py-0.5 rounded-md text-[11px] font-bold flex items-center gap-1 transition cursor-pointer ${
+                            speakingMsgId === msg.id
+                              ? "bg-rose-100 text-rose-700 border border-rose-300 animate-pulse shadow-xs"
+                              : "bg-white hover:bg-orange-50 text-slate-600 hover:text-orange-700 border border-slate-200 shadow-2xs"
+                          }`}
+                          title={
+                            speakingMsgId === msg.id
+                              ? isHi
+                                ? "आवाज़ बंद करें (Stop audio)"
+                                : "Stop audio"
+                              : isHi
+                              ? "बोलकर सुनाएं (Read aloud)"
+                              : "Read aloud"
+                          }
+                        >
+                          <span>{speakingMsgId === msg.id ? "⏹️" : "🔊"}</span>
+                          <span>{speakingMsgId === msg.id ? (isHi ? "रोकें" : "Stop") : (isHi ? "सुनें" : "Listen")}</span>
+                        </button>
                       </div>
                     )}
 
@@ -1166,6 +1301,30 @@ export default function CitizenPage() {
                 className="text-rose-500 hover:text-rose-800 font-bold"
               >
                 ✕
+              </button>
+            </div>
+          )}
+
+          {/* Active Text-To-Speech Speaking Banner */}
+          {speakingMsgId && (
+            <div className="px-4 py-2 bg-gradient-to-r from-orange-600 to-amber-600 text-white flex items-center justify-between text-xs font-bold shadow-md flex-shrink-0 animate-in fade-in duration-200">
+              <div className="flex items-center gap-2">
+                <span className="text-base animate-bounce">🔊</span>
+                <span>{isHi ? "योजनसेतु AI उत्तर बोलकर सुना रहा है..." : "YojanSetu AI is speaking aloud..."}</span>
+                <span className="flex gap-0.5 items-end h-3 ml-1">
+                  <span className="w-1 bg-white animate-pulse h-3 rounded-full"></span>
+                  <span className="w-1 bg-white animate-pulse h-2 rounded-full delay-75"></span>
+                  <span className="w-1 bg-white animate-pulse h-3.5 rounded-full delay-150"></span>
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={stopSpeech}
+                className="px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white text-white hover:text-orange-900 text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1"
+                title={isHi ? "आवाज़ बंद करें" : "Stop speaking"}
+              >
+                <span>⏹️</span>
+                <span>{isHi ? "आवाज़ बंद करें" : "Stop Audio"}</span>
               </button>
             </div>
           )}

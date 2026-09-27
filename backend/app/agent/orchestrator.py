@@ -474,12 +474,33 @@ class WelfareAgentOrchestrator:
         is_widow = bool(profile.get("is_widow") or profile.get("marital_status") == "WIDOWED")
         is_farmer = bool(profile.get("occupation") == "FARMER" or has_land)
         is_pension = "pension" in query.lower() or "पेंशन" in query or is_widow
+        has_occupation = profile.get("occupation") is not None or is_widow or (has_age and profile.get("age", 0) >= 60)
 
         confidence_score = 0.95
         follow_up_question = None
         candidate_schemes: List[Dict[str, Any]] = []
 
-        if is_pension and not has_age:
+        # RULE 1: If neither age nor profession is known, DO NOT suggest schemes!
+        # First ask who the citizen is, what their age and profession is!
+        if not has_age and not has_occupation:
+            confidence_score = 0.15
+            follow_up_question = {
+                "question_id": "ask_identity_and_role",
+                "field": "occupation",
+                "question_hi": "नमस्ते! मैं आपका योजनसेतु AI सहायक हूँ। आपके लिए 100% सही और सबसे अधिक लाभदायक सरकारी योजनाएं खोजने के लिए, मुझे पहले आपके बारे में कुछ बुनियादी बातें जाननी होंगी। कृपया बताएं: आपकी उम्र (आयु) क्या है और आप क्या काम करते हैं? (जैसे: किसान, छात्र, वरिष्ठ नागरिक, छोटा व्यापारी, दैनिक श्रमिक, या गृहिणी?)",
+                "question_en": "Hello! I am your YojanSetu AI Assistant. To find the exact welfare schemes tailored for you, I need to know a little about you first. Please tell me: What is your current age and what is your primary profession or role? (e.g. Farmer, Student, Senior Citizen, Small Business, Laborer, or Homemaker?)",
+                "rationale_hi": "सरकारी योजनाएं नागरिक की उम्र और व्यवसाय के आधार पर निर्धारित होती हैं।",
+                "rationale_en": "Government schemes are strictly based on citizen age and occupation.",
+                "options": [
+                    {"label_hi": "🌾 किसान / कृषक", "label_en": "Farmer", "value": {"occupation": "FARMER"}},
+                    {"label_hi": "🎓 विद्यार्थी / छात्र", "label_en": "Student", "value": {"occupation": "STUDENT"}},
+                    {"label_hi": "👴 वरिष्ठ नागरिक (60+ वर्ष)", "label_en": "Senior Citizen (60+)", "value": {"age": 60}},
+                    {"label_hi": "💼 छोटा व्यापारी / स्वरोजगार", "label_en": "Self-Employed / Shop", "value": {"occupation": "SELF_EMPLOYED"}},
+                    {"label_hi": "👩 गृहिणी / महिला", "label_en": "Homemaker / Women", "value": {"gender": "FEMALE", "occupation": "HOMEMAKER"}},
+                    {"label_hi": "🔨 दैनिक श्रमिक / मजदूर", "label_en": "Daily Wage Worker", "value": {"occupation": "LABORER"}},
+                ],
+            }
+        elif is_pension and not has_age:
             confidence_score = 0.35
             follow_up_question = {
                 "question_id": "ask_age_for_pension",
@@ -583,9 +604,8 @@ class WelfareAgentOrchestrator:
             lines = []
 
             if follow_up_question and confidence_score < 0.80:
-                # Question is rendered by the UI yellow card — only output a brief status line here
-                lines.append(f"⏳ पात्रता सत्यापन जारी है ({conf_pct}% विश्वास)। सटीक योजना बताने के लिए एक जानकारी और चाहिए:")
-                return "\n".join(lines)
+                q_text = follow_up_question.get("question_hi", "")
+                return q_text or f"⏳ पात्रता सत्यापन जारी है ({conf_pct}% विश्वास)। सटीक योजना बताने के लिए एक जानकारी और चाहिए।"
 
             lines.append("नमस्ते! आपके विवरण के आधार पर पात्रता विश्लेषण:")
 
@@ -627,9 +647,8 @@ class WelfareAgentOrchestrator:
             lines = []
 
             if follow_up_question and confidence_score < 0.80:
-                # Question is rendered by the UI yellow card — only output a brief status line here
-                lines.append(f"⏳ Eligibility verification in progress ({conf_pct}% confidence). One more detail needed to find your best scheme:")
-                return "\n".join(lines)
+                q_text = follow_up_question.get("question_en", "")
+                return q_text or f"⏳ Eligibility verification in progress ({conf_pct}% confidence). One more detail needed to find your best scheme."
 
             lines.append("Based on your profile, here is your verified eligibility analysis:")
 
