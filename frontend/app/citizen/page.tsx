@@ -337,25 +337,9 @@ export default function CitizenPage() {
       id: `msg_${Date.now()}`,
       sender: "assistant",
       text: isHi
-        ? "नमस्ते! 🙏 मैं आपका योजनसेतु AI सहायक हूँ।\n\nराजस्थान सरकार की सभी योजनाओं में आपकी मदद करूँगा — पेंशन, किसान सहायता, छात्रवृत्ति, स्वास्थ्य बीमा, आवास और बहुत कुछ।\n\nबस बताइए — **आपकी उम्र कितनी है और आप क्या करते हैं?**\n_(जैसे: 45 वर्षीय किसान, 19 वर्षीय छात्रा, 62 वर्षीय बुजुर्ग)_"
-        : "Hello! 👋 I'm your YojanSetu AI assistant.\n\nI help Rajasthan citizens access government benefits — pensions, farmer aid, scholarships, health insurance, housing, and more.\n\nJust tell me — **how old are you and what do you do?**\n_(e.g. 45-year-old farmer, 19-year-old student, 62-year-old senior)_",
+        ? "नमस्ते! मैं आपका योजनसेतु सहायक हूँ।\n\nआपके लिए सही योजनाएं खोजने के लिए — आपकी उम्र क्या है और आप क्या काम करते हैं?"
+        : "Hello! I am your YojanSetu assistant.\n\nTo find the right government schemes for you — how old are you and what do you do?",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      followUpQuestion: {
-        question_id: "ask_who_age_occupation",
-        field: "occupation",
-        question_hi: "आपकी उम्र कितनी है और आप क्या काम करते हैं?",
-        question_en: "How old are you and what do you do?",
-        rationale_hi: "",
-        rationale_en: "",
-        options: [
-          { label_hi: "🌾 45 वर्ष, किसान", label_en: "🌾 45 yrs, Farmer", value: "45 वर्ष किसान" },
-          { label_hi: "👴 62 वर्ष, बुजुर्ग (पेंशन)", label_en: "👴 62 yrs, Senior (Pension)", value: "62 वर्ष बुजुर्ग" },
-          { label_hi: "🎓 20 वर्ष, विद्यार्थी (छात्र)", label_en: "🎓 20 yrs, Student", value: "20 वर्ष विद्यार्थी" },
-          { label_hi: "👩 35 वर्ष, गृहिणी / महिला", label_en: "👩 35 yrs, Homemaker", value: "35 वर्ष महिला गृहिणी" },
-          { label_hi: "🔨 30 वर्ष, श्रमिक / मजदूर", label_en: "🔨 30 yrs, Daily Worker", value: "30 वर्ष श्रमिक मजदूर" },
-          { label_hi: "💼 28 वर्ष, दुकान / स्वरोजगार", label_en: "💼 28 yrs, Self-employed", value: "28 वर्ष स्वरोजगार" },
-        ],
-      },
     };
 
     setActiveSessionId(newId);
@@ -1011,37 +995,6 @@ export default function CitizenPage() {
 
                     {/* Message Text */}
                     <div className="whitespace-pre-wrap font-medium">{msg.text}</div>
-
-                    {/* Follow-Up Question Interactive Options / Chips */}
-                    {msg.followUpQuestion?.options && msg.followUpQuestion.options.length > 0 ? (
-                      <div className="mt-3 pt-2.5 border-t border-slate-100">
-                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                          <span>💡</span>
-                          <span>{isHi ? "त्वरित विकल्प (क्लिक करें):" : "Quick Options (Click to reply):"}</span>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {msg.followUpQuestion.options.map((opt, oIdx) => (
-                            <button
-                              key={oIdx}
-                              type="button"
-                              disabled={isProcessing}
-                              onClick={() => {
-                                handleSendMessage(opt.value || (isHi ? opt.label_hi : opt.label_en));
-                              }}
-                              className="px-3 py-1.5 rounded-full text-xs font-semibold bg-orange-50 hover:bg-orange-100 text-orange-800 border border-orange-200 hover:border-orange-400 transition-all shadow-2xs hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center gap-1 disabled:opacity-50 disabled:pointer-events-none"
-                            >
-                              <span>{isHi ? opt.label_hi : opt.label_en}</span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    ) : msg.followUpQuestion && !msg.text.includes(isHi ? msg.followUpQuestion.question_hi : msg.followUpQuestion.question_en) ? (
-                      <div className="mt-2 pt-2 border-t border-slate-100">
-                        <p className="text-[11px] text-slate-500 italic">
-                          👉 {isHi ? msg.followUpQuestion.question_hi : msg.followUpQuestion.question_en}
-                        </p>
-                      </div>
-                    ) : null}
 
 
                     {/* Eligible Scheme Cards */}
