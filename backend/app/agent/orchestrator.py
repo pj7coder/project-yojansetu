@@ -500,19 +500,38 @@ class WelfareAgentOrchestrator:
                     {"label_hi": "🔨 दैनिक श्रमिक / मजदूर", "label_en": "Daily Wage Worker", "value": {"occupation": "LABORER"}},
                 ],
             }
-        elif is_pension and not has_age:
+        elif has_occupation and not has_age:
             confidence_score = 0.35
             follow_up_question = {
-                "question_id": "ask_age_for_pension",
+                "question_id": "ask_age",
                 "field": "age",
-                "question_hi": "राजस्थान वृद्धजन सम्मान पेंशन के लिए महिलाओं हेतु न्यूनतम आयु 55 वर्ष तथा पुरुषों हेतु 58 वर्ष आवश्यक है। आपकी सही पात्रता जांचने के लिए कृपया अपनी वर्तमान उम्र बताएं:",
-                "question_en": "For Rajasthan Old Age Pension, the minimum age is 55 for women and 58 for men. Please state your current age:",
-                "rationale_hi": "आयु के बिना पेंशन स्वीकृति का निर्धारण असंभव है।",
-                "rationale_en": "Age is a decisive statutory requirement for pension approval.",
+                "question_hi": f"{profile.get('occupation', 'नागरिक')} के रूप में आपकी सटीक पात्रता और आयु-सीमा जांचने के लिए: कृपया अपनी वर्तमान आयु (उम्र) बताएं:",
+                "question_en": f"To determine your statutory eligibility as {profile.get('occupation', 'citizen')}: please state your current age:",
+                "rationale_hi": "प्रत्येक कल्याणकारी योजना में न्यूनतम व अधिकतम आयु सीमा अनिवार्य होती है।",
+                "rationale_en": "Statutory age limits are required for all government benefits.",
                 "options": [
-                    {"label_hi": "60 वर्ष या अधिक", "label_en": "60 Years or Older", "value": {"age": 60}},
-                    {"label_hi": "55 से 59 वर्ष", "label_en": "55 - 59 Years", "value": {"age": 58}},
-                    {"label_hi": "55 वर्ष से कम आयु", "label_en": "Under 55 Years", "value": {"age": 48}},
+                    {"label_hi": "18 से 35 वर्ष", "label_en": "18 - 35 Years", "value": {"age": 25}},
+                    {"label_hi": "36 से 55 वर्ष", "label_en": "36 - 55 Years", "value": {"age": 45}},
+                    {"label_hi": "56 से 70 वर्ष", "label_en": "56 - 70 Years", "value": {"age": 62}},
+                    {"label_hi": "70 वर्ष से अधिक", "label_en": "70+ Years", "value": {"age": 75}},
+                ],
+            }
+        elif has_age and not has_occupation:
+            confidence_score = 0.35
+            follow_up_question = {
+                "question_id": "ask_occupation",
+                "field": "occupation",
+                "question_hi": f"आपकी आयु ({profile.get('age')} वर्ष) दर्ज कर ली गई है। कृपया बताएं: आपका मुख्य कार्य या पेशा क्या है? (किसान, छात्र, वरिष्ठ नागरिक, छोटा व्यापारी, दैनिक श्रमिक, या गृहिणी?)",
+                "question_en": f"Your age ({profile.get('age')} yrs) is recorded. Please tell me your primary profession or role:",
+                "rationale_hi": "व्यवसाय अनुसार राजस्थान सरकार की विशिष्ट योजनाएं लागू होती हैं।",
+                "rationale_en": "Schemes are tailored to specific occupational sectors.",
+                "options": [
+                    {"label_hi": "🌾 किसान / कृषक", "label_en": "Farmer", "value": {"occupation": "FARMER"}},
+                    {"label_hi": "🎓 विद्यार्थी / छात्र", "label_en": "Student", "value": {"occupation": "STUDENT"}},
+                    {"label_hi": "👴 वरिष्ठ नागरिक पेंशन", "label_en": "Senior Citizen", "value": {"occupation": "RETIRED"}},
+                    {"label_hi": "💼 छोटा व्यापारी / स्वरोजगार", "label_en": "Self-Employed", "value": {"occupation": "SELF_EMPLOYED"}},
+                    {"label_hi": "👩 गृहिणी / महिला", "label_en": "Homemaker", "value": {"gender": "FEMALE", "occupation": "HOMEMAKER"}},
+                    {"label_hi": "🔨 दैनिक श्रमिक / मजदूर", "label_en": "Daily Wage Worker", "value": {"occupation": "LABORER"}},
                 ],
             }
         elif is_pension and not has_income:
@@ -546,8 +565,8 @@ class WelfareAgentOrchestrator:
                 ],
             }
 
-        if confidence_score < 0.80:
-            candidate_schemes = list(recommended_schemes)
+        if confidence_score < 0.85:
+            candidate_schemes = []
             recommended_schemes = []
 
         confidence_level = "HIGH" if confidence_score >= 0.80 else "MEDIUM" if confidence_score >= 0.50 else "LOW"

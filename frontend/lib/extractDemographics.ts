@@ -111,6 +111,17 @@ export function extractDemographicsFromText(text: string): ExtractedEntities {
     }
   }
 
+  // Standalone number for age reply: e.g. "45", "62", "20"
+  if (result.age === undefined) {
+    const rawNumberMatch = text.match(/^\s*(\d{1,2})\s*$/);
+    if (rawNumberMatch && rawNumberMatch[1]) {
+      const n = parseInt(rawNumberMatch[1], 10);
+      if (n >= 14 && n <= 100) {
+        result.age = n;
+      }
+    }
+  }
+
   // Hindi Word Numbers for Age
   if (result.age === undefined) {
     for (const [word, num] of Object.entries(HINDI_WORD_NUMBERS)) {
@@ -183,7 +194,7 @@ export function extractDemographicsFromText(text: string): ExtractedEntities {
     result.gender = "FEMALE";
   } else if (/बेरोजगार|unemployed|नौकरी\s*नहीं/i.test(text)) {
     result.occupation = "UNEMPLOYED";
-  } else if (/रिटायर्ड|सेवानिवृत्त|retired|वरिष्ठ\s*नागरिक/i.test(text)) {
+  } else if (/रिटायर्ड|सेवानिवृत्त|retired|वरिष्ठ\s*नागरिक|senior|old\s*age|बुजुर्ग|बूढ़े|वृद्ध|पेंशनर/i.test(text)) {
     result.occupation = "RETIRED";
   }
 
@@ -232,7 +243,7 @@ export function extractDemographicsFromText(text: string): ExtractedEntities {
   }
 
   // Landholding Bigha
-  const landMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:बीघा|bigha|एकड़|acre|हेक्टेयर|hectare)/i);
+  const landMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:बीघा|bigha|bighas|bighe|एकड़|acre|हेक्टेयर|hectare)/i);
   if (landMatch && landMatch[1]) {
     result.landBigha = parseFloat(landMatch[1]);
     result.occupation = "FARMER";

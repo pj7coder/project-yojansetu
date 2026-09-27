@@ -352,7 +352,7 @@ export default function CitizenPage() {
         options: [
           { label_hi: "🌾 किसान / कृषक", label_en: "Farmer", value: { occupation: "FARMER" } },
           { label_hi: "🎓 विद्यार्थी / छात्र", label_en: "Student", value: { occupation: "STUDENT" } },
-          { label_hi: "👴 वरिष्ठ नागरिक (60+ वर्ष)", label_en: "Senior Citizen (60+)", value: { age: 60 } },
+          { label_hi: "👴 वरिष्ठ नागरिक (60+ वर्ष)", label_en: "Senior Citizen (60+)", value: { age: 60, occupation: "RETIRED" } },
           { label_hi: "💼 छोटा व्यापारी / स्वरोजगार", label_en: "Self-Employed / Shop", value: { occupation: "SELF_EMPLOYED" } },
           { label_hi: "👩 गृहिणी / महिला", label_en: "Homemaker / Women", value: { gender: "FEMALE", occupation: "HOMEMAKER" } },
           { label_hi: "🔨 दैनिक श्रमिक / मजदूर", label_en: "Daily Wage Worker", value: { occupation: "LABORER" } },
@@ -362,7 +362,9 @@ export default function CitizenPage() {
 
     setActiveSessionId(newId);
     setMessages([initialGreeting]);
-    persistSession(newId, [initialGreeting], parameters);
+    setParameters(DEFAULT_CITIZEN_PARAMETERS);
+    setLastUpdatedField(null);
+    persistSession(newId, [initialGreeting], DEFAULT_CITIZEN_PARAMETERS);
   };
 
   // Switch to a past chat session
@@ -376,7 +378,10 @@ export default function CitizenPage() {
           setMessages(data.sessionData[sessionId].messages || []);
           if (data.sessionData[sessionId].parameters) {
             setParameters(data.sessionData[sessionId].parameters);
+          } else {
+            setParameters(DEFAULT_CITIZEN_PARAMETERS);
           }
+          setLastUpdatedField(null);
           localStorage.setItem(STORAGE_CURRENT_CHAT_ID, sessionId);
         }
       }
@@ -411,11 +416,15 @@ export default function CitizenPage() {
 
   // Clear or reset the active chat immediately
   const handleClearCurrentChat = () => {
-    if (activeSessionId) {
-      handleDeleteSession(activeSessionId);
-    } else {
-      startNewChat();
-    }
+    stopSpeech();
+    try {
+      localStorage.removeItem(STORAGE_CHATS_KEY);
+      localStorage.removeItem(STORAGE_CURRENT_CHAT_ID);
+    } catch {}
+    setSessions([]);
+    setParameters(DEFAULT_CITIZEN_PARAMETERS);
+    setLastUpdatedField(null);
+    startNewChat();
   };
 
   // Convert current parameters into context object
@@ -516,7 +525,7 @@ export default function CitizenPage() {
       persistSession(
         currentSession,
         finalMessages,
-        parameters,
+        activeParams,
         isFirstQuery ? query : undefined
       );
 
@@ -895,12 +904,23 @@ export default function CitizenPage() {
 
         {/* Right Controls */}
         <div className="flex items-center gap-2">
+          {/* New Chat Button */}
+          <button
+            type="button"
+            onClick={startNewChat}
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow-2xs transition cursor-pointer active:scale-95"
+            title={isHi ? "सभी विवरण रीसेट कर नई बातचीत शुरू करें" : "Start fresh conversation"}
+          >
+            <span>✨</span>
+            <span className="hidden xs:inline">{isHi ? "नई बातचीत" : "New Chat"}</span>
+          </button>
+
           {/* Clear Current Chat Button */}
           <button
             type="button"
             onClick={handleClearCurrentChat}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 transition cursor-pointer"
-            title={isHi ? "वर्तमान बातचीत हटाएं / नया चैट" : "Clear conversation"}
+            title={isHi ? "सभी बातचीत हटाएं और रीसेट करें" : "Clear conversation"}
           >
             <span>🗑️</span>
             <span className="hidden sm:inline">
@@ -1071,25 +1091,6 @@ export default function CitizenPage() {
                       </div>
                     )}
 
-                    {/* Candidate Schemes under verification */}
-                    {msg.candidateSchemes && msg.candidateSchemes.length > 0 && (!msg.schemes || msg.schemes.length === 0) && msg.confidenceScore !== undefined && msg.confidenceScore >= 0.5 && (
-                      <div className="mt-3 pt-2.5 border-t border-slate-200 space-y-1.5">
-                        <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wide flex items-center gap-1">
-                          <span>💡</span>
-                          <span>{isHi ? "संभावित योजनाएं (सत्यापन जारी):" : "Potential Schemes Under Evaluation:"}</span>
-                        </div>
-                        <div className="flex flex-wrap gap-1.5">
-                          {msg.candidateSchemes.map((cs, i) => (
-                            <span
-                              key={i}
-                              className="px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-700 text-[11px] font-semibold"
-                            >
-                              {isHi ? cs.name_hi : cs.name_en}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
 
                     {/* Eligible Scheme Cards */}
                     {msg.schemes && msg.schemes.length > 0 && (
