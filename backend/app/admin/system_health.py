@@ -33,10 +33,31 @@ class AdminSystemHealthService:
     """Operations service providing multi-component operational health, cache, search index, and worker heartbeats."""
 
     WORKER_STALE_SECONDS = 120
+    _cached_status: Optional[AdminSystemStatusResponse] = None
+    _cached_status_ts: float = 0.0
+    CACHE_TTL_SECONDS: float = 15.0
+
+    _cached_ollama_info: Optional[Dict[str, Any]] = None
+    _cached_ollama_ts: float = 0.0
+    OLLAMA_CACHE_TTL_SECONDS: float = 30.0
+
     _cached_tts_info: Optional[Dict[str, Any]] = None
     _cached_tts_ts: float = 0.0
 
-    def get_system_status(self, db: Session) -> AdminSystemStatusResponse:
+    @classmethod
+    def invalidate_cache(cls) -> None:
+        cls._cached_status = None
+        cls._cached_status_ts = 0.0
+
+    def get_system_status(self, db: Session, force_refresh: bool = False) -> AdminSystemStatusResponse:
+        current_time = time.time()
+        if (
+            not force_refresh
+            and AdminSystemHealthService._cached_status is not None
+            and (current_time - AdminSystemHealthService._cached_status_ts) < self.CACHE_TTL_SECONDS
+        ):
+            return AdminSystemHealthService._cached_status
+
         now = datetime.now(timezone.utc)
         overall_status = "HEALTHY"
 
@@ -63,26 +84,37 @@ class AdminSystemHealthService:
             latency_ms=latency_ms,
         )
 
-        # 2. Ollama LLM Health
+        # 2. Ollama LLM Health (Cached for 30s to avoid latency on health checks)
         ollama_status = "HEALTHY"
         model_available = False
         model_name = "llama3.2:3b"
         provider_name = "ollama"
 
-        try:
-            ollama_prov = OllamaProvider()
-            health_dict = ollama_prov.check_health()
+        health_dict = None
+        if (
+            AdminSystemHealthService._cached_ollama_info is not None
+            and (current_time - AdminSystemHealthService._cached_ollama_ts) < self.OLLAMA_CACHE_TTL_SECONDS
+        ):
+            health_dict = AdminSystemHealthService._cached_ollama_info
+        else:
+            try:
+                ollama_prov = OllamaProvider()
+                health_dict = ollama_prov.check_health()
+                AdminSystemHealthService._cached_ollama_info = health_dict
+                AdminSystemHealthService._cached_ollama_ts = current_time
+            except Exception as e:
+                logger.warning(f"Ollama health probe error: {e}")
+
+        if health_dict:
             ollama_status = "HEALTHY" if health_dict.get("status") == "ok" else "UNAVAILABLE"
             model_available = bool(health_dict.get("model_available", False))
             model_name = health_dict.get("model", model_name)
             provider_name = health_dict.get("provider", provider_name)
-            if ollama_status != "HEALTHY" and overall_status != "CRITICAL":
-                overall_status = "WARNING"
-        except Exception as e:
-            logger.warning(f"Ollama health probe error: {e}")
+        else:
             ollama_status = "UNAVAILABLE"
-            if overall_status != "CRITICAL":
-                overall_status = "WARNING"
+
+        if ollama_status != "HEALTHY" and overall_status != "CRITICAL":
+            overall_status = "WARNING"
 
         ollama_health = OllamaHealth(
             status=ollama_status,
@@ -214,7 +246,7 @@ class AdminSystemHealthService:
             except Exception as e:
                 logger.warning(f"Could not retrieve TTS health: {e}")
 
-        return AdminSystemStatusResponse(
+        res = AdminSystemStatusResponse(
             overall_status=overall_status,
             database=database_health,
             ollama=ollama_health,
@@ -225,6 +257,9 @@ class AdminSystemHealthService:
             tts=tts_info,
             generated_at=now.isoformat(),
         )
+        AdminSystemHealthService._cached_status = res
+        AdminSystemHealthService._cached_status_ts = current_time
+        return res
 
     def register_heartbeat(
         self,

@@ -14,11 +14,11 @@ export default function AdminProcessingPage() {
   const [retryingId, setRetryingId] = useState<string | null>(null);
   const [actionNotice, setActionNotice] = useState<string | null>(null);
 
-  const loadPipeline = useCallback(async () => {
-    setIsLoading(true);
+  const loadPipeline = useCallback(async (forceRefresh: boolean = false) => {
+    if (!pipeline) setIsLoading(true);
     setError(null);
     try {
-      const res = await getAdminPipeline();
+      const res = await getAdminPipeline(forceRefresh);
       setPipeline(res);
     } catch (err: any) {
       console.error("Failed to load pipeline queue data:", err);
@@ -26,11 +26,11 @@ export default function AdminProcessingPage() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [pipeline]);
 
   useEffect(() => {
     loadPipeline();
-  }, [loadPipeline]);
+  }, []);
 
   const handleRetry = async (item: StuckItem) => {
     if (!item.valid_retry_action) return;
@@ -182,7 +182,7 @@ export default function AdminProcessingPage() {
           </p>
         </div>
         <button
-          onClick={() => loadPipeline()}
+          onClick={() => loadPipeline(true)}
           className="text-xs text-slate-600 hover:text-slate-900 px-2.5 py-1.5 rounded bg-white border border-slate-300 hover:bg-slate-50 transition"
         >
           Refresh Queue

@@ -15,14 +15,16 @@ export default function AdminReviewQueuePage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchQueue = useCallback(async () => {
-    setIsLoading(true);
+  const fetchQueue = useCallback(async (forceRefresh: boolean = false) => {
+    if (items.length === 0) setIsLoading(true);
     setError(null);
     try {
       const res = await getReviewQueue(
         page,
         pageSize,
-        statusFilter || undefined
+        statusFilter || undefined,
+        undefined,
+        forceRefresh
       );
       setItems(res.items || []);
       setTotal(res.total || 0);
@@ -31,11 +33,11 @@ export default function AdminReviewQueuePage() {
     } finally {
       setIsLoading(false);
     }
-  }, [page, pageSize, statusFilter]);
+  }, [page, pageSize, statusFilter, items.length]);
 
   useEffect(() => {
     fetchQueue();
-  }, [fetchQueue]);
+  }, [page, pageSize, statusFilter]);
 
   const filteredItems = items.filter((item) => {
     if (!searchQuery.trim()) return true;
@@ -62,7 +64,7 @@ export default function AdminReviewQueuePage() {
           </div>
           <button
             type="button"
-            onClick={() => fetchQueue()}
+            onClick={() => fetchQueue(true)}
             disabled={isLoading}
             className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition shadow-xs flex items-center gap-1 self-start sm:self-auto"
           >

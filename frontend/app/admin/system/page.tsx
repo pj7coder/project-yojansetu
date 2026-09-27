@@ -25,11 +25,11 @@ export default function AdminSystemPage() {
   const [isResetting, setIsResetting] = useState<boolean>(false);
   const [resetModalError, setResetModalError] = useState<string | null>(null);
 
-  const loadStatus = useCallback(async () => {
-    setIsLoading(true);
+  const loadStatus = useCallback(async (forceRefresh: boolean = false) => {
+    if (!status) setIsLoading(true);
     setError(null);
     try {
-      const res = await getAdminSystemStatus();
+      const res = await getAdminSystemStatus(forceRefresh);
       setStatus(res);
     } catch (err: any) {
       console.error("Failed to load system status:", err);
@@ -37,11 +37,11 @@ export default function AdminSystemPage() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [status]);
 
   useEffect(() => {
     loadStatus();
-  }, [loadStatus]);
+  }, []);
 
   const handleRefreshCache = async () => {
     setIsRefreshingCache(true);
@@ -140,7 +140,7 @@ export default function AdminSystemPage() {
           </p>
         </div>
         <button
-          onClick={() => loadStatus()}
+          onClick={() => loadStatus(true)}
           className="text-xs text-slate-600 hover:text-slate-900 px-2.5 py-1.5 rounded bg-white border border-slate-300 hover:bg-slate-50 transition"
         >
           Re-Probe Health

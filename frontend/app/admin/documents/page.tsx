@@ -234,8 +234,8 @@ export default function AdminDocumentsPage() {
      "READY_FOR_VALIDATION", "VALIDATING"].includes(d.processing_status)
   );
 
-  const loadDocuments = useCallback(async () => {
-    setIsLoading(true);
+  const loadDocuments = useCallback(async (forceRefresh: boolean = false) => {
+    if (documents.length === 0) setIsLoading(true);
     setError(null);
     try {
       const res = await getAdminDocuments({
@@ -245,7 +245,7 @@ export default function AdminDocumentsPage() {
         query: searchQuery.trim() || undefined,
         page,
         page_size: pageSize,
-      });
+      }, forceRefresh);
       setDocuments(res.items || []);
       setTotal(res.total || 0);
     } catch (err: any) {
@@ -254,11 +254,11 @@ export default function AdminDocumentsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, methodFilter, failedOnly, searchQuery, page, pageSize]);
+  }, [statusFilter, methodFilter, failedOnly, searchQuery, page, pageSize, documents.length]);
 
   useEffect(() => {
     loadDocuments();
-  }, [loadDocuments]);
+  }, [statusFilter, methodFilter, failedOnly, searchQuery, page, pageSize]);
 
   // Watch Folder State
   const [watchFolder, setWatchFolder] = useState<WatchFolderStatus | null>(null);
@@ -434,7 +434,7 @@ export default function AdminDocumentsPage() {
               + Upload Document
             </button>
             <button
-              onClick={() => loadDocuments()}
+              onClick={() => loadDocuments(true)}
               className="text-xs text-slate-600 hover:text-slate-900 px-2.5 py-1.5 rounded bg-white border border-slate-300 hover:bg-slate-50 transition"
             >
               Refresh

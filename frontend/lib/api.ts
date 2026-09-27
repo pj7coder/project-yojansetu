@@ -199,6 +199,7 @@ export async function uploadDocument(
     throw new ApiError(errorDetail, response.status);
   }
 
+  invalidateAdminDashboardCache();
   return (await response.json()) as DocumentItem;
 }
 
@@ -263,6 +264,37 @@ import {
   ReviewSessionDetail,
 } from "../types/review";
 
+// ===========================================================================
+// Unified High-Performance Admin In-Memory Cache & In-Flight Deduplication
+// ===========================================================================
+interface CacheEntry<T> {
+  data: T;
+  ts: number;
+}
+const adminCache = new Map<string, CacheEntry<any>>();
+const adminInFlight = new Map<string, Promise<any>>();
+
+const ADMIN_CACHE_TTL_MS = 25000; // 25s for instant tab transitions without spinners
+
+export function getFromAdminCache<T>(key: string, ttlMs: number = ADMIN_CACHE_TTL_MS): T | null {
+  const entry = adminCache.get(key);
+  if (!entry) return null;
+  if (Date.now() - entry.ts > ttlMs) {
+    adminCache.delete(key);
+    return null;
+  }
+  return entry.data as T;
+}
+
+export function setAdminCache<T>(key: string, data: T): void {
+  adminCache.set(key, { data, ts: Date.now() });
+}
+
+export function invalidateAdminDashboardCache(): void {
+  adminCache.clear();
+  adminInFlight.clear();
+}
+
 /**
  * Fetch prioritized human review queue with optional filters.
  */
@@ -270,35 +302,54 @@ export async function getReviewQueue(
   page: number = 1,
   pageSize: number = 25,
   status?: string,
-  departmentId?: string
+  departmentId?: string,
+  forceRefresh: boolean = false
 ): Promise<ReviewQueueResponse> {
-  try {
-    const params = new URLSearchParams({
-      page: page.toString(),
-      page_size: pageSize.toString(),
-    });
-    if (status) params.append("status", status);
-    if (departmentId) params.append("department_id", departmentId);
-
-    const url = `${config.apiBaseUrl}/review/queue?${params.toString()}`;
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "X-Reviewer-Id": "DEV_REVIEWER",
-      },
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch review queue: HTTP ${response.status}`, response.status);
-    }
-
-    return (await response.json()) as ReviewQueueResponse;
-  } catch (err) {
-    console.warn("Backend review queue unreachable, using operational fallback:", err);
-    return getFallbackReviewQueue();
+  const cacheKey = `review_queue:${page}:${pageSize}:${status || ""}:${departmentId || ""}`;
+  if (!forceRefresh) {
+    const cached = getFromAdminCache<ReviewQueueResponse>(cacheKey);
+    if (cached) return cached;
+    if (adminInFlight.has(cacheKey)) return adminInFlight.get(cacheKey)!;
   }
+
+  const promise = (async () => {
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        page_size: pageSize.toString(),
+      });
+      if (status) params.append("status", status);
+      if (departmentId) params.append("department_id", departmentId);
+
+      const url = `${config.apiBaseUrl}/review/queue?${params.toString()}`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "X-Reviewer-Id": "DEV_REVIEWER",
+        },
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new ApiError(`Failed to fetch review queue: HTTP ${response.status}`, response.status);
+      }
+
+      const data = (await response.json()) as ReviewQueueResponse;
+      setAdminCache(cacheKey, data);
+      return data;
+    } catch (err) {
+      console.warn("Backend review queue unreachable, using operational fallback:", err);
+      const fallback = getFallbackReviewQueue();
+      setAdminCache(cacheKey, fallback);
+      return fallback;
+    } finally {
+      adminInFlight.delete(cacheKey);
+    }
+  })();
+
+  adminInFlight.set(cacheKey, promise);
+  return promise;
 }
 
 /**
@@ -843,34 +894,15 @@ const ADMIN_AUTH_HEADERS = {
   "X-Reviewer-Id": "DEV_REVIEWER",
 };
 
-// Fast in-flight request deduplication and short TTL cache for high-frequency admin panels
-let inFlightOverview: Promise<AdminOverviewResponse> | null = null;
-let cachedOverview: { data: AdminOverviewResponse; ts: number } | null = null;
-
-let inFlightSystemStatus: Promise<AdminSystemStatusResponse> | null = null;
-let cachedSystemStatus: { data: AdminSystemStatusResponse; ts: number } | null = null;
-
-let inFlightPipeline: Promise<AdminPipelineResponse> | null = null;
-let cachedPipeline: { data: AdminPipelineResponse; ts: number } | null = null;
-
-const ADMIN_CACHE_TTL_MS = 4000;
-
-export function invalidateAdminDashboardCache(): void {
-  cachedOverview = null;
-  cachedSystemStatus = null;
-  cachedPipeline = null;
-}
-
 /**
  * Fetch top-level consolidated operations overview metrics.
  */
 export async function getAdminOverview(forceRefresh: boolean = false): Promise<AdminOverviewResponse> {
-  const now = Date.now();
-  if (!forceRefresh && cachedOverview && (now - cachedOverview.ts) < ADMIN_CACHE_TTL_MS) {
-    return cachedOverview.data;
-  }
-  if (!forceRefresh && inFlightOverview) {
-    return inFlightOverview;
+  const cacheKey = "overview";
+  if (!forceRefresh) {
+    const cached = getFromAdminCache<AdminOverviewResponse>(cacheKey);
+    if (cached) return cached;
+    if (adminInFlight.has(cacheKey)) return adminInFlight.get(cacheKey)!;
   }
 
   const promise = (async () => {
@@ -887,19 +919,19 @@ export async function getAdminOverview(forceRefresh: boolean = false): Promise<A
       }
 
       const data = (await response.json()) as AdminOverviewResponse;
-      cachedOverview = { data, ts: Date.now() };
+      setAdminCache(cacheKey, data);
       return data;
     } catch (err) {
       console.warn("Backend admin overview unreachable, using operational fallback:", err);
       const fallback = getFallbackAdminOverview();
-      cachedOverview = { data: fallback, ts: Date.now() };
+      setAdminCache(cacheKey, fallback);
       return fallback;
     } finally {
-      inFlightOverview = null;
+      adminInFlight.delete(cacheKey);
     }
   })();
 
-  inFlightOverview = promise;
+  adminInFlight.set(cacheKey, promise);
   return promise;
 }
 
@@ -907,12 +939,11 @@ export async function getAdminOverview(forceRefresh: boolean = false): Promise<A
  * Fetch 10-stage pipeline queue distribution and stuck processing items.
  */
 export async function getAdminPipeline(forceRefresh: boolean = false): Promise<AdminPipelineResponse> {
-  const now = Date.now();
-  if (!forceRefresh && cachedPipeline && (now - cachedPipeline.ts) < ADMIN_CACHE_TTL_MS) {
-    return cachedPipeline.data;
-  }
-  if (!forceRefresh && inFlightPipeline) {
-    return inFlightPipeline;
+  const cacheKey = "pipeline";
+  if (!forceRefresh) {
+    const cached = getFromAdminCache<AdminPipelineResponse>(cacheKey);
+    if (cached) return cached;
+    if (adminInFlight.has(cacheKey)) return adminInFlight.get(cacheKey)!;
   }
 
   const promise = (async () => {
@@ -929,19 +960,19 @@ export async function getAdminPipeline(forceRefresh: boolean = false): Promise<A
       }
 
       const data = (await response.json()) as AdminPipelineResponse;
-      cachedPipeline = { data, ts: Date.now() };
+      setAdminCache(cacheKey, data);
       return data;
     } catch (err) {
       console.warn("Backend pipeline status unreachable, using operational fallback:", err);
       const fallback = getFallbackAdminPipeline();
-      cachedPipeline = { data: fallback, ts: Date.now() };
+      setAdminCache(cacheKey, fallback);
       return fallback;
     } finally {
-      inFlightPipeline = null;
+      adminInFlight.delete(cacheKey);
     }
   })();
 
-  inFlightPipeline = promise;
+  adminInFlight.set(cacheKey, promise);
   return promise;
 }
 
@@ -979,17 +1010,16 @@ export async function retryAdminDocument(
  * Fetch detailed component-level system health statuses (DB, Ollama, pgvector, cache, workers).
  */
 export async function getAdminSystemStatus(forceRefresh: boolean = false): Promise<AdminSystemStatusResponse> {
-  const now = Date.now();
-  if (!forceRefresh && cachedSystemStatus && (now - cachedSystemStatus.ts) < ADMIN_CACHE_TTL_MS) {
-    return cachedSystemStatus.data;
-  }
-  if (!forceRefresh && inFlightSystemStatus) {
-    return inFlightSystemStatus;
+  const cacheKey = "system_status";
+  if (!forceRefresh) {
+    const cached = getFromAdminCache<AdminSystemStatusResponse>(cacheKey);
+    if (cached) return cached;
+    if (adminInFlight.has(cacheKey)) return adminInFlight.get(cacheKey)!;
   }
 
   const promise = (async () => {
     try {
-      const url = `${config.apiBaseUrl}/admin/dashboard/system`;
+      const url = `${config.apiBaseUrl}/admin/dashboard/system${forceRefresh ? "?force_refresh=true" : ""}`;
       const response = await fetch(url, {
         method: "GET",
         headers: ADMIN_AUTH_HEADERS,
@@ -1001,43 +1031,61 @@ export async function getAdminSystemStatus(forceRefresh: boolean = false): Promi
       }
 
       const data = (await response.json()) as AdminSystemStatusResponse;
-      cachedSystemStatus = { data, ts: Date.now() };
+      setAdminCache(cacheKey, data);
       return data;
     } catch (err) {
       console.warn("Backend system status unreachable, using operational fallback:", err);
       const fallback = getFallbackAdminSystemStatus();
-      cachedSystemStatus = { data: fallback, ts: Date.now() };
+      setAdminCache(cacheKey, fallback);
       return fallback;
     } finally {
-      inFlightSystemStatus = null;
+      adminInFlight.delete(cacheKey);
     }
   })();
 
-  inFlightSystemStatus = promise;
+  adminInFlight.set(cacheKey, promise);
   return promise;
 }
 
 /**
  * Fetch operational activity stream (zero citizen data).
  */
-export async function getAdminActivity(limit: number = 25): Promise<AdminActivityResponse> {
-  try {
-    const url = `${config.apiBaseUrl}/admin/dashboard/activity?limit=${limit}`;
-    const response = await fetch(url, {
-      method: "GET",
-      headers: ADMIN_AUTH_HEADERS,
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch activity feed: HTTP ${response.status}`, response.status);
-    }
-
-    return (await response.json()) as AdminActivityResponse;
-  } catch (err) {
-    console.warn("Backend activity feed unreachable, using operational fallback:", err);
-    return getFallbackAdminActivity(limit);
+export async function getAdminActivity(limit: number = 25, forceRefresh: boolean = false): Promise<AdminActivityResponse> {
+  const cacheKey = `activity:${limit}`;
+  if (!forceRefresh) {
+    const cached = getFromAdminCache<AdminActivityResponse>(cacheKey);
+    if (cached) return cached;
+    if (adminInFlight.has(cacheKey)) return adminInFlight.get(cacheKey)!;
   }
+
+  const promise = (async () => {
+    try {
+      const url = `${config.apiBaseUrl}/admin/dashboard/activity?limit=${limit}`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: ADMIN_AUTH_HEADERS,
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new ApiError(`Failed to fetch activity feed: HTTP ${response.status}`, response.status);
+      }
+
+      const data = (await response.json()) as AdminActivityResponse;
+      setAdminCache(cacheKey, data);
+      return data;
+    } catch (err) {
+      console.warn("Backend activity feed unreachable, using operational fallback:", err);
+      const fallback = getFallbackAdminActivity(limit);
+      setAdminCache(cacheKey, fallback);
+      return fallback;
+    } finally {
+      adminInFlight.delete(cacheKey);
+    }
+  })();
+
+  adminInFlight.set(cacheKey, promise);
+  return promise;
 }
 
 /**
@@ -1048,30 +1096,48 @@ export async function getAdminConflicts(params?: {
   severity?: string;
   page?: number;
   page_size?: number;
-}): Promise<AdminConflictListResponse> {
-  try {
-    const qs = new URLSearchParams();
-    if (params?.conflict_type) qs.append("conflict_type", params.conflict_type);
-    if (params?.severity) qs.append("severity", params.severity);
-    if (params?.page) qs.append("page", params.page.toString());
-    if (params?.page_size) qs.append("page_size", params.page_size.toString());
-
-    const url = `${config.apiBaseUrl}/admin/conflicts?${qs.toString()}`;
-    const response = await fetch(url, {
-      method: "GET",
-      headers: ADMIN_AUTH_HEADERS,
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch conflicts: HTTP ${response.status}`, response.status);
-    }
-
-    return (await response.json()) as AdminConflictListResponse;
-  } catch (err) {
-    console.warn("Backend conflicts unreachable, using operational fallback:", err);
-    return getFallbackAdminConflicts();
+}, forceRefresh: boolean = false): Promise<AdminConflictListResponse> {
+  const cacheKey = `conflicts:${JSON.stringify(params || {})}`;
+  if (!forceRefresh) {
+    const cached = getFromAdminCache<AdminConflictListResponse>(cacheKey);
+    if (cached) return cached;
+    if (adminInFlight.has(cacheKey)) return adminInFlight.get(cacheKey)!;
   }
+
+  const promise = (async () => {
+    try {
+      const qs = new URLSearchParams();
+      if (params?.conflict_type) qs.append("conflict_type", params.conflict_type);
+      if (params?.severity) qs.append("severity", params.severity);
+      if (params?.page) qs.append("page", params.page.toString());
+      if (params?.page_size) qs.append("page_size", params.page_size.toString());
+
+      const url = `${config.apiBaseUrl}/admin/conflicts?${qs.toString()}`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: ADMIN_AUTH_HEADERS,
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new ApiError(`Failed to fetch conflicts: HTTP ${response.status}`, response.status);
+      }
+
+      const data = (await response.json()) as AdminConflictListResponse;
+      setAdminCache(cacheKey, data);
+      return data;
+    } catch (err) {
+      console.warn("Backend conflicts unreachable, using operational fallback:", err);
+      const fallback = getFallbackAdminConflicts();
+      setAdminCache(cacheKey, fallback);
+      return fallback;
+    } finally {
+      adminInFlight.delete(cacheKey);
+    }
+  })();
+
+  adminInFlight.set(cacheKey, promise);
+  return promise;
 }
 
 /**
@@ -1084,32 +1150,50 @@ export async function getAdminDocuments(params?: {
   query?: string;
   page?: number;
   page_size?: number;
-}): Promise<AdminDocumentListResponse> {
-  try {
-    const qs = new URLSearchParams();
-    if (params?.status) qs.append("status", params.status);
-    if (params?.ingestion_method) qs.append("ingestion_method", params.ingestion_method);
-    if (params?.failed_only) qs.append("failed_only", "true");
-    if (params?.query) qs.append("query", params.query);
-    if (params?.page) qs.append("page", params.page.toString());
-    if (params?.page_size) qs.append("page_size", params.page_size.toString());
-
-    const url = `${config.apiBaseUrl}/admin/documents?${qs.toString()}`;
-    const response = await fetch(url, {
-      method: "GET",
-      headers: ADMIN_AUTH_HEADERS,
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch documents: HTTP ${response.status}`, response.status);
-    }
-
-    return (await response.json()) as AdminDocumentListResponse;
-  } catch (err) {
-    console.warn("Backend documents unreachable, using operational fallback:", err);
-    return getFallbackAdminDocuments();
+}, forceRefresh: boolean = false): Promise<AdminDocumentListResponse> {
+  const cacheKey = `documents:${JSON.stringify(params || {})}`;
+  if (!forceRefresh) {
+    const cached = getFromAdminCache<AdminDocumentListResponse>(cacheKey);
+    if (cached) return cached;
+    if (adminInFlight.has(cacheKey)) return adminInFlight.get(cacheKey)!;
   }
+
+  const promise = (async () => {
+    try {
+      const qs = new URLSearchParams();
+      if (params?.status) qs.append("status", params.status);
+      if (params?.ingestion_method) qs.append("ingestion_method", params.ingestion_method);
+      if (params?.failed_only) qs.append("failed_only", "true");
+      if (params?.query) qs.append("query", params.query);
+      if (params?.page) qs.append("page", params.page.toString());
+      if (params?.page_size) qs.append("page_size", params.page_size.toString());
+
+      const url = `${config.apiBaseUrl}/admin/documents?${qs.toString()}`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: ADMIN_AUTH_HEADERS,
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new ApiError(`Failed to fetch documents: HTTP ${response.status}`, response.status);
+      }
+
+      const data = (await response.json()) as AdminDocumentListResponse;
+      setAdminCache(cacheKey, data);
+      return data;
+    } catch (err) {
+      console.warn("Backend documents unreachable, using operational fallback:", err);
+      const fallback = getFallbackAdminDocuments();
+      setAdminCache(cacheKey, fallback);
+      return fallback;
+    } finally {
+      adminInFlight.delete(cacheKey);
+    }
+  })();
+
+  adminInFlight.set(cacheKey, promise);
+  return promise;
 }
 
 /**
@@ -1121,31 +1205,49 @@ export async function getAdminSchemes(params?: {
   query?: string;
   page?: number;
   page_size?: number;
-}): Promise<AdminSchemeListResponse> {
-  try {
-    const qs = new URLSearchParams();
-    if (params?.status) qs.append("status", params.status);
-    if (params?.department_id) qs.append("department_id", params.department_id);
-    if (params?.query) qs.append("query", params.query);
-    if (params?.page) qs.append("page", params.page.toString());
-    if (params?.page_size) qs.append("page_size", params.page_size.toString());
-
-    const url = `${config.apiBaseUrl}/admin/schemes?${qs.toString()}`;
-    const response = await fetch(url, {
-      method: "GET",
-      headers: ADMIN_AUTH_HEADERS,
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch schemes: HTTP ${response.status}`, response.status);
-    }
-
-    return (await response.json()) as AdminSchemeListResponse;
-  } catch (err) {
-    console.warn("Backend schemes unreachable, using operational fallback:", err);
-    return getFallbackAdminSchemes();
+}, forceRefresh: boolean = false): Promise<AdminSchemeListResponse> {
+  const cacheKey = `schemes:${JSON.stringify(params || {})}`;
+  if (!forceRefresh) {
+    const cached = getFromAdminCache<AdminSchemeListResponse>(cacheKey);
+    if (cached) return cached;
+    if (adminInFlight.has(cacheKey)) return adminInFlight.get(cacheKey)!;
   }
+
+  const promise = (async () => {
+    try {
+      const qs = new URLSearchParams();
+      if (params?.status) qs.append("status", params.status);
+      if (params?.department_id) qs.append("department_id", params.department_id);
+      if (params?.query) qs.append("query", params.query);
+      if (params?.page) qs.append("page", params.page.toString());
+      if (params?.page_size) qs.append("page_size", params.page_size.toString());
+
+      const url = `${config.apiBaseUrl}/admin/schemes?${qs.toString()}`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: ADMIN_AUTH_HEADERS,
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new ApiError(`Failed to fetch schemes: HTTP ${response.status}`, response.status);
+      }
+
+      const data = (await response.json()) as AdminSchemeListResponse;
+      setAdminCache(cacheKey, data);
+      return data;
+    } catch (err) {
+      console.warn("Backend schemes unreachable, using operational fallback:", err);
+      const fallback = getFallbackAdminSchemes();
+      setAdminCache(cacheKey, fallback);
+      return fallback;
+    } finally {
+      adminInFlight.delete(cacheKey);
+    }
+  })();
+
+  adminInFlight.set(cacheKey, promise);
+  return promise;
 }
 
 /**
@@ -1175,6 +1277,7 @@ export async function getSchemeDetail(schemeId: string): Promise<SchemeDetailRes
  * Update all scheme details and canonical rules.
  */
 export async function updateSchemeFull(schemeId: string, payload: any): Promise<SchemeDetailResponse> {
+  invalidateAdminDashboardCache();
   const url = `${config.apiBaseUrl}/schemes/${schemeId}`;
   const response = await fetch(url, {
     method: "PUT",
@@ -1203,6 +1306,7 @@ export async function updateSchemeFull(schemeId: string, payload: any): Promise<
  * Delete a scheme record and its versions.
  */
 export async function deleteScheme(schemeId: string): Promise<{ status: string; message: string }> {
+  invalidateAdminDashboardCache();
   const url = `${config.apiBaseUrl}/schemes/${schemeId}`;
   const response = await fetch(url, {
     method: "DELETE",
@@ -1248,6 +1352,7 @@ export async function scanWatchFolderNow(): Promise<{
   ingested_count: number;
   ingested_document_ids: string[];
 }> {
+  invalidateAdminDashboardCache();
   const url = `${config.apiBaseUrl}/documents/watch-folder/scan`;
   const response = await fetch(url, {
     method: "POST",
@@ -1272,33 +1377,51 @@ export async function getAdminSources(params?: {
   query?: string;
   page?: number;
   page_size?: number;
-}): Promise<AdminSourceListResponse> {
-  try {
-    const qs = new URLSearchParams();
-    if (params?.status) qs.append("status", params.status);
-    if (params?.priority_tier) qs.append("priority_tier", params.priority_tier);
-    if (params?.authority_level) qs.append("authority_level", params.authority_level);
-    if (params?.enabled_only) qs.append("enabled_only", "true");
-    if (params?.query) qs.append("query", params.query);
-    if (params?.page) qs.append("page", params.page.toString());
-    if (params?.page_size) qs.append("page_size", params.page_size.toString());
-
-    const url = `${config.apiBaseUrl}/admin/sources?${qs.toString()}`;
-    const response = await fetch(url, {
-      method: "GET",
-      headers: ADMIN_AUTH_HEADERS,
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch sources: HTTP ${response.status}`, response.status);
-    }
-
-    return (await response.json()) as AdminSourceListResponse;
-  } catch (err) {
-    console.warn("Backend sources unreachable, using operational fallback:", err);
-    return getFallbackAdminSources();
+}, forceRefresh: boolean = false): Promise<AdminSourceListResponse> {
+  const cacheKey = `sources:${JSON.stringify(params || {})}`;
+  if (!forceRefresh) {
+    const cached = getFromAdminCache<AdminSourceListResponse>(cacheKey);
+    if (cached) return cached;
+    if (adminInFlight.has(cacheKey)) return adminInFlight.get(cacheKey)!;
   }
+
+  const promise = (async () => {
+    try {
+      const qs = new URLSearchParams();
+      if (params?.status) qs.append("status", params.status);
+      if (params?.priority_tier) qs.append("priority_tier", params.priority_tier);
+      if (params?.authority_level) qs.append("authority_level", params.authority_level);
+      if (params?.enabled_only) qs.append("enabled_only", "true");
+      if (params?.query) qs.append("query", params.query);
+      if (params?.page) qs.append("page", params.page.toString());
+      if (params?.page_size) qs.append("page_size", params.page_size.toString());
+
+      const url = `${config.apiBaseUrl}/admin/sources?${qs.toString()}`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: ADMIN_AUTH_HEADERS,
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new ApiError(`Failed to fetch sources: HTTP ${response.status}`, response.status);
+      }
+
+      const data = (await response.json()) as AdminSourceListResponse;
+      setAdminCache(cacheKey, data);
+      return data;
+    } catch (err) {
+      console.warn("Backend sources unreachable, using operational fallback:", err);
+      const fallback = getFallbackAdminSources();
+      setAdminCache(cacheKey, fallback);
+      return fallback;
+    } finally {
+      adminInFlight.delete(cacheKey);
+    }
+  })();
+
+  adminInFlight.set(cacheKey, promise);
+  return promise;
 }
 
 /**
@@ -1334,6 +1457,7 @@ export async function adminGlobalSearch(query: string): Promise<AdminGlobalSearc
  * Trigger verified rule cache reload and recompilation.
  */
 export async function refreshRuleCache(): Promise<{ status: string; message: string; entries: number }> {
+  invalidateAdminDashboardCache();
   const url = `${config.apiBaseUrl}/admin/cache/refresh`;
   const response = await fetch(url, {
     method: "POST",
@@ -1351,6 +1475,7 @@ export async function refreshRuleCache(): Promise<{ status: string; message: str
  * Trigger re-indexing of stale verified scheme embeddings.
  */
 export async function reindexStaleEmbeddings(): Promise<{ status: string; message: string; result: any }> {
+  invalidateAdminDashboardCache();
   const url = `${config.apiBaseUrl}/admin/search-index/reindex-stale`;
   const response = await fetch(url, {
     method: "POST",
@@ -1368,6 +1493,7 @@ export async function reindexStaleEmbeddings(): Promise<{ status: string; messag
  * Trigger an immediate manual check on an official government source URL.
  */
 export async function triggerManualSourceCheck(sourceUrlId: string): Promise<any> {
+  invalidateAdminDashboardCache();
   const url = `${config.apiBaseUrl}/sources/urls/${sourceUrlId}/check`;
   const response = await fetch(url, {
     method: "POST",
@@ -1395,6 +1521,7 @@ export async function resetAllPlatformData(confirmation: string): Promise<{
   tables_cleared: number;
   files_removed: number;
 }> {
+  invalidateAdminDashboardCache();
   const url = `${config.apiBaseUrl}/admin/system/reset-all`;
   const response = await fetch(url, {
     method: "POST",

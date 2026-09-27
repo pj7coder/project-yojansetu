@@ -83,7 +83,7 @@ class AdminDashboardService:
 
     _cached_overview: Optional[AdminOverviewResponse] = None
     _cached_overview_ts: float = 0.0
-    CACHE_TTL_SECONDS: float = 5.0
+    CACHE_TTL_SECONDS: float = 20.0
 
     @classmethod
     def invalidate_cache(cls) -> None:
@@ -312,9 +312,7 @@ class AdminDashboardService:
         # 6. Conflicts Overview - accurately matches AdminConflictService
         from app.admin.conflict_service import AdminConflictService
         conf_service = AdminConflictService()
-        conf_data = conf_service.list_conflicts(db, page=1, page_size=100)
-        total_conflicts = conf_data.total
-        crit_conflicts = sum(1 for it in conf_data.items if it.severity == "CRITICAL")
+        total_conflicts, crit_conflicts = conf_service.get_conflict_counts(db)
 
         conflicts_overview = ConflictOverview(
             total_unresolved=total_conflicts,

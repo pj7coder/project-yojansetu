@@ -45,9 +45,18 @@ export function DataTable<T>({
                 </th>
               ))}
             </tr>
+            {isLoading && data.length > 0 && (
+              <tr>
+                <td colSpan={columns.length} className="p-0 border-none">
+                  <div className="h-0.5 w-full bg-blue-100 overflow-hidden">
+                    <div className="h-full bg-blue-600 animate-pulse" style={{ width: "100%" }} />
+                  </div>
+                </td>
+              </tr>
+            )}
           </thead>
-          <tbody className="divide-y divide-slate-100 text-slate-800">
-            {isLoading ? (
+          <tbody className={`divide-y divide-slate-100 text-slate-800 transition-opacity duration-200 ${isLoading && data.length > 0 ? "opacity-75" : "opacity-100"}`}>
+            {isLoading && data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length} className="px-4 py-12 text-center text-slate-500">
                   <div className="flex flex-col items-center justify-center gap-2">

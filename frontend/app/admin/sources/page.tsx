@@ -25,8 +25,8 @@ export default function AdminSourcesPage() {
   const [checkingId, setCheckingId] = useState<string | null>(null);
   const [actionNotice, setActionNotice] = useState<string | null>(null);
 
-  const loadSources = useCallback(async () => {
-    setIsLoading(true);
+  const loadSources = useCallback(async (forceRefresh: boolean = false) => {
+    if (sources.length === 0) setIsLoading(true);
     setError(null);
     try {
       const res = await getAdminSources({
@@ -37,7 +37,7 @@ export default function AdminSourcesPage() {
         query: searchQuery.trim() || undefined,
         page,
         page_size: pageSize,
-      });
+      }, forceRefresh);
       setSources(res.items || []);
       setTotal(res.total || 0);
     } catch (err: any) {
@@ -46,11 +46,11 @@ export default function AdminSourcesPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, priorityFilter, authorityFilter, enabledOnly, searchQuery, page, pageSize]);
+  }, [statusFilter, priorityFilter, authorityFilter, enabledOnly, searchQuery, page, pageSize, sources.length]);
 
   useEffect(() => {
     loadSources();
-  }, [loadSources]);
+  }, [statusFilter, priorityFilter, authorityFilter, enabledOnly, searchQuery, page, pageSize]);
 
   const handleManualCheck = async (sourceUrlId?: string | null) => {
     if (!sourceUrlId) return;
@@ -151,7 +151,7 @@ export default function AdminSourcesPage() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => loadSources()}
+            onClick={() => loadSources(true)}
             className="text-xs text-slate-600 hover:text-slate-900 px-2.5 py-1 rounded bg-white border border-slate-300 hover:bg-slate-50 transition"
           >
             Refresh

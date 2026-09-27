@@ -20,14 +20,32 @@ logger = logging.getLogger("yojansetu.admin.conflicts")
 class AdminConflictService:
     """Operations service aggregating unresolved conflicts across normalization, validation, and versioning."""
 
-    def list_conflicts(
-        self,
-        db: Session,
-        conflict_type: Optional[str] = None,
-        severity: Optional[str] = None,
-        page: int = 1,
-        page_size: int = 25,
-    ) -> AdminConflictListResponse:
+    _cached_items: Optional[List[AdminConflictItem]] = None
+    _cached_ts: float = 0.0
+    CACHE_TTL_SECONDS: float = 15.0
+
+    @classmethod
+    def invalidate_cache(cls) -> None:
+        cls._cached_items = None
+        cls._cached_ts = 0.0
+
+    def get_conflict_counts(self, db: Session) -> tuple:
+        """Fast count retrieval without full filtering/pagination."""
+        all_items = self._get_all_raw_items(db)
+        total = len(all_items)
+        crit = sum(1 for it in all_items if it.severity == "CRITICAL")
+        return total, crit
+
+    def _get_all_raw_items(self, db: Session, force_refresh: bool = False) -> List[AdminConflictItem]:
+        import time as _t
+        cur_t = _t.time()
+        if (
+            not force_refresh
+            and AdminConflictService._cached_items is not None
+            and (cur_t - AdminConflictService._cached_ts) < self.CACHE_TTL_SECONDS
+        ):
+            return AdminConflictService._cached_items
+
         now = datetime.now(timezone.utc)
         items: List[AdminConflictItem] = []
 
@@ -199,6 +217,21 @@ class AdminConflictService:
                 )
             )
 
+        AdminConflictService._cached_items = items
+        AdminConflictService._cached_ts = cur_t
+        return items
+
+    def list_conflicts(
+        self,
+        db: Session,
+        conflict_type: Optional[str] = None,
+        severity: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 25,
+        force_refresh: bool = False,
+    ) -> AdminConflictListResponse:
+        items = list(self._get_all_raw_items(db, force_refresh=force_refresh))
+
         # Apply in-memory filters
         if conflict_type:
             items = [it for it in items if it.conflict_type.upper() == conflict_type.upper()]
@@ -219,3 +252,4 @@ class AdminConflictService:
             page=page,
             page_size=page_size,
         )
+

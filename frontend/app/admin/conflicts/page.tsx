@@ -20,8 +20,8 @@ export default function AdminConflictsPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadConflicts = useCallback(async () => {
-    setIsLoading(true);
+  const loadConflicts = useCallback(async (forceRefresh: boolean = false) => {
+    if (conflicts.length === 0) setIsLoading(true);
     setError(null);
     try {
       const res = await getAdminConflicts({
@@ -29,7 +29,7 @@ export default function AdminConflictsPage() {
         severity: severityFilter || undefined,
         page,
         page_size: pageSize,
-      });
+      }, forceRefresh);
       setConflicts(res.items || []);
       setTotal(res.total || 0);
     } catch (err: any) {
@@ -38,11 +38,11 @@ export default function AdminConflictsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [typeFilter, severityFilter, page, pageSize]);
+  }, [typeFilter, severityFilter, page, pageSize, conflicts.length]);
 
   useEffect(() => {
     loadConflicts();
-  }, [loadConflicts]);
+  }, [typeFilter, severityFilter, page, pageSize]);
 
   const columns = [
     {
@@ -114,7 +114,7 @@ export default function AdminConflictsPage() {
           </p>
         </div>
         <button
-          onClick={() => loadConflicts()}
+          onClick={() => loadConflicts(true)}
           className="text-xs text-slate-600 hover:text-slate-900 px-2.5 py-1.5 rounded bg-white border border-slate-300 hover:bg-slate-50 transition"
         >
           Refresh Conflicts

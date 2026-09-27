@@ -15,14 +15,14 @@ export default function AdminVersionsPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadVersions = useCallback(async () => {
-    setIsLoading(true);
+  const loadVersions = useCallback(async (forceRefresh: boolean = false) => {
+    if (schemes.length === 0) setIsLoading(true);
     setError(null);
     try {
       const res = await getAdminSchemes({
         page,
         page_size: pageSize,
-      });
+      }, forceRefresh);
       setSchemes(res.items || []);
       setTotal(res.total || 0);
     } catch (err: any) {
@@ -31,11 +31,11 @@ export default function AdminVersionsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [page, pageSize]);
+  }, [page, pageSize, schemes.length]);
 
   useEffect(() => {
     loadVersions();
-  }, [loadVersions]);
+  }, [page, pageSize]);
 
   const columns = [
     {
@@ -114,7 +114,7 @@ export default function AdminVersionsPage() {
           </p>
         </div>
         <button
-          onClick={() => loadVersions()}
+          onClick={() => loadVersions(true)}
           className="text-xs text-slate-600 hover:text-slate-900 px-2.5 py-1.5 rounded bg-white border border-slate-300 hover:bg-slate-50 transition"
         >
           Refresh Versions

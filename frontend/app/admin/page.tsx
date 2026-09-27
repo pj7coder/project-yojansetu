@@ -9,15 +9,17 @@ export default function AdminOverviewPage() {
   const [overview, setOverview] = useState<AdminOverviewResponse | null>(null);
   const [activities, setActivities] = useState<AdminActivityItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadData = useCallback(async () => {
-    setIsLoading(true);
+  const loadData = useCallback(async (forceRefresh: boolean = false) => {
+    if (!overview) setIsLoading(true);
+    else setIsUpdating(true);
     setError(null);
     try {
       const [ovData, actData] = await Promise.all([
-        getAdminOverview(),
-        getAdminActivity(8),
+        getAdminOverview(forceRefresh),
+        getAdminActivity(8, forceRefresh),
       ]);
       setOverview(ovData);
       setActivities(actData.items || []);
@@ -26,12 +28,13 @@ export default function AdminOverviewPage() {
       setError(err.message || "Failed to load dashboard overview.");
     } finally {
       setIsLoading(false);
+      setIsUpdating(false);
     }
-  }, []);
+  }, [overview]);
 
   useEffect(() => {
     loadData();
-  }, [loadData]);
+  }, []);
 
   if (isLoading && !overview) {
     return (
@@ -48,7 +51,7 @@ export default function AdminOverviewPage() {
         <div className="text-rose-800 font-bold mb-1">Unable to load dashboard overview</div>
         <div className="text-rose-600 mb-3">{error}</div>
         <button
-          onClick={loadData}
+          onClick={() => loadData(true)}
           className="px-4 py-1.5 rounded-lg bg-rose-600 text-white font-medium hover:bg-rose-700 transition"
         >
           Retry Connection
@@ -95,7 +98,7 @@ export default function AdminOverviewPage() {
         <div className="flex items-center gap-3 text-[11px] text-slate-500">
           <span>Synced: {new Date(overview.generated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
           <button
-            onClick={loadData}
+            onClick={() => loadData(true)}
             title="Refresh metrics from backend"
             className="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition cursor-pointer"
           >

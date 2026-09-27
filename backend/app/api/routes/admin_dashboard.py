@@ -114,10 +114,11 @@ def retry_document(
     summary="Get component-level system operational health",
 )
 def get_system_status(
+    force_refresh: bool = Query(False),
     db: Session = Depends(get_db),
     reviewer_id: str = Depends(ReviewAuthorizationService.get_current_reviewer),
 ) -> AdminSystemStatusResponse:
-    return system_health_service.get_system_status(db)
+    return system_health_service.get_system_status(db, force_refresh=force_refresh)
 
 
 @router.post(
@@ -382,26 +383,29 @@ def list_admin_schemes(
     stmt = stmt.order_by(desc(Scheme.created_at)).offset((page - 1) * page_size).limit(page_size)
     rows = db.execute(stmt).all()
 
-    items = []
-    for s, dept_name in rows:
-        # Check active current version
-        curr_ver = db.execute(
+    scheme_ids = [s.id for s, _ in rows]
+    curr_ver_map = {}
+    fut_ver_map = {}
+    if scheme_ids:
+        curr_vers = db.execute(
             select(SchemeVersion)
             .where(
                 and_(
-                    SchemeVersion.scheme_id == s.id,
+                    SchemeVersion.scheme_id.in_(scheme_ids),
                     SchemeVersion.is_current.is_(True),
                 )
             )
             .order_by(desc(SchemeVersion.version_number))
-        ).scalars().first()
+        ).scalars().all()
+        for cv in curr_vers:
+            if cv.scheme_id not in curr_ver_map:
+                curr_ver_map[cv.scheme_id] = cv
 
-        # Check future version
-        fut_ver = db.execute(
+        fut_vers = db.execute(
             select(SchemeVersion)
             .where(
                 and_(
-                    SchemeVersion.scheme_id == s.id,
+                    SchemeVersion.scheme_id.in_(scheme_ids),
                     or_(
                         SchemeVersion.valid_from > now,
                         and_(
@@ -412,7 +416,15 @@ def list_admin_schemes(
                 )
             )
             .order_by(desc(SchemeVersion.version_number))
-        ).scalars().first()
+        ).scalars().all()
+        for fv in fut_vers:
+            if fv.scheme_id not in fut_ver_map:
+                fut_ver_map[fv.scheme_id] = fv
+
+    items = []
+    for s, dept_name in rows:
+        curr_ver = curr_ver_map.get(s.id)
+        fut_ver = fut_ver_map.get(s.id)
 
         items.append(
             AdminSchemeListItem(

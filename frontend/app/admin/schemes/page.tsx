@@ -86,8 +86,8 @@ export default function AdminSchemesPage() {
     application_window: "",
   });
 
-  const loadSchemes = useCallback(async () => {
-    setIsLoading(true);
+  const loadSchemes = useCallback(async (forceRefresh: boolean = false) => {
+    if (schemes.length === 0) setIsLoading(true);
     setError(null);
     try {
       const [res, ov] = await Promise.all([
@@ -96,8 +96,8 @@ export default function AdminSchemesPage() {
           query: searchQuery.trim() || undefined,
           page,
           page_size: pageSize,
-        }),
-        getAdminOverview(),
+        }, forceRefresh),
+        getAdminOverview(forceRefresh),
       ]);
       setSchemes(res.items || []);
       setTotal(res.total || 0);
@@ -108,11 +108,11 @@ export default function AdminSchemesPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, searchQuery, page, pageSize]);
+  }, [statusFilter, searchQuery, page, pageSize, schemes.length]);
 
   useEffect(() => {
     loadSchemes();
-  }, [loadSchemes]);
+  }, [statusFilter, searchQuery, page, pageSize]);
 
   // Handle opening Scheme Inspector & Editor
   const handleOpenInspector = async (schemeId: string) => {
@@ -359,7 +359,7 @@ export default function AdminSchemesPage() {
             <span>Upload Document</span>
           </Link>
           <button
-            onClick={() => loadSchemes()}
+            onClick={() => loadSchemes(true)}
             disabled={isLoading}
             className="text-xs font-semibold px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition shadow-xs flex items-center gap-1.5"
           >
