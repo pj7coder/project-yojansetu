@@ -80,36 +80,6 @@ export default function HomePage() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* System Status Pill */}
-            <button
-              onClick={checkConnection}
-              disabled={isRefreshing}
-              title="Click to re-check backend status"
-              className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors"
-            >
-              <span
-                className={`w-2 h-2 rounded-full ${
-                  healthState.status === "connected"
-                    ? "bg-emerald-500 animate-pulse"
-                    : healthState.status === "checking"
-                    ? "bg-amber-400"
-                    : "bg-rose-500"
-                }`}
-              />
-              <span>
-                {healthState.status === "connected"
-                  ? isHi
-                    ? "सिस्टम सक्रिय"
-                    : "System Online"
-                  : healthState.status === "checking"
-                  ? isHi
-                    ? "जाँच जारी..."
-                    : "Checking..."
-                  : isHi
-                  ? "ऑफ़लाइन"
-                  : "Offline"}
-              </span>
-            </button>
 
             {/* Language Toggle */}
             <div className="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-0.5 text-xs font-bold">

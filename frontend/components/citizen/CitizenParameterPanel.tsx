@@ -154,6 +154,13 @@ export function CitizenParameterPanel({
     });
   };
 
+  const updateMany = (updates: Partial<CitizenParameters>) => {
+    onChange({
+      ...parameters,
+      ...updates,
+    });
+  };
+
   // 1-Click Preset Personas
   const applyPreset = (preset: "FARMER" | "SENIOR" | "STUDENT" | "WIDOW") => {
     if (preset === "FARMER") {
@@ -366,12 +373,14 @@ export function CitizenParameterPanel({
                 key={g.id}
                 type="button"
                 onClick={() => {
-                  update("gender", g.id as any);
                   if (g.id !== "FEMALE") {
-                    update("isWidow", false);
-                    if (parameters.maritalStatus === "WIDOW") {
-                      update("maritalStatus", null);
-                    }
+                    updateMany({
+                      gender: g.id as any,
+                      isWidow: false,
+                      maritalStatus: parameters.maritalStatus === "WIDOW" ? null : parameters.maritalStatus,
+                    });
+                  } else {
+                    update("gender", "FEMALE");
                   }
                 }}
                 className={`py-1.5 px-2 rounded-md font-bold text-[11px] transition cursor-pointer ${
@@ -501,9 +510,10 @@ export function CitizenParameterPanel({
             value={parameters.occupation ?? ""}
             onChange={(e) => {
               const occ = e.target.value || null;
-              update("occupation", occ);
-              if (occ === "STUDENT") update("isStudent", true);
-              else update("isStudent", false);
+              updateMany({
+                occupation: occ,
+                isStudent: occ === "STUDENT",
+              });
             }}
             className="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:outline-none focus:border-orange-500 cursor-pointer"
           >
@@ -698,9 +708,12 @@ export function CitizenParameterPanel({
               type="checkbox"
               checked={parameters.isWidow || parameters.maritalStatus === "WIDOW"}
               onChange={(e) => {
-                update("isWidow", e.target.checked);
-                update("maritalStatus", e.target.checked ? "WIDOW" : null);
-                if (e.target.checked) update("gender", "FEMALE");
+                const checked = e.target.checked;
+                updateMany({
+                  isWidow: checked,
+                  maritalStatus: checked ? "WIDOW" : (parameters.maritalStatus === "WIDOW" ? null : parameters.maritalStatus),
+                  ...(checked ? { gender: "FEMALE" } : {}),
+                });
               }}
               className="w-4 h-4 accent-orange-600 rounded cursor-pointer"
             />
@@ -721,10 +734,10 @@ export function CitizenParameterPanel({
                 placeholder="0"
                 onChange={(e) => {
                   const val = e.target.value === "" ? null : Math.max(0, parseInt(e.target.value) || 0);
-                  update("landBigha", val);
-                  if (val !== null && val > 0 && !parameters.occupation) {
-                    update("occupation", "FARMER");
-                  }
+                  updateMany({
+                    landBigha: val,
+                    ...(val !== null && val > 0 && !parameters.occupation ? { occupation: "FARMER" } : {}),
+                  });
                 }}
                 className="w-14 py-0.5 px-1.5 rounded bg-white border border-slate-300 font-bold text-slate-900 text-center text-xs"
               />

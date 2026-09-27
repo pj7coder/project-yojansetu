@@ -1,15 +1,15 @@
 # YojanSetu (योजनसेतु)
 
-> **Offline-first vernacular government-scheme discovery assistant for Rajasthan.**
+> **All-India Offline-First Vernacular Public Welfare Discovery & Statutory Eligibility Verification Platform for National and State Schemes.**
 
-**Current Status**: Day 29 — Extraction Accuracy Evaluation + Failure Analysis  
+**Current Status**: Day 30 — National & State Welfare Expansion + Voice Assistant Optimization  
 **Live Web Deployment**: [https://yojansetu.vercel.app](https://yojansetu.vercel.app)
 
 ---
 
 ## 1. Overview
 
-YojanSetu is designed to empower citizens of Rajasthan—especially rural, elderly, and Hindi-first users—to discover and understand eligible government welfare schemes using natural voice and vernacular language, functioning reliably offline without cloud API lock-in.
+YojanSetu (योजनसेतु) is a state-of-the-art, offline-first citizen welfare platform designed to empower citizens across India—especially rural, elderly, and Hindi-first users—to discover and understand eligible Central and State government welfare schemes. Through conversational vernacular voice interaction and deterministic statutory rule trees, citizens can seamlessly find schemes like PM-KISAN, Ayushman Bharat (PM-JAY), PM Awas Yojana (PMAY-G), National Scholarship Portal (NSP), DBT Bharat, PM Vishwakarma, as well as State welfare schemes (e.g. RajSSP, Jan Soochna, Chiranjeevi), operating with zero cloud API lock-in.
 
 ### Critical Architecture Principle:
 ```text
@@ -645,12 +645,12 @@ Subsequent discovery immediately promotes the agricultural schemes to `ELIGIBLE`
 
 ## 18. Smart Government Source Monitoring & Change Detection (Day 17)
 
-YojanSetu monitors approved Rajasthan government webpages to answer:
+YojanSetu monitors approved National and State official government portals (such as myScheme, PM-KISAN, NSP, DBT Bharat, Ayushman Bharat, Jan Soochna, RajSSP) to answer:
 > **"Has this official government source changed since the last successful check?"**
 
 ### Architectural Flow:
 ```text
-Official Rajasthan Source Registry (Day 3 sources + source_urls)
+Official National & State Source Registry (Day 3 sources + source_urls)
                     ↓
         Due Approved URLs (enabled=True, crawl_allowed=True)
                     ↓
@@ -675,7 +675,7 @@ ETag          Last-Modified            Fingerprints
 
 ### Core Principles & Boundaries:
 - **Change Detector, Not Full Crawler**: Day 17 detects change cheaply. It does NOT recursively crawl links, does NOT download discovered PDFs, does NOT parse documents, and does NOT execute LLM classification.
-- **Source Allowlists Only**: Input is strictly controlled by registered `sources` and `source_urls` where `enabled=true` and `crawl_allowed=true`. Never arbitrarily crawls `.rajasthan.gov.in`.
+- **Source Allowlists Only**: Input is strictly controlled by registered `sources` and `source_urls` where `enabled=true` and `crawl_allowed=true`. Never arbitrarily crawls unauthorized portals.
 - **First Check Baseline**: The initial check saves an immutable baseline snapshot and records `BASELINE_CREATED`. It never triggers a false `CHANGED` alert.
 - **Staged Conditional HTTP**: Uses `ETag` (`If-None-Match`) and `Last-Modified` (`If-Modified-Since`). A `304 Not Modified` immediately classifies `UNCHANGED` without body parsing or transfer.
 - **Deterministic Fingerprints**:
@@ -716,7 +716,7 @@ python -m app.monitoring.worker --once
 ## 19. Day 18: Changed-Page Analysis + Structured HTML Diff + Document Discovery + Playwright Fallback
 
 Day 17 answers: *Did an approved government source change?*
-Day 18 answers: *What changed, and is any new or modified content relevant to Rajasthan government schemes?*
+Day 18 answers: *What changed, and is any new or modified content relevant to National & State government schemes?*
 
 ### Critical Architectural Pipeline:
 ```text

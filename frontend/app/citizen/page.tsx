@@ -114,7 +114,7 @@ export default function CitizenPage() {
 
       const utterance = new SpeechSynthesisUtterance(clean);
       utterance.lang = lang === "hi" ? "hi-IN" : "en-IN";
-      utterance.rate = 1.0;
+      utterance.rate = 1.15;
       utterance.pitch = 1.0;
 
       try {

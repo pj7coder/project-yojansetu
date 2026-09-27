@@ -276,6 +276,27 @@ const adminInFlight = new Map<string, Promise<any>>();
 
 const ADMIN_CACHE_TTL_MS = 25000; // 25s for instant tab transitions without spinners
 
+/**
+ * Fast network fetch with configurable timeout (default 2500ms).
+ * Prevents UI freezes on slow network requests or pending backend queries.
+ */
+async function fetchWithFastTimeout(
+  url: string,
+  options: RequestInit = {},
+  timeoutMs: number = 2500
+): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export function getFromAdminCache<T>(key: string, ttlMs: number = ADMIN_CACHE_TTL_MS): T | null {
   const entry = adminCache.get(key);
   if (!entry) return null;
@@ -295,6 +316,28 @@ export function invalidateAdminDashboardCache(): void {
   adminInFlight.clear();
 }
 
+// Pre-seed admin in-memory cache with instant baseline data so all tabs render in 0ms
+function prewarmAdminCache(): void {
+  try {
+    setAdminCache("overview", getFallbackAdminOverview());
+    setAdminCache("pipeline", getFallbackAdminPipeline());
+    setAdminCache("system_status", getFallbackAdminSystemStatus());
+    setAdminCache("activity:25", getFallbackAdminActivity(25));
+    setAdminCache("activity:8", getFallbackAdminActivity(8));
+    setAdminCache("schemes:default", getFallbackAdminSchemes());
+    setAdminCache("documents:default", getFallbackAdminDocuments());
+    setAdminCache("conflicts:default", getFallbackAdminConflicts());
+    setAdminCache("sources:default", getFallbackAdminSources());
+    setAdminCache("review_queue:default", getFallbackReviewQueue());
+  } catch (err) {
+    // Non-critical cache warm-up error
+  }
+}
+
+if (typeof window !== "undefined") {
+  prewarmAdminCache();
+}
+
 /**
  * Fetch prioritized human review queue with optional filters.
  */
@@ -305,7 +348,11 @@ export async function getReviewQueue(
   departmentId?: string,
   forceRefresh: boolean = false
 ): Promise<ReviewQueueResponse> {
-  const cacheKey = `review_queue:${page}:${pageSize}:${status || ""}:${departmentId || ""}`;
+  const isDefault = page === 1 && (pageSize === 25 || pageSize === 20) && !status && !departmentId;
+  const cacheKey = isDefault
+    ? "review_queue:default"
+    : `review_queue:${page}:${pageSize}:${status || ""}:${departmentId || ""}`;
+
   if (!forceRefresh) {
     const cached = getFromAdminCache<ReviewQueueResponse>(cacheKey);
     if (cached) return cached;
@@ -322,14 +369,14 @@ export async function getReviewQueue(
       if (departmentId) params.append("department_id", departmentId);
 
       const url = `${config.apiBaseUrl}/review/queue?${params.toString()}`;
-      const response = await fetch(url, {
+      const response = await fetchWithFastTimeout(url, {
         method: "GET",
         headers: {
           Accept: "application/json",
           "X-Reviewer-Id": "DEV_REVIEWER",
         },
         cache: "no-store",
-      });
+      }, 2500);
 
       if (!response.ok) {
         throw new ApiError(`Failed to fetch review queue: HTTP ${response.status}`, response.status);
@@ -908,11 +955,11 @@ export async function getAdminOverview(forceRefresh: boolean = false): Promise<A
   const promise = (async () => {
     try {
       const url = `${config.apiBaseUrl}/admin/dashboard/overview${forceRefresh ? "?force_refresh=true" : ""}`;
-      const response = await fetch(url, {
+      const response = await fetchWithFastTimeout(url, {
         method: "GET",
         headers: ADMIN_AUTH_HEADERS,
         cache: "no-store",
-      });
+      }, 2500);
 
       if (!response.ok) {
         throw new ApiError(`Failed to fetch admin overview: HTTP ${response.status}`, response.status);
@@ -949,11 +996,11 @@ export async function getAdminPipeline(forceRefresh: boolean = false): Promise<A
   const promise = (async () => {
     try {
       const url = `${config.apiBaseUrl}/admin/dashboard/pipeline`;
-      const response = await fetch(url, {
+      const response = await fetchWithFastTimeout(url, {
         method: "GET",
         headers: ADMIN_AUTH_HEADERS,
         cache: "no-store",
-      });
+      }, 2500);
 
       if (!response.ok) {
         throw new ApiError(`Failed to fetch pipeline status: HTTP ${response.status}`, response.status);
@@ -1020,11 +1067,11 @@ export async function getAdminSystemStatus(forceRefresh: boolean = false): Promi
   const promise = (async () => {
     try {
       const url = `${config.apiBaseUrl}/admin/dashboard/system${forceRefresh ? "?force_refresh=true" : ""}`;
-      const response = await fetch(url, {
+      const response = await fetchWithFastTimeout(url, {
         method: "GET",
         headers: ADMIN_AUTH_HEADERS,
         cache: "no-store",
-      });
+      }, 2500);
 
       if (!response.ok) {
         throw new ApiError(`Failed to fetch system status: HTTP ${response.status}`, response.status);
@@ -1061,11 +1108,11 @@ export async function getAdminActivity(limit: number = 25, forceRefresh: boolean
   const promise = (async () => {
     try {
       const url = `${config.apiBaseUrl}/admin/dashboard/activity?limit=${limit}`;
-      const response = await fetch(url, {
+      const response = await fetchWithFastTimeout(url, {
         method: "GET",
         headers: ADMIN_AUTH_HEADERS,
         cache: "no-store",
-      });
+      }, 2500);
 
       if (!response.ok) {
         throw new ApiError(`Failed to fetch activity feed: HTTP ${response.status}`, response.status);
@@ -1097,7 +1144,8 @@ export async function getAdminConflicts(params?: {
   page?: number;
   page_size?: number;
 }, forceRefresh: boolean = false): Promise<AdminConflictListResponse> {
-  const cacheKey = `conflicts:${JSON.stringify(params || {})}`;
+  const isDefault = !params || (!params.conflict_type && !params.severity && (!params.page || params.page === 1));
+  const cacheKey = isDefault ? "conflicts:default" : `conflicts:${JSON.stringify(params || {})}`;
   if (!forceRefresh) {
     const cached = getFromAdminCache<AdminConflictListResponse>(cacheKey);
     if (cached) return cached;
@@ -1113,11 +1161,11 @@ export async function getAdminConflicts(params?: {
       if (params?.page_size) qs.append("page_size", params.page_size.toString());
 
       const url = `${config.apiBaseUrl}/admin/conflicts?${qs.toString()}`;
-      const response = await fetch(url, {
+      const response = await fetchWithFastTimeout(url, {
         method: "GET",
         headers: ADMIN_AUTH_HEADERS,
         cache: "no-store",
-      });
+      }, 2500);
 
       if (!response.ok) {
         throw new ApiError(`Failed to fetch conflicts: HTTP ${response.status}`, response.status);
@@ -1151,7 +1199,8 @@ export async function getAdminDocuments(params?: {
   page?: number;
   page_size?: number;
 }, forceRefresh: boolean = false): Promise<AdminDocumentListResponse> {
-  const cacheKey = `documents:${JSON.stringify(params || {})}`;
+  const isDefault = !params || (!params.status && !params.ingestion_method && !params.failed_only && !params.query && (!params.page || params.page === 1));
+  const cacheKey = isDefault ? "documents:default" : `documents:${JSON.stringify(params || {})}`;
   if (!forceRefresh) {
     const cached = getFromAdminCache<AdminDocumentListResponse>(cacheKey);
     if (cached) return cached;
@@ -1169,11 +1218,11 @@ export async function getAdminDocuments(params?: {
       if (params?.page_size) qs.append("page_size", params.page_size.toString());
 
       const url = `${config.apiBaseUrl}/admin/documents?${qs.toString()}`;
-      const response = await fetch(url, {
+      const response = await fetchWithFastTimeout(url, {
         method: "GET",
         headers: ADMIN_AUTH_HEADERS,
         cache: "no-store",
-      });
+      }, 2500);
 
       if (!response.ok) {
         throw new ApiError(`Failed to fetch documents: HTTP ${response.status}`, response.status);
@@ -1206,7 +1255,8 @@ export async function getAdminSchemes(params?: {
   page?: number;
   page_size?: number;
 }, forceRefresh: boolean = false): Promise<AdminSchemeListResponse> {
-  const cacheKey = `schemes:${JSON.stringify(params || {})}`;
+  const isDefault = !params || (!params.status && !params.department_id && !params.query && (!params.page || params.page === 1));
+  const cacheKey = isDefault ? "schemes:default" : `schemes:${JSON.stringify(params || {})}`;
   if (!forceRefresh) {
     const cached = getFromAdminCache<AdminSchemeListResponse>(cacheKey);
     if (cached) return cached;
@@ -1223,11 +1273,11 @@ export async function getAdminSchemes(params?: {
       if (params?.page_size) qs.append("page_size", params.page_size.toString());
 
       const url = `${config.apiBaseUrl}/admin/schemes?${qs.toString()}`;
-      const response = await fetch(url, {
+      const response = await fetchWithFastTimeout(url, {
         method: "GET",
         headers: ADMIN_AUTH_HEADERS,
         cache: "no-store",
-      });
+      }, 2500);
 
       if (!response.ok) {
         throw new ApiError(`Failed to fetch schemes: HTTP ${response.status}`, response.status);
@@ -1256,11 +1306,11 @@ export async function getAdminSchemes(params?: {
 export async function getSchemeDetail(schemeId: string): Promise<SchemeDetailResponse> {
   try {
     const url = `${config.apiBaseUrl}/schemes/${schemeId}`;
-    const response = await fetch(url, {
+    const response = await fetchWithFastTimeout(url, {
       method: "GET",
       headers: ADMIN_AUTH_HEADERS,
       cache: "no-store",
-    });
+    }, 2500);
 
     if (!response.ok) {
       throw new ApiError(`Failed to fetch scheme details: HTTP ${response.status}`, response.status);
@@ -1326,11 +1376,11 @@ export async function deleteScheme(schemeId: string): Promise<{ status: string; 
 export async function getWatchFolderStatus(): Promise<WatchFolderStatus> {
   try {
     const url = `${config.apiBaseUrl}/documents/watch-folder/status`;
-    const response = await fetch(url, {
+    const response = await fetchWithFastTimeout(url, {
       method: "GET",
       headers: ADMIN_AUTH_HEADERS,
       cache: "no-store",
-    });
+    }, 2500);
 
     if (!response.ok) {
       throw new ApiError(`Failed to fetch watch folder status: HTTP ${response.status}`, response.status);
@@ -1378,7 +1428,8 @@ export async function getAdminSources(params?: {
   page?: number;
   page_size?: number;
 }, forceRefresh: boolean = false): Promise<AdminSourceListResponse> {
-  const cacheKey = `sources:${JSON.stringify(params || {})}`;
+  const isDefault = !params || (!params.status && !params.priority_tier && !params.authority_level && !params.enabled_only && !params.query && (!params.page || params.page === 1));
+  const cacheKey = isDefault ? "sources:default" : `sources:${JSON.stringify(params || {})}`;
   if (!forceRefresh) {
     const cached = getFromAdminCache<AdminSourceListResponse>(cacheKey);
     if (cached) return cached;
@@ -1397,11 +1448,11 @@ export async function getAdminSources(params?: {
       if (params?.page_size) qs.append("page_size", params.page_size.toString());
 
       const url = `${config.apiBaseUrl}/admin/sources?${qs.toString()}`;
-      const response = await fetch(url, {
+      const response = await fetchWithFastTimeout(url, {
         method: "GET",
         headers: ADMIN_AUTH_HEADERS,
         cache: "no-store",
-      });
+      }, 2500);
 
       if (!response.ok) {
         throw new ApiError(`Failed to fetch sources: HTTP ${response.status}`, response.status);
@@ -1430,11 +1481,11 @@ export async function getAdminSources(params?: {
 export async function adminGlobalSearch(query: string): Promise<AdminGlobalSearchResponse> {
   try {
     const url = `${config.apiBaseUrl}/admin/search?q=${encodeURIComponent(query)}`;
-    const response = await fetch(url, {
+    const response = await fetchWithFastTimeout(url, {
       method: "GET",
       headers: ADMIN_AUTH_HEADERS,
       cache: "no-store",
-    });
+    }, 2500);
 
     if (!response.ok) {
       throw new ApiError(`Admin search failed: HTTP ${response.status}`, response.status);
