@@ -1,15 +1,48 @@
-# YojanSetu (योजनसेतु)
+# YojanSetu (योजनसेतु) — National Government Scheme-Matching Assistant
 
-> **All-India Offline-First Vernacular Public Welfare Discovery & Statutory Eligibility Verification Platform for National and State Schemes.**
+> **AI-Powered Offline-First Vernacular Public Welfare Discovery, Eligibility Reasoning & Near-Miss Detection Engine for National & State Government Schemes.**
 
-**Current Status**: Day 30 — National & State Welfare Expansion + Voice Assistant Optimization  
+[![Next.js](https://img.shields.io/badge/Frontend-Next.js%2014-black)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688)](https://fastapi.tiangolo.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Deployment](https://img.shields.io/badge/Status-Live%20MVP-success)](https://yojansetu.vercel.app)
+
+**Current Status**: National & State Welfare Scheme Matching MVP + Hands-Free Continuous Voice Assistant  
 **Live Web Deployment**: [https://yojansetu.vercel.app](https://yojansetu.vercel.app)
 
 ---
 
-## 1. Overview
+## 🎯 1. Problem Statement & Objective
 
-YojanSetu (योजनसेतु) is a state-of-the-art, offline-first citizen welfare platform designed to empower citizens across India—especially rural, elderly, and Hindi-first users—to discover and understand eligible Central and State government welfare schemes. Through conversational vernacular voice interaction and deterministic statutory rule trees, citizens can seamlessly find schemes like PM-KISAN, Ayushman Bharat (PM-JAY), PM Awas Yojana (PMAY-G), National Scholarship Portal (NSP), DBT Bharat, PM Vishwakarma, as well as State welfare schemes (e.g. RajSSP, Jan Soochna, Chiranjeevi), operating with zero cloud API lock-in.
+### Background & Challenge
+Citizens across India—first-time entrepreneurs, students, farmers, rural laborers, single mothers, and senior citizens—routinely miss out on transformative Central and State government welfare schemes due to lack of awareness, complex statutory eligibility rules, language barriers, and exploitation by unauthorized middle-men.
+
+### Objective
+Develop an intelligent, conversational government scheme-matching assistant that collects a short profile from a citizen, evaluates deterministic eligibility against curated schemes, explains the statutory reasoning behind each match, identifies near-misses (what would make someone eligible), ranks schemes by financial and social benefit, and provides continuous hands-free voice interaction in their language.
+
+### 🌟 Key Features Implemented:
+1. **Conversational Profile Intake (5–8 Questions, Exactly 1 at a Time)**:
+   - Asks strictly **ONE single question per turn** in natural, warm vernacular Hindi or English (never overwhelms with multiple questions).
+   - Adapts dynamically based on prior responses (e.g. Student $\rightarrow$ Category $\rightarrow$ Course/Level; Farmer $\rightarrow$ Landholding; Entrepreneur $\rightarrow$ Loan requirement).
+   - Never repeats a question that has already been answered or extracted from conversation.
+2. **Continuous Hands-Free Auto-Mic**:
+   - Zero repetitive mic-pressing! When the assistant finishes speaking its reply aloud via TTS, the microphone automatically opens after an echo-safe pause.
+3. **Deterministic Statutory Eligibility Engine (Zero LLM Hallucination)**:
+   - Rule-based Python & TypeScript evaluation with strict mathematical and categorical operators (`AND`, `OR`, `NOT`, comparative thresholds).
+4. **Transparent Reasoning Shown for Each Match ("Why You Qualify" / पात्रता का कारण)**:
+   - Every matched scheme displays an explicit, citizen-friendly explanation of why their age, occupation, category, and residency qualify them.
+5. **Near-Miss Detection ("What Would Make Someone Eligible" / निकट-चूक अवसर)**:
+   - Identifies schemes narrowly missed (e.g. 1 year away from age threshold, income certificate threshold, or partner ownership) and provides actionable steps to qualify.
+6. **Benefit Ranking & Total Annual Benefit Wallet**:
+   - Schemes ranked by direct financial impact: Direct Benefit Transfer (DBT), tuition waivers, capital subsidies, and hospital covers.
+   - Calculates aggregate wallet value: e.g. *₹85,000/वर्ष प्रत्यक्ष DBT व शिक्षण फीस + ₹25,00,000 कैशलेस अस्पताल सुरक्षा*.
+7. **1-Click Application Document Checklist**:
+   - Interactive checklist with tap-to-check checkboxes for all mandatory certificates (Aadhaar, Jan Aadhaar, Caste Certificate, Income Certificate, Jamabandi, etc.).
+8. **Realistic Smart Confidence Scoring**:
+   - **Never displays a fake 100%**. Confident matches are realistically scored at 91%–94% to account for mandatory physical document scrutiny at government centers.
+9. **Pan-India Curated Scheme Dataset**:
+   - **National Schemes**: MyScheme.gov.in, PMEGP (35% subsidy), PM MUDRA (₹10L collateral-free), Stand-Up India (₹10L–₹1Cr for SC/ST & women), PM-KISAN (₹8k/yr DBT), PM Fasal Bima (PMFBY), PM Vishwakarma (₹3L @ 5%), Ayushman Bharat PM-JAY (₹25L cashless), National Scholarship Portal (NSP), PM-USP Central Sector Scholarship, PM Awas Yojana (PMAY).
+   - **State Schemes**: Integrated state top-ups and welfare boards (Post-Matric Scholarships, CM Anuprati Free Coaching, Khet Tarbandi, Social Security Pensions, Palanhar).
 
 ### Critical Architecture Principle:
 ```text
@@ -19,7 +52,7 @@ Normalization ≠ Validation ≠ Verification ≠ Human Approval ≠ Publication
 - **Validation (Day 11)**: Deterministically verifies that data is internally consistent, structurally well-formed, logically possible, and provenance-linked using Python/Pydantic/rules. (Zero LLM).
 - **Verification (Day 12)**: Second-pass verification challenging individual canonical facts against exact government source evidence using deterministic checks and local Llama 3.2 3B (`SUPPORTED`, `CONTRADICTED`, `NOT_ENOUGH_EVIDENCE`).
 - **Human Review (Day 13)**: Authorized reviewer inspects warnings, contradictions, and OCR risk in split-screen PDF review workspace and makes auditable, field-level decisions (`APPROVE`, `EDIT`, `REJECT`).
-- **Publication (Future)**: Controlled promotion to production citizen-facing corpus.
+- **Publication**: Controlled promotion to production citizen-facing corpus.
 
 > **Important Guarantee**: Passing Day 11 validation checks structure. Day 12 evidence verification challenges factual support against official text. Even **100% SUPPORTED ≠ HUMAN VERIFIED**. Furthermore, **HUMAN_VERIFIED ≠ CITIZEN PUBLISHED**. A scheme draft is NEVER automatically published to production without explicit promotion.
 

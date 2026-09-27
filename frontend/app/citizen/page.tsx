@@ -82,6 +82,12 @@ export default function CitizenPage() {
   // Text-To-Speech (Assistant Voice Synthesis)
   const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null);
   const lastInputWasVoiceRef = useRef<boolean>(false);
+  const [isAutoMicEnabled, setIsAutoMicEnabled] = useState<boolean>(true);
+  const isAutoMicEnabledRef = useRef<boolean>(true);
+  useEffect(() => {
+    isAutoMicEnabledRef.current = isAutoMicEnabled;
+  }, [isAutoMicEnabled]);
+  const startVoiceListeningRef = useRef<(() => Promise<void>) | null>(null);
 
   // Stop assistant speech immediately
   const stopSpeech = useCallback(() => {
@@ -137,6 +143,14 @@ export default function CitizenPage() {
       };
       utterance.onend = () => {
         setSpeakingMsgId(null);
+        // Hands-Free Auto-Mic: Automatically reactivate microphone after assistant finishes speaking!
+        if (isAutoMicEnabledRef.current) {
+          setTimeout(() => {
+            if (!isListeningRef.current && !isProcessingRef.current) {
+              startVoiceListeningRef.current?.();
+            }
+          }, 450);
+        }
       };
       utterance.onerror = () => {
         setSpeakingMsgId(null);
@@ -338,8 +352,8 @@ export default function CitizenPage() {
       id: `msg_${Date.now()}`,
       sender: "assistant",
       text: isHi
-        ? "नमस्ते! मैं आपका योजनसेतु सहायक हूँ।\n\nआपके लिए सही योजनाएं खोजने के लिए — आपकी उम्र क्या है और आप क्या काम करते हैं?"
-        : "Hello! I am your YojanSetu assistant.\n\nTo find the right government schemes for you — how old are you and what do you do?",
+        ? "नमस्ते! मैं आपका योजनसेतु सहायक हूँ।\n\nआपके लिए सही सरकारी योजनाएं खोजने के लिए — आपकी उम्र (Age) कितनी है?"
+        : "Hello! I am your YojanSetu assistant.\n\nTo find the right government schemes for you — how old are you?",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     };
 
@@ -532,8 +546,8 @@ export default function CitizenPage() {
         isFirstQuery ? query : undefined
       );
 
-      // If voice input was used by the citizen, speak the reply aloud automatically!
-      if (lastInputWasVoiceRef.current) {
+      // If voice input was used or auto-mic is enabled, speak the reply aloud automatically!
+      if (lastInputWasVoiceRef.current || isAutoMicEnabledRef.current) {
         speakText(assistantMsg.text, assistantMsg.id);
         lastInputWasVoiceRef.current = false;
       }
@@ -650,26 +664,10 @@ export default function CitizenPage() {
     []
   );
 
-  // Toggle voice recognition with mic permission preflight, continuous capture, and autosend
-  const toggleVoice = async () => {
-    stopSpeech(); // Stop any active assistant speech immediately when microphone is tapped
-
-    if (isListeningRef.current) {
-      // User tapped stop button: if speech text is present, immediately auto-send!
-      stopVoiceListening(true);
-      return;
-    }
-
-    if (isProcessingRef.current) {
-      setSpeechError(
-        isHi
-          ? "कृपया पहले पिछले प्रश्न का उत्तर आने तक प्रतीक्षा करें।"
-          : "Please wait for current response to complete before speaking."
-      );
-      setTimeout(() => setSpeechError(null), 3000);
-      return;
-    }
-
+  // Core Voice Recognition Start Function (can be triggered manually or automatically by Auto-Mic)
+  const startVoiceListening = useCallback(async () => {
+    if (isListeningRef.current || isProcessingRef.current) return;
+    stopSpeech(); // Stop any active assistant speech immediately
     setSpeechError(null);
     hasSentRef.current = false;
     speechTextRef.current = "";
@@ -687,11 +685,10 @@ export default function CitizenPage() {
       return;
     }
 
-    // 1. Prompt / verify microphone permissions explicitly
+    // Preflight microphone access
     if (typeof navigator !== "undefined" && navigator.mediaDevices?.getUserMedia) {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        // Immediately release stream tracks so SpeechRecognition has dedicated microphone access
         stream.getTracks().forEach((track) => track.stop());
       } catch (micErr: any) {
         console.warn("Microphone access check failed:", micErr);
@@ -707,19 +704,12 @@ export default function CitizenPage() {
               ? "कोई माइक्रोफ़ोन डिवाइस नहीं मिला। कृपया माइक कनेक्ट करें।"
               : "No microphone device found. Please connect a microphone."
           );
-        } else {
-          setSpeechError(
-            isHi
-              ? "माइक्रोफ़ोन एक्सेस करने में समस्या आई। पुनः प्रयास करें।"
-              : "Could not access microphone. Please try again."
-          );
         }
         setTimeout(() => setSpeechError(null), 4000);
         return;
       }
     }
 
-    // 2. Initialize SpeechRecognition instance with continuous stream
     try {
       const recognition = new SpeechRecognition();
       recognitionRef.current = recognition;
@@ -733,23 +723,16 @@ export default function CitizenPage() {
         setIsListening(true);
         setSpeechStatus("listening");
 
-        // 10s idle safety timer if citizen doesn't say anything
+        // 12s idle timer if user remains silent
         if (noSpeechTimeoutRef.current) clearTimeout(noSpeechTimeoutRef.current);
         noSpeechTimeoutRef.current = setTimeout(() => {
           if (isListeningRef.current && !speechTextRef.current.trim()) {
             stopVoiceListening(false);
-            setSpeechError(
-              isHi
-                ? "कोई आवाज नहीं सुनाई दी। पुनः माइक दबाकर बोलें।"
-                : "No voice detected. Click the mic to try speaking again."
-            );
-            setTimeout(() => setSpeechError(null), 4000);
           }
-        }, 10000);
+        }, 12000);
       };
 
       recognition.onresult = (event: any) => {
-        // Clear idle no-speech timeout once speech arrives
         if (noSpeechTimeoutRef.current) {
           clearTimeout(noSpeechTimeoutRef.current);
           noSpeechTimeoutRef.current = null;
@@ -786,7 +769,7 @@ export default function CitizenPage() {
           }
         }
 
-        // Silence Debounce: When citizen stops speaking for 1.6s, automatically send!
+        // Silence Debounce: When citizen stops speaking for 1.4s, automatically send!
         if (silenceTimerRef.current) {
           clearTimeout(silenceTimerRef.current);
         }
@@ -795,16 +778,11 @@ export default function CitizenPage() {
             setSpeechStatus("sending");
             triggerVoiceAutoSend();
           }
-        }, 1600);
+        }, 1400);
       };
 
       recognition.onerror = (event: any) => {
-        console.warn("Speech recognition event error:", event.error);
-        if (event.error === "no-speech") {
-          // Do NOT abort if user paused briefly mid-sentence!
-          return;
-        }
-        if (event.error === "aborted") {
+        if (event.error === "no-speech" || event.error === "aborted") {
           return;
         }
         if (event.error === "not-allowed" || event.error === "service-not-allowed") {
@@ -818,27 +796,18 @@ export default function CitizenPage() {
           return;
         }
 
-        // If text was already captured before error, auto-send it
         if (speechTextRef.current.trim() && !hasSentRef.current) {
           triggerVoiceAutoSend();
         } else {
           stopVoiceListening(false);
-          setSpeechError(
-            isHi
-              ? "आवाज नहीं पहचानी जा सकी। कृपया पुनः प्रयास करें।"
-              : "Could not recognize audio clearly. Please try again."
-          );
-          setTimeout(() => setSpeechError(null), 3000);
         }
       };
 
       recognition.onend = () => {
         if (isListeningRef.current) {
           if (speechTextRef.current.trim() && !hasSentRef.current) {
-            // Natural speech termination -> AUTO SEND!
             triggerVoiceAutoSend();
-          } else if (!hasSentRef.current) {
-            // Re-trigger if continuous mode disconnected without text
+          } else if (!hasSentRef.current && isAutoMicEnabledRef.current) {
             try {
               recognition.start();
             } catch {
@@ -854,13 +823,34 @@ export default function CitizenPage() {
     } catch (err: any) {
       console.error("Speech initialization error:", err);
       stopVoiceListening(false);
+    }
+  }, [voiceLang, isHi, triggerVoiceAutoSend, stopVoiceListening, stopSpeech]);
+
+  // Keep ref up to date for speakText utterance.onend auto-trigger
+  useEffect(() => {
+    startVoiceListeningRef.current = startVoiceListening;
+  }, [startVoiceListening]);
+
+  // Toggle voice recognition button handler
+  const toggleVoice = async () => {
+    stopSpeech();
+
+    if (isListeningRef.current) {
+      stopVoiceListening(true);
+      return;
+    }
+
+    if (isProcessingRef.current) {
       setSpeechError(
         isHi
-          ? "माइक्रोफ़ोन प्रारंभ नहीं हो सका। कृपया पुनः प्रयास करें।"
-          : "Could not start microphone. Please try again."
+          ? "कृपया पहले पिछले प्रश्न का उत्तर आने तक प्रतीक्षा करें।"
+          : "Please wait for current response to complete before speaking."
       );
       setTimeout(() => setSpeechError(null), 3000);
+      return;
     }
+
+    await startVoiceListening();
   };
 
   return (
@@ -1365,6 +1355,46 @@ export default function CitizenPage() {
 
           {/* Bottom Chat Bar with Working Voice Icon */}
           <div className="p-3 sm:p-4 bg-white border-t border-slate-200 flex-shrink-0">
+            {/* Continuous Hands-Free Auto-Mic Banner */}
+            <div className="flex items-center justify-between px-1 mb-2 text-[11px]">
+              <button
+                type="button"
+                onClick={() => setIsAutoMicEnabled(!isAutoMicEnabled)}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition cursor-pointer border ${
+                  isAutoMicEnabled
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs hover:bg-emerald-100"
+                    : "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200"
+                }`}
+                title={
+                  isAutoMicEnabled
+                    ? isHi
+                      ? "उत्तर के बाद माइक स्वतः चालू होगा (क्लिक करके बंद करें)"
+                      : "Hands-free continuous mic is active (Click to disable)"
+                    : isHi
+                    ? "माइक स्वतः चालू करने हेतु क्लिक करें"
+                    : "Click to enable hands-free continuous mic"
+                }
+              >
+                <span className={`w-2 h-2 rounded-full ${isAutoMicEnabled ? "bg-emerald-500 animate-pulse" : "bg-slate-400"}`} />
+                <span>
+                  {isAutoMicEnabled
+                    ? isHi
+                      ? "🎙️ स्वतः माइक चालू (Hands-Free Active)"
+                      : "🎙️ Auto-Mic: ON (Hands-Free Active)"
+                    : isHi
+                    ? "🎙️ स्वतः माइक बंद (Manual Mode)"
+                    : "🎙️ Auto-Mic: OFF (Manual)"}
+                </span>
+              </button>
+
+              {isListening && (
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 animate-pulse">
+                  <span className="w-2 h-2 rounded-full bg-rose-600" />
+                  <span>{isHi ? "सुन रहा हूँ... रुकते ही स्वतः भेजा जाएगा" : "Listening... auto-sends on pause"}</span>
+                </span>
+              )}
+            </div>
+
             <form
               onSubmit={(e) => {
                 e.preventDefault();

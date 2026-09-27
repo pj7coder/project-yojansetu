@@ -1,6 +1,6 @@
 # YojanSetu (योजनसेतु) — Quick Start & User Manual
 
-An offline-first, vernacular assistant for Rajasthan citizens to discover government welfare schemes via voice and text, powered by an automated document extraction and verification pipeline.
+An offline-first, vernacular AI assistant for citizens across India to discover National and State government welfare schemes via voice and text, powered by a deterministic statutory eligibility rules engine and document verification pipeline.
 
 ---
 

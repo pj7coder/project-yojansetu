@@ -8,8 +8,9 @@ The YojanSetu frontend is a modern, responsive web application built with Next.j
 
 ## 🌟 Key Features
 
-- **Conversational Voice Assistant**: Vernacular Hindi & English speech synthesis with natural cadence, multi-turn voice turn management, and direct parameter extraction.
+- **Hands-Free Conversational Voice Assistant**: Automatic continuous voice turns (Auto-Mic turns microphone back on when speech synthesis finishes) with natural Hindi & English speech synthesis, dynamic conversational cadences, and direct parameter extraction.
 - **Citizen Parameters Panel**: Real-time atomic profile updates (Age, Gender, Category, Annual Income, Marital Status, Occupation, Land Holding, Disability) with instant statutory eligibility matching.
+- **Benefit Wallet & Actionable Cards**: Instant display of eligible monthly & one-time assistance, near-miss eligibility alerts ("What if I earn slightly less?"), and direct 1-click document preparation checklists (Aadhaar, Income Certificate, etc.).
 - **High-Performance Admin Operations**: Zero-latency dashboard transitions powered by in-memory cache pre-warming, request deduplication, and fast fallback timeouts.
 - **Multi-Source Registry**: Monitored official government sources (myScheme, PM-KISAN, NSP, DBT Bharat, Ayushman Bharat PM-JAY, PMAY-G, PM Vishwakarma, RajSSP, Jan Soochna, e-Mitra).
 - **Split-Screen Human Review**: Auditable fact-level verification workspace for government circulars, OCR checks, and rule reconciliation.

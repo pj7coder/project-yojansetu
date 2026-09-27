@@ -1,16 +1,18 @@
 # YojanSetu Backend (FastAPI)
 
-> **All-India Offline-First Vernacular Public Welfare Discovery & Statutory Eligibility Verification Engine**
+> **All-India Offline-First Vernacular Public Welfare Discovery, Eligibility Reasoning & Near-Miss Detection Engine**
 
-The YojanSetu backend is a high-performance Python FastAPI service providing deterministic rule evaluation, document ingestion and extraction, source monitoring, and conversational citizen assistance for National (Central) and State welfare schemes.
+The YojanSetu backend is a high-performance Python FastAPI service providing deterministic statutory rule evaluation, document ingestion and extraction, source monitoring, and conversational citizen assistance for National (Central) and State welfare schemes.
 
 ---
 
 ## 🏛️ Core Capabilities
 
-- **National & State Schemes Knowledge Graph**: Covers Central schemes (e.g., PM-KISAN, Ayushman Bharat PM-JAY, PMAY-G, National Scholarship Portal, DBT Bharat, PM Vishwakarma) and State schemes (e.g., RajSSP, Jan Soochna, Chiranjeevi, e-Mitra).
-- **Deterministic Eligibility Engine**: Zero-hallucination statutory rule evaluation with strict logical operators (`AND`, `OR`, `NOT`, comparative thresholds).
-- **Official Source Monitoring**: Proactive HTTP conditional checking (ETag, Last-Modified, SHA-256 body/link fingerprints) across registered official portals.
+- **National Scheme Dataset & Knowledge Graph**: Comprehensive coverage of pan-India Central schemes (MyScheme.gov.in, PMEGP, PM MUDRA, Stand-Up India, PM-KISAN, PMFBY, Ayushman Bharat PM-JAY, National Scholarship Portal NSP, PMAY, PM Vishwakarma) along with State welfare top-ups.
+- **Deterministic Statutory Eligibility Engine**: Zero-hallucination statutory rule evaluation with strict logical operators (`AND`, `OR`, `NOT`, comparative thresholds).
+- **Near-Miss Evaluation Engine**: Mathematically identifies criteria that citizens narrowly missed and generates clear, actionable guidance on how to become eligible.
+- **Transparent Reasoning Generator**: Generates statutory "Why You Qualify" explanations citing official circulars and government gazettes.
+- **Official Source Monitoring**: Proactive HTTP conditional checking (ETag, Last-Modified, SHA-256 body/link fingerprints) across registered official national portals.
 - **Multilingual Vernacular Support**: Conversational Hindi and English dialogue management, STT transcript normalization, and natural voice interaction.
 - **Admin & Human-in-the-Loop Review**: Complete operational oversight, conflict resolution, document retry pipelines, and split-screen audit verification.
 
