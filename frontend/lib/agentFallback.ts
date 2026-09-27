@@ -177,7 +177,7 @@ export function executeFallbackAgent(
 function parseHistoryAnswers(rawQ: string, lowerQ: string, facts: Record<string, any>, history: any[]) {
   // Check direct compound phrases in current user utterance
   // "me 20 saa ka student hu", "20 saal vidyarthi", "45 kisan", etc.
-  if (/(\d{1,2})\s*(?:साल|वर्ष|saal|sal|saa\b|yrs?|ki\s*umar|ka)\s*(?:student|विद्यार्थी|छात्र|padhai|college)/i.test(lowerQ)
+  if (/(\d{1,2})\s*(?:साल|वर्ष|saal|sal|saa\b|yrs?|ki\s*umar|ka)\s*(?:student|विद्यार्थी|छात्र|padhai|पढ़ाई|college|कॉलेज)/i.test(lowerQ)
       || /student.*(\d{1,2})|(\d{1,2}).*student/i.test(lowerQ)) {
     const m = lowerQ.match(/(\d{1,2})/);
     if (m) {
@@ -188,7 +188,7 @@ function parseHistoryAnswers(rawQ: string, lowerQ: string, facts: Record<string,
     facts.isStudent = true;
   }
 
-  if (/(\d{1,2})\s*(?:साल|वर्ष|saal|sal|saa\b|yrs?|ka)\s*(?:किसान|farmer|कृषक|kheti)/i.test(lowerQ)
+  if (/(\d{1,2})\s*(?:साल|वर्ष|saal|sal|saa\b|yrs?|ka)\s*(?:किसान|farmer|कृषक|kheti|खेती)/i.test(lowerQ)
       || /farmer.*(\d{1,2})|(\d{1,2}).*farmer/i.test(lowerQ)) {
     const m = lowerQ.match(/(\d{1,2})/);
     if (m) {
@@ -218,16 +218,19 @@ function parseHistoryAnswers(rawQ: string, lowerQ: string, facts: Record<string,
 
     // 1. Occupation handler
     if ((field === "occupation" || qId.includes("occupation") || qId.includes("work")) && !facts.occupation) {
-      if (/विद्यार्थी|छात्र|छात्रा|student|study|studying|padhai|padh|college|स्कूल|school|coaching|neet|jee|upsc|btech|ba|bsc|scholarship/i.test(lowerQ)) {
+      if (/विद्यार्थी|छात्र|छात्रा|student|study|studying|padhai|padh|padhti|padhta|कॉलेज|कालेज|college|महाविद्यालय|स्कूल|school|coaching|कोचिंग|neet|jee|upsc|btech|ba|bsc|scholarship|छात्रवृत्ति|पढ़ती|पढ़ता|पढ़ते|पढ़ाई|अर्थशास्त्र|economics/i.test(lowerQ)) {
         facts.occupation = "STUDENT";
         facts.isStudent = true;
-      } else if (/किसान|खेती|कृषक|farmer|agriculture|kisan|kheti|fasal|bigha/i.test(lowerQ)) {
+        if (/कॉलेज|कालेज|college|महाविद्यालय|विश्वविद्यालय|ग्रेजुएशन|degree|डिग्री|अर्थशास्त्र|economics/i.test(lowerQ)) facts.courseLevel = "COLLEGE";
+        if (/पढ़ती|करती|रहती|लड़की|महिला/i.test(lowerQ)) facts.gender = "FEMALE";
+        if (/पढ़ता|करता|रहता|लड़का/i.test(lowerQ)) facts.gender = "MALE";
+      } else if (/किसान|खेती|कृषक|farmer|agriculture|kisan|kheti|fasal|bigha|बीघा/i.test(lowerQ)) {
         facts.occupation = "FARMER";
-      } else if (/दुकान|व्यापार|स्वरोजगार|बिजनेस|business|self\s*employed|dukan|shop|vyapar|startup|entrepreneur|mudra|pmegp/i.test(lowerQ)) {
+      } else if (/दुकान|व्यापार|स्वरोजगार|बिजनेस|business|self\s*employed|dukan|shop|vyapar|startup|entrepreneur|mudra|pmegp|कारोबार/i.test(lowerQ)) {
         facts.occupation = "SELF_EMPLOYED";
-      } else if (/मजदूर|श्रमिक|दिहाड़ी|labor|labour|daily\s*wage|majdoor|mazdoor|shramik/i.test(lowerQ)) {
+      } else if (/मजदूर|श्रमिक|दिहाड़ी|labor|labour|daily\s*wage|majdoor|mazdoor|shramik|श्रम/i.test(lowerQ)) {
         facts.occupation = "LABORER";
-      } else if (/गृहणी|महिला|हाउसवाइफ|homemaker|housewife|grihini/i.test(lowerQ)) {
+      } else if (/गृहणी|गृहिणी|महिला|हाउसवाइफ|homemaker|housewife|grihini/i.test(lowerQ)) {
         facts.occupation = "HOMEMAKER";
         facts.gender = "FEMALE";
       } else if (/रिटायर्ड|वरिष्ठ|बुजुर्ग|बूढ़े|retired|senior/i.test(lowerQ)) {
@@ -246,9 +249,9 @@ function parseHistoryAnswers(rawQ: string, lowerQ: string, facts: Record<string,
 
     // 3. Category handler
     if ((field === "category" || qId.includes("category") || qId.includes("jaati")) && !facts.category) {
-      if (/\bsc\b|अनुसूचित\s*जाति|दलित|scheduled\s*caste/i.test(lowerQ)) facts.category = "SC";
-      else if (/\bst\b|अनुसूचित\s*जनजाति|tribal|आदिवासी|scheduled\s*tribe/i.test(lowerQ)) facts.category = "ST";
-      else if (/\bobc\b|अन्य\s*पिछड़ा|backward/i.test(lowerQ)) facts.category = "OBC";
+      if (/\bsc\b|एससी|अनुसूचित\s*जाति|दलित|scheduled\s*caste/i.test(lowerQ)) facts.category = "SC";
+      else if (/\bst\b|एसटी|अनुसूचित\s*जनजाति|tribal|आदिवासी|scheduled\s*tribe/i.test(lowerQ)) facts.category = "ST";
+      else if (/\bobc\b|ओबीसी|अन्य\s*पिछड़ा|backward/i.test(lowerQ)) facts.category = "OBC";
       else if (/\bews\b|ईडब्ल्यूएस|आर्थिक\s*कमजोर/i.test(lowerQ)) facts.category = "EWS";
       else if (/\bmbc\b|एमबीसी|अति\s*पिछड़ा/i.test(lowerQ)) facts.category = "MBC";
       else if (/general|सामान्य|जनरल|open/i.test(lowerQ)) facts.category = "GENERAL";
@@ -256,7 +259,7 @@ function parseHistoryAnswers(rawQ: string, lowerQ: string, facts: Record<string,
 
     // 4. Course / Education level handler
     if ((field === "course" || qId.includes("course") || qId.includes("study")) && !facts.courseLevel) {
-      if (/college|ग्रेजुएशन|graduation|degree|डिग्री|btech|b\.?tech|bsc|b\.?sc|ba\b|b\.?a|bcom|polytechnic|iti|university/i.test(lowerQ)) {
+      if (/college|कॉलेज|कालेज|ग्रेजुएशन|graduation|degree|डिग्री|btech|b\.?tech|bsc|b\.?sc|ba\b|b\.?a|bcom|polytechnic|iti|university|अर्थशास्त्र|economics/i.test(lowerQ)) {
         facts.courseLevel = "COLLEGE";
       } else if (/coaching|कोचिंग|प्रतियोगी|competition|neet|jee|upsc|ras|ssc|ca|exam/i.test(lowerQ)) {
         facts.courseLevel = "COACHING";
@@ -337,14 +340,41 @@ function detectIntent(
   if (resolved.isWidow || /विधवा|एकल\s*नारी|पति\s*(मर|गए|की\s*मृत्यु)|widow|husband\s*died/i.test(lowerQ)) return "WIDOW_PENSION";
   if (resolved.isDisabled || /दिव्यांग|विकलांग|अपंग|अंधा|बहरा|disabled|handicap/i.test(lowerQ)) return "DISABILITY_PENSION";
   if (/वृद्धा?\s*पेंशन|वृद्धजन|old\s*age\s*pension|senior\s*pension/i.test(lowerQ)) return "OLD_AGE_PENSION";
-  if (/किसान\s*सम्मान|pm\s*kisan|tarbandi|सोलर\s*पंप|kisan/i.test(lowerQ)) return "FARMER_SCHEME";
-  if (/अनुप्रति|scholarship|छात्रवृत्ति|post\s*matric|coaching|vidyarthi|student/i.test(lowerQ)) return "STUDENT_SCHOLARSHIP";
-  if (/आयुष्मान|chiranjeevi|चिरंजीवी|health\s*insurance|स्वास्थ्य\s*बीमा/i.test(lowerQ)) return "HEALTH_INSURANCE";
-  if (/pm\s*awas|इंदिरा\s*आवास|housing\s*scheme|आवास\s*योजना/i.test(lowerQ)) return "HOUSING_SCHEME";
-  if (/उज्ज्वला|गैस\s*सिलेंडर|ujjwala|ration\s*card/i.test(lowerQ)) return "GAS_RATION";
-  if (/mudra|मुद्रा|विश्वकर्मा|vishwakarma|self\s*employ|स्वरोजगार|loan|ऋण|dukan|दुकान|pmegp|stand\s*up/i.test(lowerQ)) return "SELF_EMPLOYMENT_LOAN";
-  if (/shramik|श्रमिक|labour\s*card|मजदूर\s*योजना|majdoor/i.test(lowerQ)) return "LABORER_SCHEME";
-  if (/महिला\s*योजना|लाडो|ladli|beti|बेटी|mahila/i.test(lowerQ)) return "WOMEN_SCHEME";
+
+  // Health Insurance: Direct match for health/medical/ayushman/chiranjeevi/बीमा/इलाज
+  if (
+    /आयुष्मान|ayushman|pm.?jay|chiranjeevi|चिरंजीवी|health|medical|hospital|अस्पताल|आरोग्य|aarogya|abha|आभा/i.test(lowerQ) ||
+    /स्वास्थ्य.*(?:का.*)?(?:बीमा|सुरक्षा|कार्ड|योजना|इलाज)/i.test(lowerQ) ||
+    /बीमा.*(?:स्वास्थ्य|हेल्थ|इलाज|मेडिकल)/i.test(lowerQ) ||
+    /इलाज\s*की\s*योजना|दवा\s*की\s*योजना/i.test(lowerQ)
+  ) return "HEALTH_INSURANCE";
+
+  // Student & Higher Education: College, Economics, Scholarship, Coaching
+  if (
+    /अनुप्रति|scholarship|छात्रवृत्ति|post\s*matric|coaching|कोचिंग|vidyarthi|student|विद्यार्थी|छात्र|छात्रा|कॉलेज|कालेज|college|school|स्कूल|पढ़ाई|पढ़ती|पढ़ता|अर्थशास्त्र|economics|btech|bsc|bcom|ba\b|bed/i.test(lowerQ)
+  ) return "STUDENT_SCHOLARSHIP";
+
+  // Farmer Schemes
+  if (
+    /किसान|कृषक|farmer|agriculture|pm\s*kisan|fasal|फसल|tarbandi|तारबंदी|सोलर\s*पंप|solar\s*pump|खेत|बीघा|bigha|kcc/i.test(lowerQ)
+  ) return "FARMER_SCHEME";
+
+  // Housing Schemes
+  if (/pm\s*awas|इंदिरा\s*आवास|housing\s*scheme|आवास\s*योजना|मकान|घर\s*बनाने/i.test(lowerQ)) return "HOUSING_SCHEME";
+
+  // Gas & Ration
+  if (/उज्ज्वला|ujjwala|गैस\s*सिलेंडर|ration\s*card|राशन\s*कार्ड|खाद्य\s*सुरक्षा|nfsa/i.test(lowerQ)) return "GAS_RATION";
+
+  // MSME / Self-Employment / Loans
+  if (
+    /mudra|मुद्रा|विश्वकर्मा|vishwakarma|self\s*employ|स्वरोजगार|loan|लोन|ऋण|dukan|दुकान|व्यापार|pmegp|stand\s*up|उद्यम|कारोबार/i.test(lowerQ)
+  ) return "SELF_EMPLOYMENT_LOAN";
+
+  // Laborer Schemes
+  if (/shramik|श्रमिक|labour\s*card|मजदूर\s*योजना|majdoor|दैनिक\s*मजदूरी/i.test(lowerQ)) return "LABORER_SCHEME";
+
+  // Women Schemes
+  if (/महिला\s*योजना|लाडो|ladli|beti|बेटी|mahila|लखपति\s*दीदी|lakhpati\s*didi|मातृत्व/i.test(lowerQ)) return "WOMEN_SCHEME";
 
   if (resolved.occupation === "FARMER" || resolved.landBigha !== null) return "FARMER_SCHEME";
   if (resolved.occupation === "STUDENT" || facts.isStudent) return "STUDENT_SCHOLARSHIP";
@@ -434,14 +464,63 @@ function knowledgeGraphDecide(inp: KGInput): DecisionResult {
   const hasAge = p.age !== null && p.age >= 10;
   const hasOccupation = effectiveOccupation !== null || p.isDisabled;
 
+  // Track which questions were ALREADY asked in history to PREVENT REPETITIVE QUESTIONS
+  const askedFields = new Set<string>();
+  if (inp.history && Array.isArray(inp.history)) {
+    for (const msg of inp.history) {
+      if (msg.sender === "assistant" && msg.followUpQuestion) {
+        if (msg.followUpQuestion.field) askedFields.add(msg.followUpQuestion.field.toLowerCase());
+        if (msg.followUpQuestion.question_id) askedFields.add(msg.followUpQuestion.question_id.toLowerCase());
+      }
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // PRIORITY INTENT-FIRST ROUTING: If citizen explicitly asked about a specific
+  // welfare domain (Health insurance, scholarship, loan, housing, pension, etc.),
+  // IMMEDIATELY route to that specialized rule tree without blocking on intake gates!
+  // --------------------------------------------------------------------------
+  if (intent === "HEALTH_INSURANCE") {
+    return healthDecide(p, isHi, base);
+  }
+  if (effectiveOccupation === "STUDENT" || intent === "STUDENT_SCHOLARSHIP") {
+    return studentDecide(p, isHi, base, askedFields);
+  }
+  if (intent === "HOUSING_SCHEME") {
+    return housingDecide(p, isHi, base, askedFields);
+  }
+  if (p.isWidow || intent === "WIDOW_PENSION") {
+    return widowPensionDecide(p, isHi, base, askedFields);
+  }
+  if (p.isDisabled || intent === "DISABILITY_PENSION") {
+    return disabilityDecide(p, isHi, base);
+  }
+  if (effectiveOccupation === "FARMER" || intent === "FARMER_SCHEME") {
+    return farmSchemeDecide(p, isHi, base, askedFields);
+  }
+  if (effectiveOccupation === "SELF_EMPLOYED" || intent === "SELF_EMPLOYMENT_LOAN") {
+    return selfEmployedDecide(p, isHi, base, askedFields);
+  }
+  if (isSenior || effectiveOccupation === "RETIRED") {
+    return seniorPensionDecide(p, isHi, base, askedFields);
+  }
+  if (effectiveOccupation === "LABORER" || intent === "LABORER_SCHEME") {
+    return laborerDecide(p, isHi, base, askedFields);
+  }
+  if (effectiveOccupation === "HOMEMAKER" || intent === "WOMEN_SCHEME") {
+    return womenDecide(p, isHi, base);
+  }
+
   // --------------------------------------------------------------------------
   // INTAKE GATE 1: Neither Age nor Occupation known
-  // ASK ONLY ONE SINGLE QUESTION: AGE
   // --------------------------------------------------------------------------
   if (!hasAge && !hasOccupation) {
+    if (askedFields.has("age") || askedFields.has("ask_age")) {
+      return generalDiscovery(p, isHi, base, effectiveOccupation);
+    }
     return {
       ...base,
-      confidenceScore: 0.18,
+      confidenceScore: 0.22,
       conversationalText: isHi
         ? "नमस्ते! मैं आपका योजनसेतु सहायक हूँ। आपके लिए सही सरकारी योजनाएं खोजने के लिए — आपकी उम्र (Age) कितनी है?"
         : "Hello! I am your YojanSetu assistant. To find the exact welfare schemes you qualify for — how old are you?",
@@ -457,9 +536,11 @@ function knowledgeGraphDecide(inp: KGInput): DecisionResult {
 
   // --------------------------------------------------------------------------
   // INTAKE GATE 2: Occupation known, but Age unknown
-  // ASK ONLY AGE
   // --------------------------------------------------------------------------
   if (hasOccupation && !hasAge) {
+    if (askedFields.has("age") || askedFields.has("ask_age_after_occupation")) {
+      return generalDiscovery(p, isHi, base, effectiveOccupation);
+    }
     const occLabel: Record<string, string> = {
       STUDENT: isHi ? "विद्यार्थी" : "student",
       FARMER: isHi ? "किसान" : "farmer",
@@ -471,12 +552,12 @@ function knowledgeGraphDecide(inp: KGInput): DecisionResult {
     const lbl = (effectiveOccupation && occLabel[effectiveOccupation]) || (isHi ? "नागरिक" : "citizen");
     return {
       ...base,
-      confidenceScore: 0.34,
+      confidenceScore: 0.38,
       verifiedCriteria: [`व्यवसाय: ${lbl} ✓`],
       missingFields: ["age"],
       conversationalText: isHi
-        ? `अच्छा, तो आप ${lbl} हैं! आपकी उम्र कितनी है?`
-        : `Got it, you are a ${lbl}! How old are you?`,
+        ? "आपकी आयु (उम्र) कितनी है?"
+        : "How old are you?",
       followUpQuestion: makeFollowUp(
         "ask_age_after_occupation",
         "age",
@@ -488,18 +569,22 @@ function knowledgeGraphDecide(inp: KGInput): DecisionResult {
 
   // --------------------------------------------------------------------------
   // INTAKE GATE 3: Age known, but Occupation unknown
-  // ASK ONLY OCCUPATION
   // --------------------------------------------------------------------------
   if (hasAge && !hasOccupation) {
     const ag = p.age!;
+    // If occupation was ALREADY asked in previous conversation turns, DO NOT repeat!
+    if (askedFields.has("occupation") || askedFields.has("ask_occupation_after_age")) {
+      return generalDiscovery(p, isHi, base, effectiveOccupation);
+    }
+
     return {
       ...base,
-      confidenceScore: 0.36,
+      confidenceScore: 0.40,
       verifiedCriteria: [`उम्र: ${ag} वर्ष ✓`],
       missingFields: ["occupation"],
       conversationalText: isHi
-        ? `आपकी उम्र ${ag} वर्ष नोट कर ली। आप क्या काम करते हैं? (जैसे विद्यार्थी, किसान, व्यापारी/दुकान, या श्रमिक)`
-        : `Noted ${ag} years. What is your occupation? (e.g. Student, Farmer, Business/Self-employed, or Worker)`,
+        ? "आप क्या काम करते हैं? (जैसे विद्यार्थी, किसान, छोटा व्यापारी/दुकान, गृहिणी, या श्रमिक)"
+        : "What is your occupation? (e.g. Student, Farmer, Business/Self-employed, Homemaker, or Worker)",
       followUpQuestion: makeFollowUp(
         "ask_occupation_after_age",
         "occupation",
@@ -509,85 +594,61 @@ function knowledgeGraphDecide(inp: KGInput): DecisionResult {
     };
   }
 
-  // --------------------------------------------------------------------------
-  // BOTH AGE AND OCCUPATION KNOWN: Route into specialized domain rule trees
-  // --------------------------------------------------------------------------
-  if (effectiveOccupation === "STUDENT" || intent === "STUDENT_SCHOLARSHIP") {
-    return studentDecide(p, isHi, base);
-  }
-  if (effectiveOccupation === "FARMER" || intent === "FARMER_SCHEME") {
-    return farmSchemeDecide(p, isHi, base);
-  }
-  if (effectiveOccupation === "SELF_EMPLOYED" || intent === "SELF_EMPLOYMENT_LOAN") {
-    return selfEmployedDecide(p, isHi, base);
-  }
-  if (isSenior || effectiveOccupation === "RETIRED") {
-    return seniorPensionDecide(p, isHi, base);
-  }
-  if (p.isWidow || intent === "WIDOW_PENSION") {
-    return widowPensionDecide(p, isHi, base);
-  }
-  if (p.isDisabled || intent === "DISABILITY_PENSION") {
-    return disabilityDecide(p, isHi, base);
-  }
-  if (effectiveOccupation === "LABORER" || intent === "LABORER_SCHEME") {
-    return laborerDecide(p, isHi, base);
-  }
-  if (effectiveOccupation === "HOMEMAKER" || intent === "WOMEN_SCHEME") {
-    return womenDecide(p, isHi, base);
-  }
-  if (intent === "HEALTH_INSURANCE") {
-    return healthDecide(p, isHi, base);
-  }
-  if (intent === "HOUSING_SCHEME") {
-    return housingDecide(p, isHi, base);
-  }
-
   return generalDiscovery(p, isHi, base, effectiveOccupation);
 }
 
 // ============================================================================
 // 1. STUDENT SCHOLARSHIP & HIGHER EDUCATION RULE ENGINE
 // ============================================================================
-function studentDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult): DecisionResult {
+function studentDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult, askedFields?: Set<string>): DecisionResult {
   // Step 2 for Student: Social Category
   if (!p.category) {
-    return {
-      ...base,
-      confidenceScore: 0.52,
-      confidenceLevel: "MEDIUM",
-      verifiedCriteria: [`उम्र: ${p.age} वर्ष ✓`, "व्यवसाय: विद्यार्थी ✓"],
-      missingFields: ["category"],
-      conversationalText: isHi
-        ? `${p.age} वर्ष के विद्यार्थी, बहुत बढ़िया! आपकी सामाजिक श्रेणी (Category) क्या है? (जैसे General, OBC, SC, ST, EWS)`
-        : `Great! For a ${p.age}-year-old student, what is your social category? (General, OBC, SC, ST, EWS)`,
-      followUpQuestion: makeFollowUp(
-        "ask_student_category",
-        "category",
-        "आपकी सामाजिक श्रेणी क्या है?",
-        "What is your social category?"
-      ),
-    };
+    if (askedFields && (askedFields.has("category") || askedFields.has("ask_student_category"))) {
+      // Do NOT repeat asking category! Proceed with General/All-category scholarships!
+      p.category = "GENERAL";
+    } else {
+      return {
+        ...base,
+        confidenceScore: 0.62,
+        confidenceLevel: "MEDIUM",
+        verifiedCriteria: [`उम्र: ${p.age || 20} वर्ष ✓`, "व्यवसाय: विद्यार्थी ✓"],
+        missingFields: ["category"],
+        conversationalText: isHi
+          ? "विद्यार्थी वर्ग के लिए कई छात्रवृत्ति व शिक्षा प्रोत्साहन योजनाएं उपलब्ध हैं। आपकी सामाजिक श्रेणी (Category) क्या है? (जैसे General, OBC, SC, ST, EWS)"
+          : "Multiple scholarships are available for students. What is your social category? (General, OBC, SC, ST, EWS)",
+        followUpQuestion: makeFollowUp(
+          "ask_student_category",
+          "category",
+          "आपकी सामाजिक श्रेणी क्या है?",
+          "What is your social category?"
+        ),
+      };
+    }
   }
 
   // Step 3 for Student: Course level
   if (!p.courseLevel) {
-    return {
-      ...base,
-      confidenceScore: 0.72,
-      confidenceLevel: "MEDIUM",
-      verifiedCriteria: [`उम्र: ${p.age} वर्ष ✓`, `श्रेणी: ${p.category} ✓`, "व्यवसाय: विद्यार्थी ✓"],
-      missingFields: ["courseLevel"],
-      conversationalText: isHi
-        ? `${p.category} श्रेणी नोट कर ली। आप वर्तमान में किस कक्षा या कोर्स में पढ़ रहे हैं? (जैसे स्कूल 10वीं/12वीं, कॉलेज/ग्रेजुएशन, या प्रतियोगी परीक्षा/कोचिंग)`
-        : `Noted ${p.category}. What is your current level of study? (School 10th/12th, College/Degree, or Competitive Exam Coaching)`,
-      followUpQuestion: makeFollowUp(
-        "ask_student_course",
-        "course",
-        "आपकी वर्तमान पढ़ाई या कोर्स क्या है?",
-        "What is your course/level of study?"
-      ),
-    };
+    if (askedFields && (askedFields.has("course") || askedFields.has("ask_student_course"))) {
+      // Do NOT repeat asking course! Proceed with College/Degree level!
+      p.courseLevel = "COLLEGE";
+    } else {
+      return {
+        ...base,
+        confidenceScore: 0.74,
+        confidenceLevel: "MEDIUM",
+        verifiedCriteria: [`उम्र: ${p.age || 20} वर्ष ✓`, `श्रेणी: ${p.category} ✓`, "व्यवसाय: विद्यार्थी ✓"],
+        missingFields: ["courseLevel"],
+        conversationalText: isHi
+          ? "आप वर्तमान में किस कक्षा या कोर्स में पढ़ रहे हैं? (जैसे स्कूल 10वीं/12वीं, कॉलेज/ग्रेजुएशन, या प्रतियोगी परीक्षा/कोचिंग)"
+          : "What is your current level of study? (School 10th/12th, College/Degree, or Competitive Exam Coaching)",
+        followUpQuestion: makeFollowUp(
+          "ask_student_course",
+          "course",
+          "आपकी वर्तमान पढ़ाई या कोर्स क्या है?",
+          "What is your course/level of study?"
+        ),
+      };
+    }
   }
 
   // Confirmed Student Profile: Deliver ranked recommendations, near misses & reasoning
@@ -731,25 +792,29 @@ function studentDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult): 
 // ============================================================================
 // 2. FARMER & AGRICULTURE RULE ENGINE
 // ============================================================================
-function farmSchemeDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult): DecisionResult {
+function farmSchemeDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult, askedFields?: Set<string>): DecisionResult {
   // Step 2 for Farmer: Landholding (Bigha)
   if (p.landBigha === null) {
-    return {
-      ...base,
-      confidenceScore: 0.50,
-      confidenceLevel: "MEDIUM",
-      verifiedCriteria: [`उम्र: ${p.age} वर्ष ✓`, "व्यवसाय: किसान ✓"],
-      missingFields: ["landBigha"],
-      conversationalText: isHi
-        ? `${p.age} वर्षीय किसान भाई, आपके पास कुल कितनी कृषि भूमि (बीघा में) है?`
-        : `As a ${p.age}-year-old farmer, how many bighas of agricultural land do you own?`,
-      followUpQuestion: makeFollowUp(
-        "ask_farmer_land_bigha",
-        "landBigha",
-        "आपके पास कितनी कृषि भूमि है (बीघे में)?",
-        "How much land do you own (in bighas)?"
-      ),
-    };
+    if (askedFields && (askedFields.has("landbigha") || askedFields.has("ask_farmer_land_bigha"))) {
+      p.landBigha = 2.0; // Prevent loop! Default to marginal farmer
+    } else {
+      return {
+        ...base,
+        confidenceScore: 0.50,
+        confidenceLevel: "MEDIUM",
+        verifiedCriteria: [`उम्र: ${p.age || 40} वर्ष ✓`, "व्यवसाय: किसान ✓"],
+        missingFields: ["landBigha"],
+        conversationalText: isHi
+          ? "किसान कल्याण योजनाओं के लिए — आपके पास कुल कितनी कृषि भूमि (बीघा में) है?"
+          : "For farmer welfare schemes — how many bighas of agricultural land do you own?",
+        followUpQuestion: makeFollowUp(
+          "ask_farmer_land_bigha",
+          "landBigha",
+          "आपके पास कितनी कृषि भूमि है (बीघे में)?",
+          "How much land do you own (in bighas)?"
+        ),
+      };
+    }
   }
 
   const isLandless = p.landBigha === 0;
@@ -895,25 +960,29 @@ function farmSchemeDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult
 // ============================================================================
 // 3. ENTREPRENEUR, MSME, DUKAN & SELF-EMPLOYED LOAN RULE ENGINE
 // ============================================================================
-function selfEmployedDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult): DecisionResult {
+function selfEmployedDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult, askedFields?: Set<string>): DecisionResult {
   // Step 2 for Entrepreneur: Project / Loan Need
   if (!p.loanNeed) {
-    return {
-      ...base,
-      confidenceScore: 0.52,
-      confidenceLevel: "MEDIUM",
-      verifiedCriteria: [`उम्र: ${p.age} वर्ष ✓`, "व्यवसाय: स्वरोजगार / व्यापार ✓"],
-      missingFields: ["loanNeed"],
-      conversationalText: isHi
-        ? `${p.age} वर्ष — व्यापार व स्वरोजगार के लिए कई योजनाएं हैं। आपको अपने नए काम या दुकान के लिए लगभग कितने ऋण (Loan) की आवश्यकता है? (जैसे ₹50,000 तक, ₹5 लाख तक, या ₹25 लाख+)`
-        : `For self-employment, there are great loan schemes! What loan amount do you require? (Up to Rs.50k, up to Rs.5 Lakh, or Rs.25 Lakh+)`,
-      followUpQuestion: makeFollowUp(
-        "ask_loan_amount",
-        "loanAmount",
-        "आपको लगभग कितने ऋण की आवश्यकता है?",
-        "What loan amount do you require?"
-      ),
-    };
+    if (askedFields && (askedFields.has("loanamount") || askedFields.has("ask_loan_amount"))) {
+      p.loanNeed = "KISHORE"; // Prevent loop! Default to Kishore Mudra (up to Rs.5 Lakh)
+    } else {
+      return {
+        ...base,
+        confidenceScore: 0.52,
+        confidenceLevel: "MEDIUM",
+        verifiedCriteria: [`उम्र: ${p.age || 35} वर्ष ✓`, "व्यवसाय: स्वरोजगार / व्यापार ✓"],
+        missingFields: ["loanNeed"],
+        conversationalText: isHi
+          ? "व्यापार व स्वरोजगार के लिए कई योजनाएं हैं। आपको अपने नए काम या दुकान के लिए लगभग कितने ऋण (Loan) की आवश्यकता है? (जैसे ₹50,000 तक, ₹5 लाख तक, या ₹25 लाख+)"
+          : "For self-employment, there are great loan schemes! What loan amount do you require? (Up to Rs.50k, up to Rs.5 Lakh, or Rs.25 Lakh+)",
+        followUpQuestion: makeFollowUp(
+          "ask_loan_amount",
+          "loanAmount",
+          "आपको लगभग कितने ऋण की आवश्यकता है?",
+          "What loan amount do you require?"
+        ),
+      };
+    }
   }
 
   const recommended: RecommendedScheme[] = [
@@ -1045,7 +1114,7 @@ function selfEmployedDecide(p: DecisiveParams, isHi: boolean, base: DecisionResu
 // ============================================================================
 // 4. SENIOR CITIZEN PENSION RULE ENGINE
 // ============================================================================
-function seniorPensionDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult): DecisionResult {
+function seniorPensionDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult, askedFields?: Set<string>): DecisionResult {
   const effectiveAge = p.age || 60;
   const isWoman = p.gender === "FEMALE";
   const minAge = isWoman ? 55 : 58;
@@ -1101,22 +1170,26 @@ function seniorPensionDecide(p: DecisiveParams, isHi: boolean, base: DecisionRes
 
   // Step 2 for Senior: Income / BPL threshold
   if (p.income === null && !p.isBpl) {
-    return {
-      ...base,
-      confidenceScore: 0.62,
-      confidenceLevel: "MEDIUM",
-      verifiedCriteria: [`उम्र: ${effectiveAge} वर्ष ✓`, `आयु सीमा: ${minAge}+ वर्ष पूर्ण ✓`],
-      missingFields: ["income"],
-      conversationalText: isHi
-        ? `${effectiveAge} वर्ष — आप वृद्धजन सम्मान पेंशन के पात्र हैं! क्या आपके परिवार का BPL कार्ड है या वार्षिक आय ₹48,000 से कम है?`
-        : `At ${effectiveAge} years, you qualify for Senior Pension! Does your family have a BPL card or annual income below Rs.48,000?`,
-      followUpQuestion: makeFollowUp(
-        "ask_senior_income",
-        "income",
-        "परिवार की वार्षिक आय ₹48,000 से कम है या BPL कार्ड है?",
-        "Is family income below Rs.48,000 or BPL?"
-      ),
-    };
+    if (askedFields && (askedFields.has("income") || askedFields.has("ask_senior_income"))) {
+      p.income = 40000; // Default to qualifying income to prevent looping!
+    } else {
+      return {
+        ...base,
+        confidenceScore: 0.62,
+        confidenceLevel: "MEDIUM",
+        verifiedCriteria: [`उम्र: ${effectiveAge} वर्ष ✓`, `आयु सीमा: ${minAge}+ वर्ष पूर्ण ✓`],
+        missingFields: ["income"],
+        conversationalText: isHi
+          ? "वृद्धजन सम्मान पेंशन के लिए — क्या आपके परिवार का BPL राशन कार्ड है या वार्षिक पारिवारिक आय ₹48,000 से कम है?"
+          : "For Senior Pension — does your family have a BPL card or is annual income under Rs.48,000?",
+        followUpQuestion: makeFollowUp(
+          "ask_senior_income",
+          "income",
+          "परिवार की वार्षिक आय ₹48,000 से कम है या BPL कार्ड है?",
+          "Is family income below Rs.48,000 or BPL?"
+        ),
+      };
+    }
   }
 
   const amt = effectiveAge >= 75 ? 1500 : 1000;
@@ -1226,33 +1299,41 @@ function seniorPensionDecide(p: DecisiveParams, isHi: boolean, base: DecisionRes
 // ============================================================================
 // 5. WIDOW / SINGLE WOMAN RULE ENGINE
 // ============================================================================
-function widowPensionDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult): DecisionResult {
+function widowPensionDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult, askedFields?: Set<string>): DecisionResult {
   if (!p.age) {
-    return {
-      ...base,
-      confidenceScore: 0.32,
-      confidenceLevel: "LOW",
-      verifiedCriteria: ["एकल नारी / विधवा स्थिति ✓"],
-      missingFields: ["age"],
-      conversationalText: isHi
-        ? "एकल नारी सम्मान पेंशन के लिए — आपकी उम्र कितनी है?"
-        : "For Single Woman / Widow Pension — how old are you?",
-      followUpQuestion: makeFollowUp("ask_widow_age", "age", "आपकी उम्र कितनी है?", "How old are you?"),
-    };
+    if (askedFields && (askedFields.has("age") || askedFields.has("ask_widow_age"))) {
+      p.age = 45; // Default age to avoid looping!
+    } else {
+      return {
+        ...base,
+        confidenceScore: 0.32,
+        confidenceLevel: "LOW",
+        verifiedCriteria: ["एकल नारी / विधवा स्थिति ✓"],
+        missingFields: ["age"],
+        conversationalText: isHi
+          ? "एकल नारी सम्मान पेंशन के लिए — आपकी उम्र कितनी है?"
+          : "For Single Woman / Widow Pension — how old are you?",
+        followUpQuestion: makeFollowUp("ask_widow_age", "age", "आपकी उम्र कितनी है?", "How old are you?"),
+      };
+    }
   }
 
   if (p.income === null && !p.isBpl) {
-    return {
-      ...base,
-      confidenceScore: 0.62,
-      confidenceLevel: "MEDIUM",
-      verifiedCriteria: [`उम्र: ${p.age} वर्ष ✓`, "एकल नारी / विधवा स्थिति ✓"],
-      missingFields: ["income"],
-      conversationalText: isHi
-        ? `${p.age} वर्ष नोट कर लिया। क्या परिवार की वार्षिक आय ₹48,000 से कम है?`
-        : `Noted ${p.age} years. Is your family annual income under Rs.48,000?`,
-      followUpQuestion: makeFollowUp("ask_widow_income", "income", "परिवार की वार्षिक आय ₹48,000 से कम है?", "Family income below Rs.48,000?"),
-    };
+    if (askedFields && (askedFields.has("income") || askedFields.has("ask_widow_income"))) {
+      p.income = 40000; // Default to qualifying income to avoid looping!
+    } else {
+      return {
+        ...base,
+        confidenceScore: 0.62,
+        confidenceLevel: "MEDIUM",
+        verifiedCriteria: [`उम्र: ${p.age} वर्ष ✓`, "एकल नारी / विधवा स्थिति ✓"],
+        missingFields: ["income"],
+        conversationalText: isHi
+          ? "एकल नारी पेंशन के लिए — क्या परिवार की वार्षिक आय ₹48,000 से कम है या BPL कार्ड है?"
+          : "For Single Woman Pension — is family annual income under Rs.48,000 or BPL?",
+        followUpQuestion: makeFollowUp("ask_widow_income", "income", "परिवार की वार्षिक आय ₹48,000 से कम है?", "Family income below Rs.48,000?"),
+      };
+    }
   }
 
   const amt = (p.age || 40) >= 75 ? 1500 : 1000;
@@ -1436,18 +1517,22 @@ function disabilityDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult
 // ============================================================================
 // 7. LABORER, WOMEN, HEALTH, HOUSING & GENERAL DISCOVERY
 // ============================================================================
-function laborerDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult): DecisionResult {
+function laborerDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult, askedFields?: Set<string>): DecisionResult {
   if (!p.residence) {
-    return {
-      ...base,
-      confidenceScore: 0.52,
-      verifiedCriteria: [`उम्र: ${p.age} वर्ष ✓`, "व्यवसाय: श्रमिक / मजदूर ✓"],
-      missingFields: ["residence"],
-      conversationalText: isHi
-        ? `${p.age} वर्ष — श्रमिक कल्याण योजनाओं के लिए, क्या आप गाँव (ग्रामीण) में रहते हैं या शहर (शहरी) में?`
-        : `Got it, ${p.age} years. For worker schemes, do you live in a village (rural) or city (urban)?`,
-      followUpQuestion: makeFollowUp("ask_laborer_residence", "residence", "गाँव में या शहर में?", "Village or city?"),
-    };
+    if (askedFields && (askedFields.has("residence") || askedFields.has("ask_laborer_residence"))) {
+      p.residence = "RURAL"; // Default to rural to prevent loop!
+    } else {
+      return {
+        ...base,
+        confidenceScore: 0.52,
+        verifiedCriteria: [`उम्र: ${p.age || 35} वर्ष ✓`, "व्यवसाय: श्रमिक / मजदूर ✓"],
+        missingFields: ["residence"],
+        conversationalText: isHi
+          ? "श्रमिक कल्याण योजनाओं के लिए — क्या आप गाँव (ग्रामीण) में रहते हैं या शहर (शहरी) में?"
+          : "For worker schemes — do you live in a village (rural) or city (urban)?",
+        followUpQuestion: makeFollowUp("ask_laborer_residence", "residence", "गाँव में या शहर में?", "Village or city?"),
+      };
+    }
   }
 
   const recommended: RecommendedScheme[] = [
@@ -1613,17 +1698,21 @@ function healthDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult): D
   };
 }
 
-function housingDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult): DecisionResult {
+function housingDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult, askedFields?: Set<string>): DecisionResult {
   if (!p.isBpl && p.income === null) {
-    return {
-      ...base,
-      confidenceScore: 0.50,
-      missingFields: ["income"],
-      conversationalText: isHi
-        ? "PM आवास योजना के लिए — क्या आपके पास BPL राशन कार्ड है या वार्षिक आय ₹1.5 लाख से कम है?"
-        : "For PM Awas Yojana — do you have a BPL card or is family income under Rs.1.5 Lakh?",
-      followUpQuestion: makeFollowUp("ask_housing_bpl", "income", "BPL कार्ड है या वार्षिक आय?", "BPL card or annual income?"),
-    };
+    if (askedFields && (askedFields.has("income") || askedFields.has("ask_housing_bpl"))) {
+      p.income = 80000; // Default qualifying income to prevent loop!
+    } else {
+      return {
+        ...base,
+        confidenceScore: 0.50,
+        missingFields: ["income"],
+        conversationalText: isHi
+          ? "PM आवास योजना के लिए — क्या आपके पास BPL राशन कार्ड है या वार्षिक आय ₹1.5 लाख से कम है?"
+          : "For PM Awas Yojana — do you have a BPL card or is family income under Rs.1.5 Lakh?",
+        followUpQuestion: makeFollowUp("ask_housing_bpl", "income", "BPL कार्ड है या वार्षिक आय?", "BPL card or annual income?"),
+      };
+    }
   }
 
   const smartConfidence = 0.90;
@@ -1659,21 +1748,94 @@ function housingDecide(p: DecisiveParams, isHi: boolean, base: DecisionResult): 
 }
 
 function generalDiscovery(p: DecisiveParams, isHi: boolean, base: DecisionResult, occ: string | null): DecisionResult {
+  const ag = p.age || 40;
+  const isEligibleHealth = true;
+  const isEligibleAccident = ag >= 18 && ag <= 70;
+  const isEligibleLife = ag >= 18 && ag <= 50;
+
+  const rec: RecommendedScheme[] = [
+    {
+      scheme_code: "CHIRANJEEVI",
+      name_hi: "मुख्यमंत्री आयुष्मान आरोग्य योजना (Ayushman Bharat)",
+      name_en: "Mukhyamantri Ayushman Arogya Yojana",
+      eligibility_status: "CONFIDENTLY_ELIGIBLE",
+      ranking: 1,
+      ranking_badge_hi: "⭐ Rank #1 - ₹25 लाख संपूर्ण कैशलेस अस्पताल सुरक्षा",
+      benefit_summary: isHi ? "₹25 लाख/वर्ष कैशलेस अस्पताल इलाज — 1,736+ संबद्ध सरकारी व निजी अस्पतालों में" : "Rs.25L/yr cashless treatment at 1,736+ hospitals",
+      annual_financial_val: 2500000,
+      why_you_qualify_hi: "राजस्थान के प्रत्येक जन आधार कार्ड धारक परिवार को अस्पताल में भर्ती होने पर ₹25 लाख तक का कैशलेस इलाज व दवाइयां निःशुल्क मिलती हैं।",
+      why_you_qualify_en: "Every Jan Aadhaar enrolled family gets up to Rs.25 Lakh cashless treatment.",
+      passed_conditions: ["राजस्थान निवासी", "जन आधार / आधार कार्ड धारक"],
+      documents_required: ["जन आधार कार्ड", "आधार कार्ड"],
+    },
+  ];
+
+  if (isEligibleAccident) {
+    rec.push({
+      scheme_code: "PMSBY",
+      name_hi: "प्रधानमंत्री सुरक्षा बीमा योजना (PMSBY)",
+      name_en: "Pradhan Mantri Suraksha Bima Yojana",
+      eligibility_status: "CONFIDENTLY_ELIGIBLE",
+      ranking: 2,
+      ranking_badge_hi: "Rank #2 - ₹2,00,000 दुर्घटना बीमा सुरक्षा",
+      benefit_summary: isHi ? "मात्र ₹20/वर्ष में ₹2,00,000 का दुर्घटना मृत्यु व स्थायी अपंगता बीमा कवर" : "Rs.2 Lakh accidental cover for Rs.20/year",
+      annual_financial_val: 200000,
+      why_you_qualify_hi: `आपकी आयु ${ag} वर्ष है (पात्र आयु 18 से 70 वर्ष)। बैंक खाते से स्वतः नवीनीकरण द्वारा ₹2 लाख का सुरक्षा कवर मिलता है।`,
+      why_you_qualify_en: `Age ${ag} qualifies for Rs.2 Lakh accident insurance under central government rules.`,
+      passed_conditions: [`उम्र ${ag} वर्ष (18-70 सीमा मान्य)`, "सक्रिय बचत बैंक खाता"],
+      documents_required: ["आधार कार्ड", "बैंक पासबुक"],
+    });
+  }
+
+  if (isEligibleLife) {
+    rec.push({
+      scheme_code: "PMJJBY",
+      name_hi: "प्रधानमंत्री जीवन ज्योति बीमा योजना (PMJJBY)",
+      name_en: "Pradhan Mantri Jeevan Jyoti Bima Yojana",
+      eligibility_status: "CONFIDENTLY_ELIGIBLE",
+      ranking: 3,
+      ranking_badge_hi: "Rank #3 - ₹2,00,000 जीवन बीमा कवर",
+      benefit_summary: isHi ? "₹436/वर्ष में किसी भी कारण से मृत्यु पर परिवार को ₹2,00,000 वित्तीय सुरक्षा" : "Rs.2 Lakh life insurance for Rs.436/year",
+      annual_financial_val: 200000,
+      why_you_qualify_hi: `आपकी आयु ${ag} वर्ष है (पात्र आयु 18 से 50 वर्ष)। किसी भी राष्ट्रीयकृत बैंक या डाकघर द्वारा यह सुरक्षा मिलती है।`,
+      why_you_qualify_en: `Age ${ag} qualifies for Rs.2 Lakh life insurance cover.`,
+      passed_conditions: [`उम्र ${ag} वर्ष (18-50 सीमा मान्य)`, "बैंक खाता धारक"],
+      documents_required: ["आधार कार्ड", "बैंक पासबुक"],
+    });
+  }
+
+  const smartConfidence = 0.89;
   return {
     ...base,
-    confidenceScore: 0.58,
-    confidenceLevel: "MEDIUM",
-    verifiedCriteria: [`उम्र: ${p.age} वर्ष ✓`, occ ? `व्यवसाय: ${occ} ✓` : ""].filter(Boolean),
-    missingFields: ["intent"],
+    confidenceScore: smartConfidence,
+    confidenceLevel: "HIGH",
+    verifiedCriteria: [`उम्र: ${ag} वर्ष ✓`, occ ? `व्यवसाय: ${occ} ✓` : ""].filter(Boolean),
+    missingFields: [],
+    recommendedSchemes: rec,
+    candidateSchemes: [
+      {
+        scheme_code: "PM-AWAS",
+        name_hi: "प्रधानमंत्री आवास योजना (PMAY)",
+        name_en: "Pradhan Mantri Awas Yojana",
+        eligibility_status: "POTENTIALLY_ELIGIBLE",
+        ranking: 4,
+        ranking_badge_hi: "निकट-चूक अवसर: ₹1.20L–₹1.80L पक्का मकान सहायता",
+        benefit_summary: isHi ? "कच्चे मकान धारकों हेतु ₹1,20,000 से ₹1,80,000 पक्का मकान निर्माण अनुदान" : "Rs.1.20L-1.80L grant for pucca house",
+        annual_financial_val: 120000,
+        why_you_qualify_hi: "यदि आपके पास पक्का मकान नहीं है और वार्षिक आय ₹1.5 लाख से कम है, तो आप ग्राम पंचायत में आवेदन कर सकते हैं।",
+        why_you_qualify_en: "Subsidized aid if you do not own a pucca house.",
+        passed_conditions: ["आयु सीमा मान्य"],
+        documents_required: ["जन आधार", "राशन कार्ड", "बैंक पासबुक"],
+      }
+    ],
+    requiredDocs: [makeJanAadhaarDoc(isHi), makeBankDoc(isHi)],
+    totalAnnualBenefitHi: isHi
+      ? "₹25,00,000 कैशलेस अस्पताल सुरक्षा + ₹4,00,000 बीमा सुरक्षा"
+      : "Rs.25L cashless health cover + Rs.4L life/accident cover",
+    citations: [],
     conversationalText: isHi
-      ? `आपकी उम्र ${p.age} वर्ष नोट कर ली। आपको मुख्य रूप से किस चीज़ में सरकारी मदद चाहिए? (जैसे पढ़ाई की छात्रवृत्ति, खेती की योजना, नया व्यापार/लोन, या स्वास्थ्य बीमा)`
-      : `Noted ${p.age} years. What type of assistance are you looking for? (Education scholarship, Farming, Business loan, or Healthcare)`,
-    followUpQuestion: makeFollowUp(
-      "ask_specific_need",
-      "intent",
-      "आपको किस प्रकार की योजना में सहायता चाहिए?",
-      "What type of scheme do you need?"
-    ),
+      ? `आपकी आयु (${ag} वर्ष) के अनुसार आपके लिए ₹25 लाख का आयुष्मान स्वास्थ्य बीमा और राष्ट्रीय सामाजिक सुरक्षा योजनाएं उपलब्ध हैं। यदि आप किसी विशिष्ट क्षेत्र (जैसे पढ़ाई की छात्रवृत्ति, कृषि, व्यापार लोन, या पेंशन) में भी योजनाएं देखना चाहते हैं, तो कृपया बताएं।`
+      : `Based on your age (${ag} years), you qualify for Rs.25 Lakh Ayushman health cover and national social security schemes. Feel free to mention if you also need education, farming, business loans, or pension.`,
   };
 }
 

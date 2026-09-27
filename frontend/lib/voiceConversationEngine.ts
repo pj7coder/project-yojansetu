@@ -588,12 +588,12 @@ export function processDialogueTurn(
     !updatedProfile.income_confirmed
   ) {
     const spokenReply = isHi
-      ? `आपकी आयु ${updatedProfile.age} वर्ष दर्ज कर ली गई है। मुख्यमंत्री वृद्धजन सम्मान पेंशन (₹1,000 प्रति माह DBT) के लिए क्या आपकी पारिवारिक वार्षिक आय ₹48,000 से कम है या आपके पास बीपीएल राशन कार्ड है?`
-      : `Your age is recorded as ${updatedProfile.age}. For Senior Citizen Pension (₹1,000/month DBT), is your family annual income within ₹48,000 or do you hold a BPL card?`;
+      ? `मुख्यमंत्री वृद्धजन सम्मान पेंशन (₹1,000 प्रति माह DBT) के लिए क्या आपकी पारिवारिक वार्षिक आय ₹48,000 से कम है या आपके पास बीपीएल राशन कार्ड है?`
+      : `For Senior Citizen Pension (₹1,000/month DBT), is your family annual income within ₹48,000 or do you hold a BPL card?`;
 
     const displayReply = isHi
-      ? `👴 **मुख्यमंत्री वृद्धजन सम्मान पेंशन योजना पात्रता:**\nआपकी आयु **${updatedProfile.age} वर्ष** दर्ज की गई है।\n• **मासिक पेंशन:** 75 वर्ष तक ₹1,000/माह; 75+ वर्ष पर ₹1,500/माह सीधा बैंक खाता DBT\n\n❓ **पात्रता प्रश्न:** क्या आपकी पारिवारिक वार्षिक आय **₹48,000 से कम** है या आपके पास **बीपीएल राशन कार्ड** है?`
-      : `👴 **Mukhyamantri Vridhjan Samman Pension:**\nYour age is recorded as **${updatedProfile.age}**.\n• **Benefit:** ₹1,000 to ₹1,500 monthly direct bank transfer\n\n❓ **Eligibility Question:** Is your family annual income **within ₹48,000** or do you hold a **BPL card**?`;
+      ? `👴 **मुख्यमंत्री वृद्धजन सम्मान पेंशन योजना पात्रता:**\n• **मासिक पेंशन:** 75 वर्ष तक ₹1,000/माह; 75+ वर्ष पर ₹1,500/माह सीधा बैंक खाता DBT\n\n❓ **पात्रता प्रश्न:** क्या आपकी पारिवारिक वार्षिक आय **₹48,000 से कम** है या आपके पास **बीपीएल राशन कार्ड** है?`
+      : `👴 **Mukhyamantri Vridhjan Samman Pension:**\n• **Benefit:** ₹1,000 to ₹1,500 monthly direct bank transfer\n\n❓ **Eligibility Question:** Is your family annual income **within ₹48,000** or do you hold a **BPL card**?`;
 
     updatedProfile.lastQuestionField = 'annual_income';
     updatedProfile.stage = 'COLLECTING';
@@ -1071,12 +1071,12 @@ export function processDialogueTurn(
     updatedProfile.gender !== 'FEMALE'
   ) {
     const spokenReply = isHi
-      ? `आपकी आयु ${updatedProfile.age} वर्ष दर्ज कर ली गई है। सरकारी योजनाओं की पात्रता हेतु क्या आप किसान, विद्यार्थी, या किसी अन्य व्यवसाय से जुड़े हैं?`
-      : `Your age is recorded as ${updatedProfile.age}. To identify eligible schemes, are you a farmer, student, or in another occupation?`;
+      ? `सरकारी योजनाओं की पात्रता हेतु क्या आप किसान, विद्यार्थी, या किसी अन्य व्यवसाय से जुड़े हैं?`
+      : `To identify eligible schemes, are you a farmer, student, or in another occupation?`;
 
     const displayReply = isHi
-      ? `🏛️ **योजनसेतु योजना पात्रता परामर्श:**\nआपकी आयु **${updatedProfile.age} वर्ष** दर्ज कर ली गई है।\n\n❓ **पात्रता प्रश्न:** कृपया अपना पेशा बोलकर बताएं:\n• क्या आप **किसान** हैं (कृषि भूमि धारक)?\n• क्या आप **कॉलेज छात्र / विद्यार्थी** हैं?\n• क्या आप **दैनिक श्रमिक / छोटा व्यापारी** हैं?`
-      : `🏛️ **YojanSetu Scheme Guidance:**\nYour age is recorded as **${updatedProfile.age} years**.\n\n❓ **Eligibility Question:** Please speak your occupation:\n• Are you a **farmer** (holding land)?\n• Are you a **student / candidate**?\n• Are you a **daily-wage worker / artisan**?`;
+      ? `🏛️ **योजनसेतु योजना पात्रता परामर्श:**\n\n❓ **पात्रता प्रश्न:** कृपया अपना पेशा बोलकर बताएं:\n• क्या आप **किसान** हैं (कृषि भूमि धारक)?\n• क्या आप **कॉलेज छात्र / विद्यार्थी** हैं?\n• क्या आप **दैनिक श्रमिक / छोटा व्यापारी** हैं?`
+      : `🏛️ **YojanSetu Scheme Guidance:**\n\n❓ **Eligibility Question:** Please speak your occupation:\n• Are you a **farmer** (holding land)?\n• Are you a **student / candidate**?\n• Are you a **daily-wage worker / artisan**?`;
 
     updatedProfile.lastQuestionField = 'occupation';
     updatedProfile.stage = 'COLLECTING';

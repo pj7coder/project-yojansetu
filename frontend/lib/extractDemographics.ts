@@ -22,6 +22,7 @@ export interface ExtractedEntities {
   hasJanAadhaar?: boolean;
   isStudent?: boolean;
   maritalStatus?: "MARRIED" | "SINGLE" | "WIDOW" | "DIVORCED";
+  courseLevel?: "SCHOOL" | "COLLEGE" | "COACHING" | "OTHER";
 }
 
 const HINDI_WORD_NUMBERS: Record<string, number> = {
@@ -137,10 +138,18 @@ export function extractDemographicsFromText(text: string): ExtractedEntities {
     }
   }
 
-  // 2. Gender Extraction
-  if (/(?:महिला|औरत|स्त्री|लड़की|माता|बहन|फीमेल|female|woman|girl|widow|विधवा)/i.test(text)) {
+  // 2. Gender Extraction (Including Hindi verb markers like पढ़ती हूँ / पढ़ता हूँ)
+  if (
+    /(?:महिला|औरत|स्त्री|लड़की|माता|बहन|फीमेल|female|woman|girl|widow|विधवा)/i.test(text) ||
+    /(?:पढ़ती|करती|रहती|जाती|आती|चाहती|दिखती)\s*(?:हूँ|हूं|hu|hoon|है|hai)?/i.test(text) ||
+    /\b(?:padhti|karti|rahti|chahti|ladki)\b/i.test(text)
+  ) {
     result.gender = "FEMALE";
-  } else if (/(?:पुरुष|मर्द|आदमी|लड़का|मेल|male|man|boy)/i.test(text)) {
+  } else if (
+    /(?:पुरुष|मर्द|आदमी|लड़का|मेल|male|man|boy)/i.test(text) ||
+    /(?:पढ़ता|करता|रहता|जाता|आता|चाहता)\s*(?:हूँ|हूं|hu|hoon|है|hai)?/i.test(text) ||
+    /\b(?:padhta|karta|rahta|chahta|ladka)\b/i.test(text)
+  ) {
     result.gender = "MALE";
   } else if (/(?:अन्य|transgender|किन्नर|other)/i.test(text)) {
     result.gender = "OTHER";
@@ -183,33 +192,40 @@ export function extractDemographicsFromText(text: string): ExtractedEntities {
   }
 
   // 5. Occupation Extraction
-  // Student & Higher Education
+  // Student, College, School, Coaching, Economics / Higher Education
   if (
-    /विद्यार्थी|छात्र|छात्रा|student|study|studying|padhai|padh\s*raha|padh\s*rahi|padhti|padhta|college|school|coaching|कोचिंग|10th|12th|b\.?tech|b\.?sc|b\.?a\b|b\.?com|diploma|iti\b|neet|jee|upsc|ras|ssc|bed|b\.?ed|scholarship|छात्रवृत्ति/i.test(text)
+    /विद्यार्थी|छात्र|छात्रा|student|study|studying|padhai|padh\s*raha|padh\s*rahi|padhti|padhta|कॉलेज|कालेज|college|स्कूल|विद्यालय|school|coaching|कोचिंग|10th|12th|10वीं|12वीं|b\.?tech|b\.?sc|b\.?a\b|b\.?com|diploma|iti\b|neet|jee|upsc|ras|ssc|bed|b\.?ed|scholarship|छात्रवृत्ति|पढ़ती|पढ़ता|पढ़ते|पढ़ाई|पढ़\s*रहा|पढ़\s*रही|अध्ययन|अर्थशास्त्र|economics|arts|commerce|science|ग्रेजुएशन|पोस्ट\s*ग्रेजुएशन|डिग्री/i.test(text)
   ) {
     result.occupation = "STUDENT";
     result.isStudent = true;
+    if (/कॉलेज|कालेज|college|महाविद्यालय|विश्वविद्यालय|ग्रेजुएशन|degree|डिग्री|b\.?tech|b\.?sc|b\.?a|b\.?com|अर्थशास्त्र|economics/i.test(text)) {
+      result.courseLevel = "COLLEGE";
+    } else if (/कोचिंग|coaching|प्रतियोगी|competition|neet|jee|upsc|ras|ssc/i.test(text)) {
+      result.courseLevel = "COACHING";
+    } else if (/स्कूल|विद्यालय|school|10th|12th|10वीं|12वीं/i.test(text)) {
+      result.courseLevel = "SCHOOL";
+    }
   }
   // Farmer & Agriculture
   else if (
-    /किसान|खेती|कृषक|farmer|agriculture|काश्तकार|खेतीहर|kisan|kheti|fasal|jamabandi|khet\b|bigha|बीघा|फसल|agro/i.test(text)
+    /किसान|खेती|कृषक|farmer|agriculture|काश्तकार|खेतीहर|kisan|kheti|fasal|jamabandi|khet\b|bigha|बीघा|फसल|agro|खाद|बीज|पटवारी|गिरदावरी/i.test(text)
   ) {
     result.occupation = "FARMER";
   }
   // Self-Employed, MSME, Entrepreneur, Shopkeeper, Artisan
   else if (
-    /स्वरोजगार|दुकान|व्यापार|बिजनेस|business|self\s*employed|दुकानदार|छोटा\s*व्यापारी|dukan|shop|vyapar|thela|vendor|artisan|vishwakarma|karigar|tailor|darji|lohar|kumhar|suthar|entrepreneur|mudra|pmegp|startup|udyam|कारोबार/i.test(text)
+    /स्वरोजगार|दुकान|व्यापार|बिजनेस|business|self\s*employed|दुकानदार|छोटा\s*व्यापारी|dukan|shop|vyapar|thela|vendor|artisan|vishwakarma|karigar|tailor|darji|lohar|kumhar|suthar|entrepreneur|mudra|pmegp|startup|udyam|कारोबार|सिलाई|टेलरिंग|ब्यूटी/i.test(text)
   ) {
     result.occupation = "SELF_EMPLOYED";
   }
   // Laborer, Construction Worker, Daily Wage
   else if (
-    /मजदूर|श्रमिक|दिहाड़ी|labor|labour|daily\s*wage|मजदूरी|कारीगर|majdoor|mazdoor|shramik|dihadi|mistri|driver|beldar|safai\s*karmi|shramik\s*card/i.test(text)
+    /मजदूर|श्रमिक|दिहाड़ी|labor|labour|daily\s*wage|मजदूरी|कारीगर|majdoor|mazdoor|shramik|dihadi|mistri|driver|beldar|safai\s*karmi|shramik\s*card|श्रम/i.test(text)
   ) {
     result.occupation = "LABORER";
   }
   // Homemaker
-  else if (/गृहणी|हाउसवाइफ|homemaker|housewife|grihini|महिला|औरत/i.test(text)) {
+  else if (/गृहणी|गृहिणी|हाउसवाइफ|homemaker|housewife|grihini|महिला|औरत/i.test(text)) {
     result.occupation = "HOMEMAKER";
     result.gender = "FEMALE";
   }

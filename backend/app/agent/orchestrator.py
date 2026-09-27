@@ -521,8 +521,8 @@ class WelfareAgentOrchestrator:
             follow_up_question = {
                 "question_id": "ask_occupation",
                 "field": "occupation",
-                "question_hi": f"आपकी आयु ({profile.get('age')} वर्ष) दर्ज कर ली गई है। कृपया बताएं: आपका मुख्य कार्य या पेशा क्या है? (किसान, छात्र, वरिष्ठ नागरिक, छोटा व्यापारी, दैनिक श्रमिक, या गृहिणी?)",
-                "question_en": f"Your age ({profile.get('age')} yrs) is recorded. Please tell me your primary profession or role:",
+                "question_hi": "कृपया बताएं: आपका मुख्य कार्य या पेशा क्या है? (जैसे: किसान, छात्र, वरिष्ठ नागरिक, छोटा व्यापारी, दैनिक श्रमिक, या गृहिणी?)",
+                "question_en": "Please tell me your primary profession or role: (e.g. Farmer, Student, Senior Citizen, Small Business, Laborer, or Homemaker)",
                 "rationale_hi": "व्यवसाय अनुसार राजस्थान सरकार की विशिष्ट योजनाएं लागू होती हैं।",
                 "rationale_en": "Schemes are tailored to specific occupational sectors.",
                 "options": [
