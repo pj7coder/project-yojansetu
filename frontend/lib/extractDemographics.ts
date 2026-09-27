@@ -93,11 +93,12 @@ export function extractDemographicsFromText(text: string): ExtractedEntities {
   const lower = text.toLowerCase().trim();
 
   // 1. Age Extraction
-  // Patterns like: "उम्र 50", "age 50", "50 साल", "50 वर्ष", "50 years", "50 yrs", "50 saal", "i am 50"
+  // Robust matching for: "20 साल", "20 saal", "20 sal", "20 saa", "20 वर्ष", "20 years", "20 yrs", "20 yr", "20 ki umar", "umar 20", "age 20", "me 20 ka hu", "i am 20", etc.
   const ageRegexes = [
-    /(?:उम्र|आयु|age)\s*(?:is|है|=|:)?\s*(\d{1,2})/i,
-    /(\d{1,2})\s*(?:साल|वर्ष|saal|sal|years?|yrs?|की उम्र|आयु)/i,
-    /(?:i am|मैं)\s*(\d{1,2})\s*(?:years|साल|का|की)?/i,
+    /(\d{1,2})\s*(?:साल|वर्ष|saal|sal|saa\b|years?|yrs?|yr|ki\s*umar|ki\s*aayu|की\s*उम्र|की\s*आयु)/i,
+    /(?:उम्र|आयु|age|umar|aayu)\s*(?:is|hai|है|=|:)?\s*(\d{1,2})/i,
+    /(?:i am|मैं|me|mai|iam)\s*(\d{1,2})\s*(?:ka|ki|का|की|years?|saal|sal|saa\b|साल|वर्ष)?\s*(?:hu|hoon|हूँ|है)?/i,
+    /(\d{1,2})\s*(?:ka|ki|का|की)\s*(?:student|kisan|ladka|ladki|chhatra|vidyarthi|farmer|boy|girl)/i,
   ];
 
   for (const re of ageRegexes) {
@@ -111,12 +112,14 @@ export function extractDemographicsFromText(text: string): ExtractedEntities {
     }
   }
 
-  // Standalone number for age reply: e.g. "45", "62", "20"
+  // Standalone or bounded 2-digit number for age reply: e.g. "45", "62", "20", "me 20"
   if (result.age === undefined) {
-    const rawNumberMatch = text.match(/^\s*(\d{1,2})\s*$/);
+    const rawNumberMatch = text.match(/\b(\d{1,2})\b/);
     if (rawNumberMatch && rawNumberMatch[1]) {
       const n = parseInt(rawNumberMatch[1], 10);
-      if (n >= 14 && n <= 100) {
+      // Ensure it's not a money / land / percentage term
+      const isNotOtherUnit = !/(?:₹|rs|रु|लाख|lakh|हजार|k\b|%|बीघा|bigha|acre|एकड़)/i.test(text);
+      if (n >= 14 && n <= 100 && isNotOtherUnit) {
         result.age = n;
       }
     }
@@ -135,7 +138,7 @@ export function extractDemographicsFromText(text: string): ExtractedEntities {
   }
 
   // 2. Gender Extraction
-  if (/(?:महिला|औरत|स्त्री|लड़की|माता|बहन|फीमेल|female|woman|girl)/i.test(text)) {
+  if (/(?:महिला|औरत|स्त्री|लड़की|माता|बहन|फीमेल|female|woman|girl|widow|विधवा)/i.test(text)) {
     result.gender = "FEMALE";
   } else if (/(?:पुरुष|मर्द|आदमी|लड़का|मेल|male|man|boy)/i.test(text)) {
     result.gender = "MALE";
@@ -154,7 +157,7 @@ export function extractDemographicsFromText(text: string): ExtractedEntities {
     result.category = "EWS";
   } else if (/\b(?:mbc|एमबीसी|अति\s*पिछड़ा)\b/i.test(text)) {
     result.category = "MBC";
-  } else if (/\b(?:general|सामान्य|जनरल)\b/i.test(text)) {
+  } else if (/\b(?:general|सामान्य|जनरल|open)\b/i.test(text)) {
     result.category = "GENERAL";
   }
 
@@ -180,21 +183,42 @@ export function extractDemographicsFromText(text: string): ExtractedEntities {
   }
 
   // 5. Occupation Extraction
-  if (/किसान|खेती|कृषक|farmer|agriculture|काश्तकार|खेतीहर/i.test(text)) {
-    result.occupation = "FARMER";
-  } else if (/विद्यार्थी|छात्र|छात्रा|student|पढ़ाई|कॉलेज|स्कूल|coaching|कोचिंग/i.test(text)) {
+  // Student & Higher Education
+  if (
+    /विद्यार्थी|छात्र|छात्रा|student|study|studying|padhai|padh\s*raha|padh\s*rahi|padhti|padhta|college|school|coaching|कोचिंग|10th|12th|b\.?tech|b\.?sc|b\.?a\b|b\.?com|diploma|iti\b|neet|jee|upsc|ras|ssc|bed|b\.?ed|scholarship|छात्रवृत्ति/i.test(text)
+  ) {
     result.occupation = "STUDENT";
     result.isStudent = true;
-  } else if (/मजदूर|श्रमिक|दिहाड़ी|labor|daily\s*wage|मजदूरी|कारीगर/i.test(text)) {
-    result.occupation = "LABORER";
-  } else if (/स्वरोजगार|दुकान|व्यापार|बिजनेस|business|self\s*employed|दुकानदार|छोटा\s*व्यापारी/i.test(text)) {
+  }
+  // Farmer & Agriculture
+  else if (
+    /किसान|खेती|कृषक|farmer|agriculture|काश्तकार|खेतीहर|kisan|kheti|fasal|jamabandi|khet\b|bigha|बीघा|फसल|agro/i.test(text)
+  ) {
+    result.occupation = "FARMER";
+  }
+  // Self-Employed, MSME, Entrepreneur, Shopkeeper, Artisan
+  else if (
+    /स्वरोजगार|दुकान|व्यापार|बिजनेस|business|self\s*employed|दुकानदार|छोटा\s*व्यापारी|dukan|shop|vyapar|thela|vendor|artisan|vishwakarma|karigar|tailor|darji|lohar|kumhar|suthar|entrepreneur|mudra|pmegp|startup|udyam|कारोबार/i.test(text)
+  ) {
     result.occupation = "SELF_EMPLOYED";
-  } else if (/गृहणी|हाउसवाइफ|homemaker|housewife/i.test(text)) {
+  }
+  // Laborer, Construction Worker, Daily Wage
+  else if (
+    /मजदूर|श्रमिक|दिहाड़ी|labor|labour|daily\s*wage|मजदूरी|कारीगर|majdoor|mazdoor|shramik|dihadi|mistri|driver|beldar|safai\s*karmi|shramik\s*card/i.test(text)
+  ) {
+    result.occupation = "LABORER";
+  }
+  // Homemaker
+  else if (/गृहणी|हाउसवाइफ|homemaker|housewife|grihini|महिला|औरत/i.test(text)) {
     result.occupation = "HOMEMAKER";
     result.gender = "FEMALE";
-  } else if (/बेरोजगार|unemployed|नौकरी\s*नहीं/i.test(text)) {
+  }
+  // Unemployed
+  else if (/बेरोजगार|unemployed|नौकरी\s*नहीं|jobless|no\s*job/i.test(text)) {
     result.occupation = "UNEMPLOYED";
-  } else if (/रिटायर्ड|सेवानिवृत्त|retired|वरिष्ठ\s*नागरिक|senior|old\s*age|बुजुर्ग|बूढ़े|वृद्ध|पेंशनर/i.test(text)) {
+  }
+  // Retired / Senior Citizen
+  else if (/रिटायर्ड|सेवानिवृत्त|retired|वरिष्ठ\s*नागरिक|senior|old\s*age|बुजुर्ग|बूढ़े|वृद्ध|पेंशनर|vridh/i.test(text)) {
     result.occupation = "RETIRED";
   }
 

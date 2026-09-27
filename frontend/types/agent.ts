@@ -23,6 +23,21 @@ export interface RecommendedScheme {
   benefit_details?: Record<string, any>;
   passed_conditions?: string[];
   documents_required?: string[];
+  department?: string;
+  category?: string;
+  match_score?: number;
+  annual_financial_val?: number;
+  ranking?: number;
+  ranking_badge_hi?: string;
+  ranking_badge_en?: string;
+  why_you_qualify_hi?: string;
+  why_you_qualify_en?: string;
+  // Near-miss specific properties
+  is_near_miss?: boolean;
+  missing_condition_hi?: string;
+  missing_condition_en?: string;
+  how_to_become_eligible_hi?: string;
+  how_to_become_eligible_en?: string;
 }
 
 export interface RequiredDocument {
@@ -67,6 +82,8 @@ export interface AgentStructuredData {
   confidence_score?: number;
   confidence_level?: "HIGH" | "MEDIUM" | "LOW";
   confidence_reasons?: string[];
+  total_annual_benefit_hi?: string;
+  total_annual_benefit_en?: string;
   follow_up_question?: FollowUpQuestion | null;
 }
 

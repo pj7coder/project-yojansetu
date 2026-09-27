@@ -42,6 +42,7 @@ interface ChatMessage {
   confidenceScore?: number;
   confidenceLevel?: "HIGH" | "MEDIUM" | "LOW";
   followUpQuestion?: FollowUpQuestion | null;
+  totalAnnualBenefit?: string;
 }
 
 const STORAGE_CHATS_KEY = "yojansetu_citizen_chat_sessions_v2";
@@ -486,6 +487,25 @@ export default function CitizenPage() {
         updatedMessages
       );
 
+      // Synchronize any newly extracted profile parameters from the engine
+      if (resp.structured_data?.profile_extracted) {
+        const p = resp.structured_data.profile_extracted;
+        const merged: CitizenParameters = {
+          ...activeParams,
+          ...(p.age !== undefined && p.age !== null ? { age: Number(p.age) } : {}),
+          ...(p.occupation ? { occupation: p.occupation } : {}),
+          ...(p.gender ? { gender: p.gender } : {}),
+          ...(p.category ? { category: p.category } : {}),
+          ...(p.income !== undefined && p.income !== null ? { income: Number(p.income) } : {}),
+          ...(p.landBigha !== undefined && p.landBigha !== null ? { landBigha: Number(p.landBigha) } : {}),
+          ...(p.isWidow !== undefined ? { isWidow: p.isWidow } : {}),
+          ...(p.isDisabled !== undefined ? { isDisabled: p.isDisabled } : {}),
+          ...(p.residence ? { residence: p.residence } : {}),
+        };
+        activeParams = merged;
+        setParameters(merged);
+      }
+
       const assistantMsg: ChatMessage = {
         id: `asst_${Date.now()}`,
         sender: "assistant",
@@ -500,6 +520,7 @@ export default function CitizenPage() {
         confidenceScore: resp.structured_data?.confidence_score,
         confidenceLevel: resp.structured_data?.confidence_level,
         followUpQuestion: resp.structured_data?.follow_up_question || null,
+        totalAnnualBenefit: resp.structured_data?.total_annual_benefit_hi,
       };
 
       const finalMessages = [...updatedMessages, assistantMsg];
@@ -951,11 +972,11 @@ export default function CitizenPage() {
                             <span>
                               {msg.confidenceScore >= 0.8
                                 ? isHi
-                                  ? "100% सत्यापित व पुष्ट पात्रता"
-                                  : "100% Confident Match"
+                                  ? `${Math.min(94, Math.round(msg.confidenceScore * 100))}% संभावित पात्रता (दस्तावेज़ सत्यापन अधीन)`
+                                  : `${Math.min(94, Math.round(msg.confidenceScore * 100))}% Match (Pending Physical Docs)`
                                 : isHi
-                                ? `सत्यापन प्रक्रियाधीन (${Math.round(msg.confidenceScore * 100)}% सटीकता)`
-                                : `Verification in Progress (${Math.round(msg.confidenceScore * 100)}% Confidence)`}
+                                ? `प्रोफाइल जानकारी संग्रह (${Math.round(msg.confidenceScore * 100)}%)`
+                                : `Profile Intake (${Math.round(msg.confidenceScore * 100)}%)`}
                             </span>
                           </span>
                         ) : (
@@ -996,24 +1017,53 @@ export default function CitizenPage() {
                     {/* Message Text */}
                     <div className="whitespace-pre-wrap font-medium">{msg.text}</div>
 
+                    {/* Total Annual Benefit Wallet Banner (Unique MVP Feature) */}
+                    {msg.totalAnnualBenefit && (
+                      <div className="mt-3 p-3 rounded-xl bg-gradient-to-r from-orange-50 via-amber-50 to-emerald-50 border border-orange-200 shadow-2xs">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">💰</span>
+                          <div>
+                            <div className="text-[10px] font-black uppercase tracking-wider text-orange-950">
+                              {isHi ? "कुल अनुमानित वार्षिक सहायता वॉलेट" : "Estimated Annual Benefit Wallet"}
+                            </div>
+                            <div className="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5">
+                              {msg.totalAnnualBenefit}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
-                    {/* Eligible Scheme Cards */}
+                    {/* Eligible Scheme Cards with Rankings & "Why You Qualify" */}
                     {msg.schemes && msg.schemes.length > 0 && (
                       <div className="mt-3.5 space-y-2.5 pt-3 border-t border-slate-200">
-                        <div className="text-[11px] font-black uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                          <span>🎯</span>
-                          <span>
-                            {isHi ? "पात्र कल्याणकारी योजनाएं" : "Eligible Welfare Schemes"} (
-                            {msg.schemes.length})
+                        <div className="text-[11px] font-black uppercase tracking-wider text-slate-600 flex items-center justify-between">
+                          <span className="flex items-center gap-1.5">
+                            <span>🎯</span>
+                            <span>
+                              {isHi ? "पात्र कल्याणकारी योजनाएं" : "Eligible Welfare Schemes"} (
+                              {msg.schemes.length})
+                            </span>
+                          </span>
+                          <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                            {isHi ? "प्राथमिकता क्रमबद्ध" : "Ranked by Benefit"}
                           </span>
                         </div>
 
-                        <div className="grid grid-cols-1 gap-2">
+                        <div className="grid grid-cols-1 gap-2.5">
                           {msg.schemes.map((scheme, idx) => (
                             <div
                               key={idx}
                               className="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs hover:border-orange-300 transition"
                             >
+                              {scheme.ranking_badge_hi && (
+                                <div className="mb-1.5">
+                                  <span className="inline-block px-2 py-0.5 rounded bg-orange-50 text-orange-800 font-extrabold text-[10px] border border-orange-200">
+                                    {isHi ? scheme.ranking_badge_hi : `Rank #${scheme.ranking || idx + 1}`}
+                                  </span>
+                                </div>
+                              )}
+
                               <div className="flex items-start justify-between gap-2">
                                 <div>
                                   <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">
@@ -1032,8 +1082,19 @@ export default function CitizenPage() {
                                 </button>
                               </div>
 
+                              {/* Why you qualify / पात्रता का कारण */}
+                              {(scheme.why_you_qualify_hi || scheme.why_you_qualify_en) && (
+                                <div className="mt-2 p-2 rounded-lg bg-emerald-50/70 border border-emerald-200/70 text-[11px] text-emerald-950 font-medium leading-relaxed">
+                                  <span className="font-bold text-emerald-900 flex items-center gap-1 mb-0.5">
+                                    <span>💡</span>
+                                    <span>{isHi ? "पात्रता का कारण (Why you qualify):" : "Why you qualify:"}</span>
+                                  </span>
+                                  {isHi ? scheme.why_you_qualify_hi : scheme.why_you_qualify_en}
+                                </div>
+                              )}
+
                               {scheme.benefit_summary && (
-                                <p className="text-[11px] text-slate-600 mt-1 font-medium">
+                                <p className="text-[11px] text-slate-700 mt-2 font-medium">
                                   💵 {typeof scheme.benefit_summary === "string" ? scheme.benefit_summary : JSON.stringify(scheme.benefit_summary)}
                                 </p>
                               )}
@@ -1047,6 +1108,92 @@ export default function CitizenPage() {
                                 </div>
                               )}
                             </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Near-Miss Opportunities Card (Problem Statement Core Requirement) */}
+                    {msg.candidateSchemes && msg.candidateSchemes.length > 0 && (
+                      <div className="mt-3.5 space-y-2.5 pt-3 border-t border-slate-200">
+                        <div className="text-[11px] font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                          <span>⚡</span>
+                          <span>
+                            {isHi ? "निकट-चूक योजनाएं (Near-Miss Opportunities) — आप पात्र कैसे बन सकते हैं?" : "Near-Miss Opportunities — How to Become Eligible"} (
+                            {msg.candidateSchemes.length})
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-2.5">
+                          {msg.candidateSchemes.map((scheme, idx) => (
+                            <div
+                              key={idx}
+                              className="p-3 rounded-xl bg-amber-50/50 border border-amber-300 shadow-2xs hover:border-amber-400 transition"
+                            >
+                              <div className="flex items-start justify-between gap-2">
+                                <div>
+                                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">
+                                    {isHi ? scheme.name_hi : scheme.name_en}
+                                  </h4>
+                                  <span className="inline-block mt-0.5 px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-bold text-[10px] border border-amber-300">
+                                    ⏳ {isHi ? "निकट-चूक (Near Miss)" : "Near Miss"} {scheme.match_score ? `(${scheme.match_score}% मिलान)` : ""}
+                                  </span>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenSchemeDetail(scheme.scheme_code)}
+                                  className="text-[11px] font-bold text-amber-900 hover:text-amber-950 bg-amber-200/70 px-2 py-1 rounded border border-amber-300 hover:bg-amber-200 transition whitespace-nowrap cursor-pointer"
+                                >
+                                  {isHi ? "नियम देखें →" : "View Rules →"}
+                                </button>
+                              </div>
+
+                              {scheme.missing_condition_hi && (
+                                <div className="mt-2 text-[11px] text-slate-800 bg-white/90 p-2 rounded-lg border border-amber-200">
+                                  <span className="font-bold text-rose-700">⚠️ {isHi ? "क्या कमी रह गई:" : "Missing Condition:"}</span>{" "}
+                                  {scheme.missing_condition_hi}
+                                </div>
+                              )}
+
+                              {scheme.how_to_become_eligible_hi && (
+                                <div className="mt-1.5 text-[11px] text-emerald-950 bg-emerald-50/90 p-2 rounded-lg border border-emerald-200 font-medium">
+                                  <span className="font-bold text-emerald-800">✅ {isHi ? "पात्र बनने का उपाय:" : "How to qualify:"}</span>{" "}
+                                  {scheme.how_to_become_eligible_hi}
+                                </div>
+                              )}
+
+                              {scheme.benefit_summary && (
+                                <p className="text-[11px] text-slate-600 mt-1.5 font-medium">
+                                  💵 {typeof scheme.benefit_summary === "string" ? scheme.benefit_summary : JSON.stringify(scheme.benefit_summary)}
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 1-Click Document Checklist (Unique MVP Feature) */}
+                    {msg.documents && msg.documents.length > 0 && (
+                      <div className="mt-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div className="text-[11px] font-black uppercase tracking-wider text-slate-700 flex items-center justify-between mb-2">
+                          <span className="flex items-center gap-1.5">
+                            <span>📋</span>
+                            <span>{isHi ? "आवेदन दस्तावेज़ चेकलिस्ट (तैयार रखें)" : "Application Document Checklist"}</span>
+                          </span>
+                          <span className="text-[9px] text-slate-400 font-normal">
+                            {isHi ? "टैप करके टिक करें" : "Tap to check off"}
+                          </span>
+                        </div>
+                        <div className="space-y-1.5">
+                          {msg.documents.map((doc, dIdx) => (
+                            <label key={dIdx} className="flex items-start gap-2 text-[11px] text-slate-700 cursor-pointer select-none hover:text-slate-900 transition">
+                              <input type="checkbox" className="mt-0.5 rounded text-orange-600 focus:ring-orange-500 border-slate-300" />
+                              <div>
+                                <span className="font-bold text-slate-900">{doc.document_name}</span>
+                                {doc.purpose && <span className="text-slate-500 text-[10px] block">({doc.purpose})</span>}
+                              </div>
+                            </label>
                           ))}
                         </div>
                       </div>

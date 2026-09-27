@@ -309,8 +309,8 @@ export function extractProfileFromUtterance(
   // -------------------------------------------------------------
 
   // 1. Age extraction
-  const ageMatch = text.match(/(\d{1,2})\s*(?:साल|वर्ष|saal|sal|years?|yrs?|की उम्र|आयु)/i) ||
-                   text.match(/(?:उम्र|आयु|age)\D*?(\d{1,2})/i);
+  const ageMatch = text.match(/(\d{1,2})\s*(?:साल|वर्ष|saal|sal|saa\b|years?|yrs?|yr|की उम्र|आयु|ka|ki)/i) ||
+                   text.match(/(?:उम्र|आयु|age|umar)\D*?(\d{1,2})/i);
   if (ageMatch) {
     const parsedAge = parseInt(ageMatch[1], 10);
     if (parsedAge > 0 && parsedAge <= 110) {
@@ -319,7 +319,7 @@ export function extractProfileFromUtterance(
   } else {
     // Check standalone numbers or Hindi word numbers
     const parsed = parseHindiOrArabicNumber(text);
-    if (parsed !== null && parsed >= 16 && parsed <= 110 && !profile.age) {
+    if (parsed !== null && parsed >= 14 && parsed <= 110 && !profile.age) {
       profile.age = parsed;
     }
   }
@@ -366,7 +366,7 @@ export function extractProfileFromUtterance(
   }
 
   // 5. Student & Education
-  if (/छात्र|छात्रा|विद्यार्थी|पढ़ाई|कॉलेज|12वीं|neet|iit|coaching|student|study|exam/i.test(text)) {
+  if (/छात्र|छात्रा|विद्यार्थी|पढ़ाई|कॉलेज|12वीं|10वीं|neet|iit|jee|upsc|ras|ssc|btech|ba|bsc|bcom|diploma|iti|coaching|student|study|exam|scholarship|छात्रवृत्ति/i.test(text)) {
     profile.is_student = true;
     profile.occupation = 'STUDENT';
     profile.intent = 'STUDENT';
