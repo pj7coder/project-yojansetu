@@ -65,10 +65,18 @@ export default function CitizenPage() {
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-  // Speech Recognition (Voice)
+  // Speech Recognition (Voice) with Intelligent Auto-Send & Silence Detection
   const [isListening, setIsListening] = useState(false);
+  const [speechStatus, setSpeechStatus] = useState<"idle" | "listening" | "hearing" | "sending">("idle");
   const [speechError, setSpeechError] = useState<string | null>(null);
+  const [voiceLang, setVoiceLang] = useState<"hi" | "en">(lang === "en" ? "en" : "hi");
   const recognitionRef = useRef<any>(null);
+  const isListeningRef = useRef<boolean>(false);
+  const speechTextRef = useRef<string>("");
+  const hasSentRef = useRef<boolean>(false);
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const noSpeechTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const audioStreamRef = useRef<MediaStream | null>(null);
 
   // Modals & Drawers
   const [selectedCitation, setSelectedCitation] = useState<SchemeCitation | null>(
@@ -151,6 +159,37 @@ export default function CitizenPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isProcessing]);
+
+  // Keep voice recognition language aligned with selected citizen language
+  useEffect(() => {
+    setVoiceLang(lang === "en" ? "en" : "hi");
+  }, [lang]);
+
+  const isProcessingRef = useRef(isProcessing);
+  useEffect(() => {
+    isProcessingRef.current = isProcessing;
+  }, [isProcessing]);
+
+  const handleSendMessageRef = useRef<((query?: string) => Promise<void>) | null>(null);
+  useEffect(() => {
+    handleSendMessageRef.current = handleSendMessage;
+  });
+
+  // Cleanup speech recognition, timers, and audio streams on unmount
+  useEffect(() => {
+    return () => {
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      if (noSpeechTimeoutRef.current) clearTimeout(noSpeechTimeoutRef.current);
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch {}
+      }
+      if (audioStreamRef.current) {
+        audioStreamRef.current.getTracks().forEach((t) => t.stop());
+      }
+    };
+  }, []);
 
   // Load Past Chats from localStorage on Mount
   useEffect(() => {
@@ -421,54 +460,203 @@ export default function CitizenPage() {
     handleSendMessage(query);
   };
 
-  // Working Voice Recognition
-  const toggleVoice = () => {
-    if (isListening) {
-      // Stop listening
+  // Voice Auto-Send Trigger (dispatched on silence or manual stop)
+  const triggerVoiceAutoSend = useCallback(() => {
+    if (hasSentRef.current) return;
+    const textToSend = speechTextRef.current.trim();
+
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+    if (noSpeechTimeoutRef.current) {
+      clearTimeout(noSpeechTimeoutRef.current);
+      noSpeechTimeoutRef.current = null;
+    }
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {}
+    }
+    if (audioStreamRef.current) {
+      audioStreamRef.current.getTracks().forEach((track) => track.stop());
+      audioStreamRef.current = null;
+    }
+
+    isListeningRef.current = false;
+    setIsListening(false);
+    setSpeechStatus("idle");
+
+    if (textToSend.length > 0) {
+      hasSentRef.current = true;
+      setInputText("");
+      speechTextRef.current = "";
+      // Immediately send query into chat without user needing to press Enter
+      handleSendMessageRef.current?.(textToSend);
+    }
+  }, []);
+
+  // Stop voice listening cleanly
+  const stopVoiceListening = useCallback(
+    (shouldSend: boolean = true) => {
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+      if (noSpeechTimeoutRef.current) {
+        clearTimeout(noSpeechTimeoutRef.current);
+        noSpeechTimeoutRef.current = null;
+      }
       if (recognitionRef.current) {
         try {
           recognitionRef.current.stop();
         } catch {}
       }
+      if (audioStreamRef.current) {
+        audioStreamRef.current.getTracks().forEach((track) => track.stop());
+        audioStreamRef.current = null;
+      }
+
+      isListeningRef.current = false;
       setIsListening(false);
+      setSpeechStatus("idle");
+
+      const textToSend = speechTextRef.current.trim();
+      if (shouldSend && textToSend.length > 0 && !hasSentRef.current) {
+        hasSentRef.current = true;
+        setInputText("");
+        speechTextRef.current = "";
+        handleSendMessageRef.current?.(textToSend);
+      } else {
+        speechTextRef.current = "";
+      }
+    },
+    []
+  );
+
+  // Toggle voice recognition with mic permission preflight, continuous capture, and autosend
+  const toggleVoice = async () => {
+    if (isListeningRef.current) {
+      // User tapped stop button: if speech text is present, immediately auto-send!
+      stopVoiceListening(true);
+      return;
+    }
+
+    if (isProcessingRef.current) {
+      setSpeechError(
+        isHi
+          ? "कृपया पहले पिछले प्रश्न का उत्तर आने तक प्रतीक्षा करें।"
+          : "Please wait for current response to complete before speaking."
+      );
+      setTimeout(() => setSpeechError(null), 3000);
       return;
     }
 
     setSpeechError(null);
+    hasSentRef.current = false;
+    speechTextRef.current = "";
+
     const SpeechRecognition =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      // Web Speech not available in this browser; provide helpful prompt
       setSpeechError(
         isHi
-          ? "इस ब्राउज़र में स्पीच रिकग्निशन उपलब्ध नहीं है। कृपया लिखकर पूछें।"
-          : "Speech recognition not supported in this browser. Please type."
+          ? "इस ब्राउज़र में स्पीच रिकग्निशन उपलब्ध नहीं है। कृपया Google Chrome या Microsoft Edge का उपयोग करें।"
+          : "Speech recognition is not supported in this browser. Please use Chrome or Edge."
       );
-      setTimeout(() => setSpeechError(null), 4000);
+      setTimeout(() => setSpeechError(null), 5000);
       return;
     }
 
+    // 1. Prompt / verify microphone permissions explicitly
+    if (typeof navigator !== "undefined" && navigator.mediaDevices?.getUserMedia) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // Immediately release stream tracks so SpeechRecognition has dedicated microphone access
+        stream.getTracks().forEach((track) => track.stop());
+      } catch (micErr: any) {
+        console.warn("Microphone access check failed:", micErr);
+        if (micErr.name === "NotAllowedError" || micErr.name === "PermissionDeniedError") {
+          setSpeechError(
+            isHi
+              ? "माइक्रोफ़ोन अनुमति अस्वीकृत है। कृपया ब्राउज़र सेटिंग्स में माइक्रोफ़ोन की अनुमति दें।"
+              : "Microphone permission denied. Please allow microphone access in your browser."
+          );
+        } else if (micErr.name === "NotFoundError" || micErr.name === "DevicesNotFoundError") {
+          setSpeechError(
+            isHi
+              ? "कोई माइक्रोफ़ोन डिवाइस नहीं मिला। कृपया माइक कनेक्ट करें।"
+              : "No microphone device found. Please connect a microphone."
+          );
+        } else {
+          setSpeechError(
+            isHi
+              ? "माइक्रोफ़ोन एक्सेस करने में समस्या आई। पुनः प्रयास करें।"
+              : "Could not access microphone. Please try again."
+          );
+        }
+        setTimeout(() => setSpeechError(null), 4000);
+        return;
+      }
+    }
+
+    // 2. Initialize SpeechRecognition instance with continuous stream
     try {
       const recognition = new SpeechRecognition();
       recognitionRef.current = recognition;
-      recognition.lang = lang === "hi" ? "hi-IN" : "en-IN";
-      recognition.continuous = false;
+      recognition.lang = voiceLang === "hi" ? "hi-IN" : "en-IN";
+      recognition.continuous = true;
       recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
 
       recognition.onstart = () => {
+        isListeningRef.current = true;
         setIsListening(true);
+        setSpeechStatus("listening");
+
+        // 10s idle safety timer if citizen doesn't say anything
+        if (noSpeechTimeoutRef.current) clearTimeout(noSpeechTimeoutRef.current);
+        noSpeechTimeoutRef.current = setTimeout(() => {
+          if (isListeningRef.current && !speechTextRef.current.trim()) {
+            stopVoiceListening(false);
+            setSpeechError(
+              isHi
+                ? "कोई आवाज नहीं सुनाई दी। पुनः माइक दबाकर बोलें।"
+                : "No voice detected. Click the mic to try speaking again."
+            );
+            setTimeout(() => setSpeechError(null), 4000);
+          }
+        }, 10000);
       };
 
       recognition.onresult = (event: any) => {
-        let transcript = "";
-        for (let i = 0; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
+        // Clear idle no-speech timeout once speech arrives
+        if (noSpeechTimeoutRef.current) {
+          clearTimeout(noSpeechTimeoutRef.current);
+          noSpeechTimeoutRef.current = null;
         }
-        setInputText(transcript);
+
+        let interim = "";
+        let final = "";
+        for (let i = 0; i < event.results.length; i++) {
+          const item = event.results[i];
+          if (item.isFinal) {
+            final += item[0].transcript + " ";
+          } else {
+            interim += item[0].transcript;
+          }
+        }
+
+        const combined = (final + interim).trim();
+        if (!combined) return;
+
+        speechTextRef.current = combined;
+        setInputText(combined);
+        setSpeechStatus("hearing");
 
         // Dynamically extract demographics as user speaks
-        const liveEntities = extractDemographicsFromText(transcript);
+        const liveEntities = extractDemographicsFromText(combined);
         if (Object.keys(liveEntities).length > 0) {
           setParameters((prev) => ({
             ...prev,
@@ -479,28 +667,80 @@ export default function CitizenPage() {
             setLastUpdatedField(keys[0]);
           }
         }
+
+        // Silence Debounce: When citizen stops speaking for 1.6s, automatically send!
+        if (silenceTimerRef.current) {
+          clearTimeout(silenceTimerRef.current);
+        }
+        silenceTimerRef.current = setTimeout(() => {
+          if (isListeningRef.current && speechTextRef.current.trim()) {
+            setSpeechStatus("sending");
+            triggerVoiceAutoSend();
+          }
+        }, 1600);
       };
 
       recognition.onerror = (event: any) => {
-        console.warn("Speech error:", event.error);
-        setIsListening(false);
-        if (event.error === "not-allowed") {
-          setSpeechError(isHi ? "माइक्रोफ़ोन अनुमति अस्वीकृत है।" : "Microphone permission denied.");
-        } else {
-          setSpeechError(isHi ? "आवाज नहीं पहचानी जा सकी।" : "Could not hear audio clearly.");
+        console.warn("Speech recognition event error:", event.error);
+        if (event.error === "no-speech") {
+          // Do NOT abort if user paused briefly mid-sentence!
+          return;
         }
-        setTimeout(() => setSpeechError(null), 3000);
+        if (event.error === "aborted") {
+          return;
+        }
+        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+          stopVoiceListening(false);
+          setSpeechError(
+            isHi
+              ? "माइक्रोफ़ोन अनुमति अस्वीकृत है। कृपया ब्राउज़र में अनुमति दें।"
+              : "Microphone permission denied. Please allow microphone in browser."
+          );
+          setTimeout(() => setSpeechError(null), 4000);
+          return;
+        }
+
+        // If text was already captured before error, auto-send it
+        if (speechTextRef.current.trim() && !hasSentRef.current) {
+          triggerVoiceAutoSend();
+        } else {
+          stopVoiceListening(false);
+          setSpeechError(
+            isHi
+              ? "आवाज नहीं पहचानी जा सकी। कृपया पुनः प्रयास करें।"
+              : "Could not recognize audio clearly. Please try again."
+          );
+          setTimeout(() => setSpeechError(null), 3000);
+        }
       };
 
       recognition.onend = () => {
-        setIsListening(false);
+        if (isListeningRef.current) {
+          if (speechTextRef.current.trim() && !hasSentRef.current) {
+            // Natural speech termination -> AUTO SEND!
+            triggerVoiceAutoSend();
+          } else if (!hasSentRef.current) {
+            // Re-trigger if continuous mode disconnected without text
+            try {
+              recognition.start();
+            } catch {
+              isListeningRef.current = false;
+              setIsListening(false);
+              setSpeechStatus("idle");
+            }
+          }
+        }
       };
 
       recognition.start();
     } catch (err: any) {
       console.error("Speech initialization error:", err);
-      setIsListening(false);
-      setSpeechError(isHi ? "माइक्रोफ़ोन प्रारंभ नहीं हो सका।" : "Could not start microphone.");
+      stopVoiceListening(false);
+      setSpeechError(
+        isHi
+          ? "माइक्रोफ़ोन प्रारंभ नहीं हो सका। कृपया पुनः प्रयास करें।"
+          : "Could not start microphone. Please try again."
+      );
       setTimeout(() => setSpeechError(null), 3000);
     }
   };
@@ -847,6 +1087,72 @@ export default function CitizenPage() {
           )}
 
           {/* Speech Error Banner if any */}
+          {/* Active Voice Listening Banner with Auto-Send and Language Selector */}
+          {isListening && (
+            <div className="px-3 sm:px-4 py-2 bg-gradient-to-r from-orange-50 via-rose-50 to-orange-50 border-t border-orange-200/80 flex items-center justify-between gap-2 text-xs sm:text-sm shadow-xs animate-fadeIn">
+              <div className="flex items-center gap-2 text-slate-700 font-medium overflow-hidden">
+                <span className="flex h-3 w-3 relative flex-shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+                </span>
+                {speechStatus === "sending" ? (
+                  <span className="text-orange-700 font-bold flex items-center gap-1.5 animate-pulse">
+                    <span>🚀</span> {isHi ? "स्वतः भेजा जा रहा है..." : "Auto-sending query..."}
+                  </span>
+                ) : speechTextRef.current ? (
+                  <span className="text-slate-800 flex items-center gap-1.5 truncate">
+                    <span className="font-semibold text-rose-600 flex-shrink-0">
+                      {isHi ? "पहचाना:" : "Heard:"}
+                    </span>
+                    <span className="italic truncate max-w-[180px] sm:max-w-xs text-slate-900 font-semibold">
+                      &quot;{speechTextRef.current}&quot;
+                    </span>
+                    <span className="text-[11px] text-orange-600 font-normal hidden sm:inline flex-shrink-0">
+                      ({isHi ? "रुकते ही स्वतः भेजा जाएगा" : "auto-sends when you pause"})
+                    </span>
+                  </span>
+                ) : (
+                  <span className="text-slate-700 flex items-center gap-1.5">
+                    <span>🎙️</span>{" "}
+                    {isHi
+                      ? "बोलिए, मैं सुन रहा हूँ... (बोलना रुकते ही स्वतः भेजा जाएगा)"
+                      : "Listening... speak now (will auto-send when you pause)"}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                {/* Voice Language Switcher */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const nextLang = voiceLang === "hi" ? "en" : "hi";
+                    setVoiceLang(nextLang);
+                    if (recognitionRef.current) {
+                      try {
+                        recognitionRef.current.stop();
+                      } catch {}
+                    }
+                  }}
+                  className="px-2 py-0.5 text-[11px] sm:text-xs font-semibold rounded-md bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition shadow-2xs"
+                  title={isHi ? "आवाज भाषा बदलें" : "Switch voice language"}
+                >
+                  🗣️ {voiceLang === "hi" ? "हिंदी" : "English"}
+                </button>
+
+                {/* Cancel Voice Input */}
+                <button
+                  type="button"
+                  onClick={() => stopVoiceListening(false)}
+                  className="text-xs text-slate-400 hover:text-rose-600 font-bold px-1.5 py-0.5 rounded transition"
+                  title={isHi ? "रद्द करें" : "Cancel"}
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          )}
+
           {speechError && (
             <div className="px-4 py-1.5 bg-rose-50 border-t border-rose-200 text-rose-700 text-xs flex items-center justify-between">
               <span>⚠️ {speechError}</span>
@@ -877,11 +1183,11 @@ export default function CitizenPage() {
                 title={
                   isListening
                     ? isHi
-                      ? "सुनना बंद करें"
-                      : "Stop Listening"
+                      ? "बोलना पूरा हुआ (तुरंत भेजें)"
+                      : "Done speaking (Send now)"
                     : isHi
-                    ? "बोलकर पूछें (आवाज सहायक)"
-                    : "Speak your query (Voice Input)"
+                    ? "बोलकर पूछें (स्वतः भेजा जाएगा)"
+                    : "Speak your query (Auto-sends)"
                 }
                 className={`relative w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
                   isListening
@@ -907,8 +1213,8 @@ export default function CitizenPage() {
                 placeholder={
                   isListening
                     ? isHi
-                      ? "सुन रहा हूँ... बोलिए..."
-                      : "Listening... please speak..."
+                      ? "सुन रहा हूँ... बोलिए (रुकते ही स्वतः भेजा जाएगा)..."
+                      : "Listening... speak now (auto-sends when you pause)..."
                     : isHi
                     ? "योजना के बारे में पूछें या अपनी समस्या बताएं..."
                     : "Ask about welfare schemes or state your need..."
